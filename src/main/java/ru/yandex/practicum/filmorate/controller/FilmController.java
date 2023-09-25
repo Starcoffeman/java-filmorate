@@ -12,18 +12,18 @@ import java.util.HashMap;
 public class FilmController {
 
     private static final Logger log = LoggerFactory.getLogger(FilmController.class);
-    private final HashMap<Integer ,Film> films = new HashMap<>();
+    private final HashMap<Integer, Film> films = new HashMap<>();
 
     @PostMapping
     public Film createFilm(@RequestBody Film film) {
-        films.put(film.getId(),film);
+        films.put(film.getId(), film);
         log.debug("Фильм создана!");
         return film;
     }
 
     @PutMapping
     public Film updateFilm(@RequestBody Film updatedFilm) {
-        films.replace(updatedFilm.getId(),updatedFilm);
+        films.replace(updatedFilm.getId(), updatedFilm);
         log.debug("Фильм обновлен!");
         return updatedFilm;
     }
