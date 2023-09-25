@@ -12,17 +12,17 @@ import java.util.HashMap;
 public class UserController {
 
     private static final Logger log = LoggerFactory.getLogger(FilmController.class);
-    private final HashMap<Integer , User> users = new HashMap<>();
+    private final HashMap<Integer, User> users = new HashMap<>();
 
     @PostMapping
-    public User createUser( @RequestBody User user) {
-        users.put(user.getId(),user);
+    public User createUser(@RequestBody User user) {
+        users.put(user.getId(), user);
         log.debug("User создан");
         return user;
     }
 
     @PutMapping
-    public User updateUser( @RequestBody User updatedUser) {
+    public User updateUser(@RequestBody User updatedUser) {
         users.replace(updatedUser.getId(), updatedUser);
         log.debug("User заменён");
         return updatedUser;
