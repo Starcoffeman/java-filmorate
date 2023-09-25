@@ -1,12 +1,8 @@
 package ru.yandex.practicum.filmorate.model;
 
 import lombok.Data;
-import org.springframework.format.annotation.DateTimeFormat;
-
 import javax.validation.ValidationException;
-import javax.validation.constraints.*;
 import java.time.LocalDate;
-import java.util.Date;
 
 @Data
 public class User {
