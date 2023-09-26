@@ -14,7 +14,10 @@
 	<name>filmorate</name>
 	<description>Demo project for Spring Boot</description>
 	<properties>
-		<java.version>21</java.version>
+		<java.version>17</java.version>
+		<jbehave.core.version>4.8.3</jbehave.core.version>
+		<maven.compiler.source>16</maven.compiler.source>
+		<maven.compiler.target>16</maven.compiler.target>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -52,6 +55,7 @@
         </dependency>
     </dependencies>
 
+
 	<build>
 		<plugins>
 			<plugin>
@@ -60,6 +64,7 @@
 			</plugin>
 		</plugins>
 	</build>
+
 	<repositories>
 		<repository>
 			<id>spring-milestones</id>
