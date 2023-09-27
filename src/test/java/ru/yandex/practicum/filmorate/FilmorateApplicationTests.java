@@ -1,6 +1,7 @@
 package ru.yandex.practicum.filmorate;
 
-import org.junit.Test;
+
+import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
@@ -8,7 +9,8 @@ import ru.yandex.practicum.filmorate.model.User;
 import javax.validation.ValidationException;
 import java.time.LocalDate;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
+
 
 @SpringBootTest
 public class FilmorateApplicationTests {
@@ -114,7 +116,7 @@ public class FilmorateApplicationTests {
 		String name = "User Name";
 		LocalDate birthday = LocalDate.of(1990, 1, 1);
 
- 		assertThrows(ValidationException.class, () -> new User(id, email, login, name, birthday));
+		assertThrows(ValidationException.class, () -> new User(id, email, login, name, birthday));
 	}
 
 	@Test
