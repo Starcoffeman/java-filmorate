@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.User;
+import java.util.Collection;
 import java.util.HashMap;
 
 @RestController
@@ -28,8 +29,8 @@ public class UserController {
     }
 
     @GetMapping
-    public User getAllUsers(@RequestBody User user) {
+    public Collection<User> getAllUsers(@RequestBody User user) {
         log.debug("Текущее количество пользователей: {}", users.size());
-        return users.get(user.getId());
+        return users.values();
     }
 }
