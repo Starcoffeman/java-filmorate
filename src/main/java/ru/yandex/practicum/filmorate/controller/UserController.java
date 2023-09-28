@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 
 @RestController
@@ -30,8 +31,8 @@ public class UserController {
     }
 
     @GetMapping
-    public ArrayList<User> getAllUsers() {
+    public Collection<User> getAllUsers() {
         log.debug("Текущее количество пользователей: {}", users.size());
-        return (ArrayList<User>) users.values();
+        return users.values();
     }
 }
