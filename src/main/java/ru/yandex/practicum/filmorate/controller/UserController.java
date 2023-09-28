@@ -29,8 +29,8 @@ public class UserController {
     }
 
     @GetMapping
-    public Collection<User> getAllUsers() {
+    public User getAllUsers(@RequestBody User user) {
         log.debug("Текущее количество пользователей: {}", users.size());
-        return users.values();
+        return users.get(user.getId());
     }
 }
