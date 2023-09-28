@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.User;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 @RestController
@@ -29,8 +30,12 @@ public class UserController {
     }
 
     @GetMapping
-    public HashMap<Integer, User> getAllUsers() {
+    public ArrayList<User> getAllUsers() {
         log.debug("Текущее количество пользователей: {}", users.size());
-        return users;
+        ArrayList<User> A = new ArrayList<>();
+        for(User user : users.values()){
+            A.add(user);
+        }
+        return A;
     }
 }

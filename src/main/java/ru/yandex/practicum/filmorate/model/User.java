@@ -22,10 +22,8 @@ public class User {
             throw new ValidationException("Логин не может быть пустым и содержать пробелы");
         }
 
-        if (name == null || name.isEmpty()) {
+        if (name == null || name.isEmpty() || name.contains(" ")) {
             this.name = login;
-        } else {
-            this.name = name;
         }
 
         LocalDate currentDate = LocalDate.now();
