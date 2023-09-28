@@ -32,10 +32,6 @@ public class UserController {
     @GetMapping
     public ArrayList<User> getAllUsers() {
         log.debug("Текущее количество пользователей: {}", users.size());
-        ArrayList<User> A = new ArrayList<>();
-        for(User user : users.values()){
-            A.add(user);
-        }
-        return A;
+        return (ArrayList<User>) users.values();
     }
 }
