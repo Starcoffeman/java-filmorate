@@ -14,7 +14,7 @@ public class Film {
     private LocalDate releaseDate;
     private int duration;
 
-    public Film(int id, String name, String description, LocalDate releaseDate, int duration) {
+    public Film( String name, String description, LocalDate releaseDate, int duration) {
 
         if (name == null) {
             throw new ValidationException("Название не может быть пустым");
@@ -33,7 +33,6 @@ public class Film {
             throw new ValidationException("Продолжительность фильма должна быть положительной");
         }
 
-        this.id = id;
         this.name = name;
         this.description = description;
         this.releaseDate = releaseDate;

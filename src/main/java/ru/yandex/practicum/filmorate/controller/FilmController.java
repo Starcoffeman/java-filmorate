@@ -13,11 +13,13 @@ public class FilmController {
 
     private static final Logger log = LoggerFactory.getLogger(FilmController.class);
     private final HashMap<Integer, Film> films = new HashMap<>();
+    Integer id = 0;
 
     @PostMapping
     public Film createFilm(@RequestBody Film film) {
-        films.put(film.getId(), film);
-        log.debug("Фильм создана!");
+        film.setId(++id);
+        films.put(id, film);
+        log.debug("User создан");
         return film;
     }
 
