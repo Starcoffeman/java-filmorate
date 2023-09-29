@@ -13,7 +13,7 @@ public class User {
     private String name;
     private LocalDate birthday;
 
-    public User(int id, String email, String login, String name, LocalDate birthday) {
+    public User( String email, String login, String name, LocalDate birthday) {
         if (email == null || !email.contains("@")) {
             throw new ValidationException("Некорректный формат электронной почты");
         }
