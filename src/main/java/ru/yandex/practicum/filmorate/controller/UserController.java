@@ -17,9 +17,8 @@ public class UserController {
 
     @PostMapping
     public User createUser(@RequestBody User user) {
-        user.setId(id);
+        user.setId(++id);
         users.put(id, user);
-        id++;
         log.debug("User создан");
         return user;
     }
