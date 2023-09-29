@@ -13,10 +13,12 @@ public class UserController {
 
     private static final Logger log = LoggerFactory.getLogger(FilmController.class);
     private final HashMap<Integer, User> users = new HashMap<>();
+    Integer id = 0;
 
     @PostMapping
     public User createUser(@RequestBody User user) {
-        users.put(user.getId(), user);
+        users.put(id, user);
+        id++;
         log.debug("User создан");
         return user;
     }
