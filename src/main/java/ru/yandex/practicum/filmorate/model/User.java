@@ -31,7 +31,6 @@ public class User {
             throw new ValidationException("Дата рождения не может быть в будущем");
         }
 
-        this.id = id;
         this.email = email;
         this.login = login;
         this.name = name;
