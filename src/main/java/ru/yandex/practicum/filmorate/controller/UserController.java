@@ -32,7 +32,7 @@ public class UserController {
     }
 
     @GetMapping
-    public Collection<User> getAllUsers(@RequestBody User user) {
+    public Collection<User> getAllUsers() {
         log.debug("Текущее количество пользователей: {}", users.size());
         return users.values();
     }
