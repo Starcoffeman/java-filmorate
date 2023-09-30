@@ -27,7 +27,7 @@ public class FilmController {
 
     @PutMapping
     public Film updateFilm(@RequestBody Film updatedFilm) throws UserNotFoundException {
-        if(films.get(updatedFilm.getId())!=null) {
+        if (films.get(updatedFilm.getId()) != null) {
             films.replace(updatedFilm.getId(), updatedFilm);
             log.debug("Фильм обновлен!");
             return updatedFilm;
