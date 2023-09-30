@@ -4,10 +4,11 @@ package ru.yandex.practicum.filmorate;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
-import ru.yandex.practicum.filmorate.exception.ValidationException;
+
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
 
+import javax.validation.ValidationException;
 import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -64,7 +65,7 @@ class FilmorateApplicationTests {
 
 	@Test
 	public void testFilmWithLongDescription() {
-		String longDescription = "This is a very long description that exceeds the maximum allowed length. This description is longer than 200 characters. This description is longer than 200 characters.";
+		String longDescription = "This is a very long description that exceeds the maximum allowed length. This description is longer than 200 characters. This description is longer than 200 characterssssssssssssssssssssssssssssssssss.";
 		assertThrows(ValidationException.class, () -> {
 			Film film = new Film("Movie Title", longDescription, LocalDate.of(2000, 1, 1), 120);
 		});
