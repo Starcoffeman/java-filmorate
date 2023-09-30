@@ -24,6 +24,8 @@ public class User {
 
         if (name == null || name.isEmpty() || name.contains(" ")) {
             this.name = login;
+        } else {
+            this.name = name;
         }
 
         LocalDate currentDate = LocalDate.now();
@@ -33,7 +35,7 @@ public class User {
 
         this.email = email;
         this.login = login;
-        this.name = name;
+
         this.birthday = birthday;
     }
 }

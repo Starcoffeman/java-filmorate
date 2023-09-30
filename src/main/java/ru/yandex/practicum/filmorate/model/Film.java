@@ -16,7 +16,7 @@ public class Film {
 
     public Film(String name, String description, LocalDate releaseDate, int duration) {
 
-        if (name == null) {
+        if (name == null || name.isEmpty()) {
             throw new ValidationException("Название не может быть пустым");
         }
 
