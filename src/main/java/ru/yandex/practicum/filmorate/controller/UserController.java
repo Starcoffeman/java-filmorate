@@ -3,6 +3,7 @@ package ru.yandex.practicum.filmorate.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
+import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
 import java.util.Collection;
 import java.util.HashMap;
@@ -25,10 +26,14 @@ public class UserController {
 
 
     @PutMapping
-    public User updateUser(@RequestBody User updatedUser) {
-        users.replace(updatedUser.getId(), updatedUser);
-        log.debug("User заменён");
-        return updatedUser;
+    public User updateUser(@RequestBody User updatedUser) throws UserNotFoundException {
+        if(users.get(updatedUser.getId())!=null) {
+            users.replace(updatedUser.getId(), updatedUser);
+            log.debug("Фильм обновлен!");
+            return updatedUser;
+        } else {
+            throw new UserNotFoundException("Пользователя под таким индексом нет  ");
+        }
     }
 
     @GetMapping
