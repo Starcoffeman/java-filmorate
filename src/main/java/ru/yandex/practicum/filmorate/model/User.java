@@ -14,16 +14,18 @@ public class User {
     private LocalDate birthday;
 
     public User(String email, String login, String name, LocalDate birthday) {
+        if (name == null || name.isEmpty() || name.contains(" ")) {
+            this.name = login;
+        } else {
+            this.name = name;
+        }
+
         if (email == null || !email.contains("@")) {
             throw new ValidationException("Некорректный формат электронной почты");
         }
 
         if (login == null || login.isEmpty() || login.contains(" ")) {
             throw new ValidationException("Логин не может быть пустым и содержать пробелы");
-        }
-
-        if (name == null || name.isEmpty() || name.contains(" ")) {
-            this.name = login;
         }
 
         LocalDate currentDate = LocalDate.now();
@@ -33,7 +35,6 @@ public class User {
 
         this.email = email;
         this.login = login;
-        this.name = name;
         this.birthday = birthday;
     }
 }
