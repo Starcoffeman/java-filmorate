@@ -1,38 +1,34 @@
 package ru.yandex.practicum.filmorate.model;
 
 import lombok.Data;
+import lombok.NonNull;
 
-import javax.validation.ValidationException;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.PastOrPresent;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.Size;
 import java.time.LocalDate;
 
 
 @Data
 public class Film {
-    private int id;
+
+    int id;
+
+    @NotBlank(message = "Название не может быть пустым")
     private String name;
+
+    @NonNull
+    @Size(max = 200, message = "Максимальная длина описания - 200 символов")
     private String description;
+
+    @PastOrPresent(message = "Дата релиза не может быть в будущем и должна соответствовать формату yyyy-MM-dd")
     private LocalDate releaseDate;
+
+    @Positive(message = "Продолжительность фильма должна быть положительной")
     private int duration;
 
     public Film(String name, String description, LocalDate releaseDate, int duration) {
-
-        if (name == null || name.isEmpty()) {
-            throw new ValidationException("Название не может быть пустым");
-        }
-
-        if (description.length() > 200) {
-            throw new ValidationException("Описание не может превышать 200 символов");
-        }
-
-        LocalDate minReleaseDate = LocalDate.of(1895, 12, 28); // 28 декабря 1895 года
-        if (releaseDate == null || releaseDate.isBefore(minReleaseDate)) {
-            throw new ValidationException("Дата релиза должна быть не ранее 28 декабря 1895 года");
-        }
-
-        if (duration <= 0) {
-            throw new ValidationException("Продолжительность фильма должна быть положительной");
-        }
-
         this.name = name;
         this.description = description;
         this.releaseDate = releaseDate;

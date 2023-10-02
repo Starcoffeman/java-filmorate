@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
 
+import javax.validation.Valid;
 import java.util.Collection;
 import java.util.HashMap;
 
@@ -18,7 +19,7 @@ public class FilmController {
     Integer id = 0;
 
     @PostMapping
-    public Film createFilm(@RequestBody Film film) {
+    public Film createFilm(@Valid @RequestBody Film film) {
         film.setId(++id);
         films.put(id, film);
         log.debug("User создан");
@@ -32,7 +33,7 @@ public class FilmController {
             log.debug("Фильм обновлен!");
             return updatedFilm;
         } else {
-            throw new UserNotFoundException("Пользователя под таким индексом нет  ");
+            throw new UserNotFoundException("Пользователя под таким индексом нет");
         }
     }
 

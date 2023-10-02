@@ -25,7 +25,6 @@ public class UserController {
         return user;
     }
 
-
     @PutMapping
     public User updateUser(@RequestBody User updatedUser) throws UserNotFoundException {
         if (users.get(updatedUser.getId()) != null) {
