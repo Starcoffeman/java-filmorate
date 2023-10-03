@@ -19,7 +19,7 @@ public class FilmController {
     Integer id = 0;
 
     @PostMapping
-    public Film createFilm(@Valid @RequestBody Film film) {
+    public Film createFilm( @RequestBody @Valid Film film) {
         film.setId(++id);
         films.put(id, film);
         log.debug("User создан");
@@ -27,7 +27,7 @@ public class FilmController {
     }
 
     @PutMapping
-    public Film updateFilm(@RequestBody Film updatedFilm) throws UserNotFoundException {
+    public Film updateFilm(@RequestBody @Valid Film updatedFilm) throws UserNotFoundException {
         if (films.get(updatedFilm.getId()) != null) {
             films.replace(updatedFilm.getId(), updatedFilm);
             log.debug("Фильм обновлен!");

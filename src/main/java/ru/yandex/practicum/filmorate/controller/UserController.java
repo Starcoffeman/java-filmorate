@@ -19,7 +19,7 @@ public class UserController {
     Integer id = 0;
 
     @PostMapping
-    public User createUser(@Valid @RequestBody User user) {
+    public User createUser( @RequestBody @Valid User user) {
         user.setId(++id);
         users.put(id, user);
         log.debug("User создан");
@@ -27,13 +27,13 @@ public class UserController {
     }
 
     @PutMapping
-    public User updateUser(@RequestBody User updatedUser) throws UserNotFoundException {
+    public User updateUser(@RequestBody @Valid User updatedUser) throws UserNotFoundException {
         if (users.get(updatedUser.getId()) != null) {
             users.replace(updatedUser.getId(), updatedUser);
             log.debug("Фильм обновлен!");
             return updatedUser;
         } else {
-            throw new UserNotFoundException("Пользователя под таким индексом нет  ");
+            throw new UserNotFoundException("Пользователя под таким индексом нет");
         }
     }
 
