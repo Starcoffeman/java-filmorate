@@ -19,7 +19,7 @@ public class FilmController {
     Integer id = 0;
 
     @PostMapping
-    public Film createFilm( @RequestBody @Valid Film film) {
+    public Film createFilm(@RequestBody @Valid Film film) {
         film.setId(++id);
         films.put(id, film);
         log.debug("User создан");
