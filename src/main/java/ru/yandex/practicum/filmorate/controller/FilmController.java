@@ -16,7 +16,7 @@ public class FilmController {
 
     private static final Logger log = LoggerFactory.getLogger(FilmController.class);
     private final HashMap<Integer, Film> films = new HashMap<>();
-    Integer id = 0;
+    private int id = 0;
 
     @PostMapping
     public Film createFilm(@RequestBody @Valid Film film) {

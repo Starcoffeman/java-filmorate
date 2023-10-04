@@ -16,7 +16,7 @@ public class UserController {
 
     private static final Logger log = LoggerFactory.getLogger(FilmController.class);
     private final HashMap<Integer, User> users = new HashMap<>();
-    Integer id = 0;
+    private int id = 0;
 
     @PostMapping
     public User createUser(@RequestBody @Valid User user) {
