@@ -24,12 +24,12 @@ public class UserService {
     }
 
     @DeleteMapping("/{id}")
-    public void removeUser(@PathVariable int id){
+    public void removeUser(@PathVariable int id) {
         inMemoryUserStorage.removeUser(id);
     }
 
     @GetMapping("/{id}")
-    public User getUserById( @PathVariable int id){
+    public User getUserById(@PathVariable int id) {
         return inMemoryUserStorage.users.get(id);
     }
 
@@ -39,21 +39,21 @@ public class UserService {
     }
 
     @PutMapping("/{id}/friends/{friendId}")
-    public void addFriend(@PathVariable int id, int friend_Id){
-        inMemoryUserStorage.users.get(id).getFriendsList().add(friend_Id);
+    public void addFriend(@PathVariable int id, int friendId) {
+        inMemoryUserStorage.users.get(id).getFriendsList().add(friendId);
     }
 
     @DeleteMapping("/{id}/friends/{friendId}")
-    public void removeFriend(@PathVariable int id, int friend_Id){
-        inMemoryUserStorage.users.get(id).getFriendsList().remove(friend_Id);
+    public void removeFriend(@PathVariable int id, int friendId) {
+        inMemoryUserStorage.users.get(id).getFriendsList().remove(friendId);
     }
 
     @GetMapping("/{id}/friends/common/{otherId}")
-    public ArrayList<Integer> getCommonFriends(@PathVariable int id, int other_Id){
+    public ArrayList<Integer> getCommonFriends(@PathVariable int id, int otherId) {
         ArrayList<Integer> commonFriends = new ArrayList<>();
-        for(Integer i : inMemoryUserStorage.users.get(id).getFriendsList()){
-            for( Integer j : inMemoryUserStorage.users.get(other_Id).getFriendsList()){
-                if(i ==j){
+        for (Integer i : inMemoryUserStorage.users.get(id).getFriendsList()) {
+            for (Integer j : inMemoryUserStorage.users.get(otherId).getFriendsList()) {
+                if (i == j) {
                     commonFriends.add(i);
                 }
             }
