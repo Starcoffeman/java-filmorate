@@ -38,8 +38,9 @@ public class FilmService {
     }
 
     @PutMapping
-    public void updateFilm(@PathVariable Film updateFilm) throws UserNotFoundException {
+    public Film updateFilm(@PathVariable Film updateFilm) throws UserNotFoundException {
         inMemoryFilmStorage.updateFilm(updateFilm);
+        return updateFilm;
     }
 
     @PutMapping("/{id}/like/{userId}")

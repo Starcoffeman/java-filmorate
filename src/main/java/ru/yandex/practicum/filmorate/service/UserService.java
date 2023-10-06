@@ -39,8 +39,9 @@ public class UserService {
     }
 
     @PutMapping
-    public void updateUser(@PathVariable User updateUser) throws UserNotFoundException {
+    public User updateUser(@PathVariable User updateUser) throws UserNotFoundException {
         inMemoryUserStorage.updateUser(updateUser);
+        return updateUser;
     }
 
     @PutMapping("/{id}/friends/{friendId}")
