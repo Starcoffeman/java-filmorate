@@ -10,8 +10,8 @@ import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.Collection;
 
-@RestController
 @Service
+@RestController
 @RequestMapping("/users")
 public class UserService {
 
@@ -34,7 +34,7 @@ public class UserService {
     }
 
     @GetMapping()
-    public Collection<User> getAllUsers(@PathVariable int id) {
+    public Collection<User> getAllUsers() {
         return inMemoryUserStorage.users.values();
     }
 
