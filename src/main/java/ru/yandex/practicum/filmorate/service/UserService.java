@@ -32,7 +32,7 @@ public class UserService {
         return inMemoryUserStorage.users.get(id);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping
     public void updateUser(@PathVariable User updateUser) throws UserNotFoundException {
         inMemoryUserStorage.updateUser(updateUser);
     }

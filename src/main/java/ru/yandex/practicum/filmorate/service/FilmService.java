@@ -32,7 +32,7 @@ public class FilmService {
         return inMemoryFilmStorage.films.get(id);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping
     public void updateFilm(@PathVariable Film updateFilm) throws UserNotFoundException {
         inMemoryFilmStorage.updateFilm(updateFilm);
     }
