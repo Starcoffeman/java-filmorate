@@ -6,9 +6,7 @@ import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.storage.film.InMemoryFilmStorage;
 
-
 import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.Collection;
 
 @Service
@@ -33,6 +31,7 @@ public class FilmService {
     public Film getFilmById(@PathVariable int id) {
         return inMemoryFilmStorage.films.get(id);
     }
+
     @GetMapping()
     public Collection<Film> getAllFilms() {
         return inMemoryFilmStorage.films.values();
