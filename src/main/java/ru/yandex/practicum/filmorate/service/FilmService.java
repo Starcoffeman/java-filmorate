@@ -28,8 +28,12 @@ public class FilmService {
     }
 
     @GetMapping("/{id}")
-    public Film getFilmById(@PathVariable int id) {
-        return inMemoryFilmStorage.films.get(id);
+    public Film getFilmById(@PathVariable int id) throws UserNotFoundException {
+        if (inMemoryFilmStorage.films.get(id) != null) {
+            return inMemoryFilmStorage.films.get(id);
+        } else {
+            throw new UserNotFoundException("Фильма под таким индексом нет");
+        }
     }
 
     @GetMapping()

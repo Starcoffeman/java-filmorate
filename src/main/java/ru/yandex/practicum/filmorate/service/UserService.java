@@ -29,8 +29,12 @@ public class UserService {
     }
 
     @GetMapping("/{id}")
-    public User getUserById(@PathVariable int id) {
-        return inMemoryUserStorage.users.get(id);
+    public User getUserById(@PathVariable int id) throws UserNotFoundException {
+        if (inMemoryUserStorage.users.get(id) != null) {
+            return inMemoryUserStorage.users.get(id);
+        } else {
+            throw new UserNotFoundException("Пользователя под таким индексом нет");
+        }
     }
 
     @GetMapping()
@@ -39,7 +43,7 @@ public class UserService {
     }
 
     @PutMapping
-    public User updateUser(@PathVariable User updateUser) throws UserNotFoundException {
+    public User updateUser(@RequestBody @Valid User updateUser) throws UserNotFoundException {
         inMemoryUserStorage.updateUser(updateUser);
         return updateUser;
     }
