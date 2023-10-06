@@ -8,6 +8,7 @@ import ru.yandex.practicum.filmorate.storage.user.InMemoryUserStorage;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
+import java.util.Collection;
 
 @RestController
 @Service
@@ -30,6 +31,11 @@ public class UserService {
     @GetMapping("/{id}")
     public User getUserById(@PathVariable int id) {
         return inMemoryUserStorage.users.get(id);
+    }
+
+    @GetMapping()
+    public Collection<User> getAllUsers(@PathVariable int id) {
+        return inMemoryUserStorage.users.values();
     }
 
     @PutMapping

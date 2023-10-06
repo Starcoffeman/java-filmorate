@@ -8,6 +8,8 @@ import ru.yandex.practicum.filmorate.storage.film.InMemoryFilmStorage;
 
 
 import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.Collection;
 
 @Service
 @RestController
@@ -30,6 +32,10 @@ public class FilmService {
     @GetMapping("/{id}")
     public Film getFilmById(@PathVariable int id) {
         return inMemoryFilmStorage.films.get(id);
+    }
+    @GetMapping()
+    public Collection<Film> getAllFilms() {
+        return inMemoryFilmStorage.films.values();
     }
 
     @PutMapping
