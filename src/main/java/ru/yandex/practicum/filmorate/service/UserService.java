@@ -11,6 +11,7 @@ import java.util.ArrayList;
 
 @RestController
 @Service
+@RequestMapping("/users")
 public class UserService {
 
     InMemoryUserStorage inMemoryUserStorage = new InMemoryUserStorage();
