@@ -20,9 +20,14 @@ public class UserService {
     InMemoryUserStorage inMemoryUserStorage = new InMemoryUserStorage();
 
     @PostMapping
-    public User createFilm(@RequestBody @Valid User user) {
-        inMemoryUserStorage.addUser(user);
-        return user;
+    public ResponseEntity<User> createFilm(@RequestBody @Valid User user) {
+        try{
+            inMemoryUserStorage.addUser(user);
+            return ResponseEntity.ok(user);
+        } catch (Exception e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+
     }
 
     @DeleteMapping("/{id}")
