@@ -56,6 +56,4 @@ public class FilmService {
     public void deleteLike(@PathVariable int id, int userid) {
         inMemoryFilmStorage.films.get(id).getLikes().remove(userid);
     }
-
-
 }
