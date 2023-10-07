@@ -20,14 +20,9 @@ public class UserService {
     InMemoryUserStorage inMemoryUserStorage = new InMemoryUserStorage();
 
     @PostMapping
-    public ResponseEntity<User> createFilm(@RequestBody @Valid User user) {
-        try {
-            inMemoryUserStorage.addUser(user);
-            return ResponseEntity.ok(user);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
-
+    public User createFilm(@RequestBody @Valid User user) {
+        inMemoryUserStorage.addUser(user);
+        return user;
     }
 
     @DeleteMapping("/{id}")
@@ -36,11 +31,11 @@ public class UserService {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable int id) throws UserNotFoundException {
+    public User getUserById(@PathVariable int id) throws UserNotFoundException {
         if (inMemoryUserStorage.users.get(id) != null) {
-            return ResponseEntity.ok(inMemoryUserStorage.users.get(id));
+            return inMemoryUserStorage.users.get(id);
         } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            throw new UserNotFoundException("Пользователя под таким индексом нет");
         }
     }
 
