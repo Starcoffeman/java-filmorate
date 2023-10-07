@@ -2,9 +2,12 @@ package ru.yandex.practicum.filmorate.service;
 
 /*import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;*/
+
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
+/*import ru.yandex.practicum.filmorate.exception.ValidationException;*/
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.user.InMemoryUserStorage;
 
@@ -22,20 +25,26 @@ public class UserService {
     @PostMapping
     public User createFilm(@RequestBody @Valid User user) {
         inMemoryUserStorage.addUser(user);
-        return user;
+        return ResponseEntity.ok(user).getBody();
     }
 
     @DeleteMapping("/{id}")
-    public void removeUser(@PathVariable int id) {
-        inMemoryUserStorage.removeUser(id);
+    public ResponseEntity<User> removeUser(@PathVariable int id) {
+        if (inMemoryUserStorage.users.get(id) != null) {
+            inMemoryUserStorage.removeUser(id);
+            return ResponseEntity.ok(inMemoryUserStorage.users.get(id));
+        } else {
+            return ResponseEntity.noContent().build();
+        }
+
     }
 
     @GetMapping("/{id}")
-    public User getUserById(@PathVariable int id) throws UserNotFoundException {
+    public ResponseEntity<User> getUserById(@PathVariable int id) throws UserNotFoundException {
         if (inMemoryUserStorage.users.get(id) != null) {
-            return inMemoryUserStorage.users.get(id);
+            return ResponseEntity.ok(inMemoryUserStorage.users.get(id));
         } else {
-            throw new UserNotFoundException("Пользователя под таким индексом нет");
+            return ResponseEntity.noContent().build();
         }
     }
 
