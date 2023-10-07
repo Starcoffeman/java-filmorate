@@ -21,13 +21,13 @@ public class UserService {
     InMemoryUserStorage inMemoryUserStorage = new InMemoryUserStorage();
 
     @PostMapping
-    public User createFilm(@RequestBody @Valid User user) {
-        try {
-            inMemoryUserStorage.addUser(user);
-            return user;
-        } catch (ValidationException e) {
+    public User createUser(@RequestBody @Valid User user) {
+        /*        try {*/
+        inMemoryUserStorage.addUser(user);
+        return user;
+/*        } catch (ValidationException e) {
             throw new ValidationException("ada");
-        }
+        }*/
     }
 
     @DeleteMapping("/{id}")
