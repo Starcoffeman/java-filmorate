@@ -6,14 +6,11 @@ import org.springframework.http.ResponseEntity;*/
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
 /*import ru.yandex.practicum.filmorate.exception.ValidationException;*/
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.user.InMemoryUserStorage;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.Collection;
 
 @Service
 @RestController
@@ -25,10 +22,21 @@ public class UserService {
     @PostMapping
     public User createFilm(@RequestBody @Valid User user) {
         inMemoryUserStorage.addUser(user);
-        return ResponseEntity.ok(user).getBody();
+        return user;
     }
 
     @DeleteMapping("/{id}")
+    public ResponseEntity<User> removeUser(@PathVariable int id) throws  {
+        if (inMemoryUserStorage.users.get(id) != null) {
+            inMemoryUserStorage.removeUser(id);
+            return ResponseEntity.ok(inMemoryUserStorage.users.get(id));
+        } else {
+            return ResponseEntity.noContent().build();
+        }
+    }
+
+
+/*    @DeleteMapping("/{id}")
     public ResponseEntity<User> removeUser(@PathVariable int id) {
         if (inMemoryUserStorage.users.get(id) != null) {
             inMemoryUserStorage.removeUser(id);
@@ -80,6 +88,6 @@ public class UserService {
             }
         }
         return commonFriends;
-    }
+    }*/
 
 }
