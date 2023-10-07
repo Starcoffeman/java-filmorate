@@ -11,6 +11,7 @@ import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.user.InMemoryUserStorage;
 
 import javax.validation.Valid;
+import javax.validation.ValidationException;
 
 @Service
 @RestController
@@ -20,9 +21,13 @@ public class UserService {
     InMemoryUserStorage inMemoryUserStorage = new InMemoryUserStorage();
 
     @PostMapping
-    public User createFilm(@RequestBody @Valid User user) {
-        inMemoryUserStorage.addUser(user);
-        return user;
+    public User createFilm(@RequestBody @Valid User user)  {
+        try{
+            inMemoryUserStorage.addUser(user);
+            return user;
+        } catch (ValidationException e){
+            throw new ValidationException("ada");
+        }
     }
 
     @DeleteMapping("/{id}")
