@@ -21,10 +21,10 @@ public class UserService {
 
     @PostMapping
     public ResponseEntity<User> createFilm(@RequestBody @Valid User user) {
-        try{
+        try {
             inMemoryUserStorage.addUser(user);
             return ResponseEntity.ok(user);
-        } catch (Exception e){
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
 
