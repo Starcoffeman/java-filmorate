@@ -22,7 +22,7 @@ public class FilmService {
         try {
             inMemoryFilmStorage.addFilm(film);
             return film;
-        } catch (Exception e){
+        } catch (Exception e) {
             throw new ValidationException("a");
         }
 
