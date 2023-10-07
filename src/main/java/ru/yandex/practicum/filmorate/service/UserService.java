@@ -1,5 +1,7 @@
 package ru.yandex.practicum.filmorate.service;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
@@ -29,11 +31,11 @@ public class UserService {
     }
 
     @GetMapping("/{id}")
-    public User getUserById(@PathVariable int id) throws UserNotFoundException {
-        if (inMemoryUserStorage.users.get(id) != null) {
-            return inMemoryUserStorage.users.get(id);
+    public ResponseEntity<User> getUserById(@PathVariable int id) throws UserNotFoundException {
+        if (inMemoryUserStorage.users.get(id)!=null) {
+            return ResponseEntity.ok(inMemoryUserStorage.users.get(id));
         } else {
-            throw new UserNotFoundException("Пользователя под таким индексом нет");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
 
