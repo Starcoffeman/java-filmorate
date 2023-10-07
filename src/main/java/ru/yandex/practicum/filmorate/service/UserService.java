@@ -26,7 +26,7 @@ public class UserService {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<User> removeUser(@PathVariable int id) throws  {
+    public ResponseEntity<User> removeUser(@PathVariable int id) {
         if (inMemoryUserStorage.users.get(id) != null) {
             inMemoryUserStorage.removeUser(id);
             return ResponseEntity.ok(inMemoryUserStorage.users.get(id));
