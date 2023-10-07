@@ -1,9 +1,10 @@
 package ru.yandex.practicum.filmorate.service;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
-/*import ru.yandex.practicum.filmorate.exception.ValidationException;*/
+import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.storage.film.InMemoryFilmStorage;
 
@@ -14,12 +15,27 @@ import java.util.Collection;
 @RestController
 @RequestMapping("/films")
 public class FilmService {
+
     InMemoryFilmStorage inMemoryFilmStorage = new InMemoryFilmStorage();
 
     @PostMapping
-    public Film createFilm(@RequestBody @Valid Film film) {
+    public Film createFilm(@RequestBody @Valid Film film) throws ValidationException {
         inMemoryFilmStorage.addFilm(film);
-        return film;
+        return ResponseEntity.ok(film).getBody();
+    }
+
+    @DeleteMapping("/{id}")
+    public void removeFilm(@PathVariable int id) {
+        inMemoryFilmStorage.removeFilm(id);
+    }
+
+    @GetMapping("/{id}")
+    public Film getFilmById(@PathVariable int id) throws UserNotFoundException {
+        if (inMemoryFilmStorage.films.get(id) != null) {
+            return inMemoryFilmStorage.films.get(id);
+        } else {
+            throw new UserNotFoundException("Фильма под таким индексом нет");
+        }
     }
 
     @GetMapping()
@@ -31,5 +47,15 @@ public class FilmService {
     public Film updateFilm(@PathVariable @Valid Film updateFilm) throws UserNotFoundException {
         inMemoryFilmStorage.updateFilm(updateFilm);
         return updateFilm;
+    }
+
+    @PutMapping("/{id}/like/{userId}")
+    public void putLike(@PathVariable int id, int userid) {
+        inMemoryFilmStorage.films.get(id).getLikes().add(userid);
+    }
+
+    @DeleteMapping("/films/{id}/like/{userId}")
+    public void deleteLike(@PathVariable int id, int userid) {
+        inMemoryFilmStorage.films.get(id).getLikes().remove(userid);
     }
 }
