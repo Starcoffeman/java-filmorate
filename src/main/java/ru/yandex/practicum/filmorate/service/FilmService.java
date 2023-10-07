@@ -3,6 +3,7 @@ package ru.yandex.practicum.filmorate.service;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
+import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.storage.film.InMemoryFilmStorage;
 
@@ -17,9 +18,14 @@ public class FilmService {
     InMemoryFilmStorage inMemoryFilmStorage = new InMemoryFilmStorage();
 
     @PostMapping
-    public Film createFilm(@RequestBody @Valid Film film) {
-        inMemoryFilmStorage.addFilm(film);
-        return film;
+    public Film createFilm(@RequestBody @Valid Film film) throws ValidationException {
+        try {
+            inMemoryFilmStorage.addFilm(film);
+            return film;
+        } catch (Exception e){
+            throw new ValidationException("a");
+        }
+
     }
 
     @DeleteMapping("/{id}")
