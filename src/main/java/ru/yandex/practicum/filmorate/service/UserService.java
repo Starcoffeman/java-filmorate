@@ -32,7 +32,7 @@ public class UserService {
 
     @GetMapping("/{id}")
     public ResponseEntity<User> getUserById(@PathVariable int id) throws UserNotFoundException {
-        if (inMemoryUserStorage.users.get(id)!=null) {
+        if (inMemoryUserStorage.users.get(id) != null) {
             return ResponseEntity.ok(inMemoryUserStorage.users.get(id));
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
