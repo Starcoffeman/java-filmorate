@@ -3,10 +3,13 @@ package ru.yandex.practicum.filmorate.service;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
+import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.user.InMemoryUserStorage;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.Collection;
 
 @Service
 @RestController
@@ -31,20 +34,8 @@ public class UserService {
         }
     }
 
-
-/*    @DeleteMapping("/{id}")
-    public ResponseEntity<User> removeUser(@PathVariable int id) {
-        if (inMemoryUserStorage.users.get(id) != null) {
-            inMemoryUserStorage.removeUser(id);
-            return ResponseEntity.ok(inMemoryUserStorage.users.get(id));
-        } else {
-            return ResponseEntity.noContent().build();
-        }
-
-    }
-
     @GetMapping("/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable int id) throws UserNotFoundException {
+    public ResponseEntity<User> getUserById(@PathVariable int id) {
         if (inMemoryUserStorage.users.get(id) != null) {
             return ResponseEntity.ok(inMemoryUserStorage.users.get(id));
         } else {
@@ -64,13 +55,27 @@ public class UserService {
     }
 
     @PutMapping("/{id}/friends/{friendId}")
-    public void addFriend(@PathVariable int id, int friendId) {
-        inMemoryUserStorage.users.get(id).getFriendsList().add(friendId);
+    public ResponseEntity<Integer> addFriend(@PathVariable int id, int friendId) {
+        if (inMemoryUserStorage.users.get(id) != null) {
+            inMemoryUserStorage.users.get(id).getFriendsList().add(friendId);
+            return ResponseEntity.ok(inMemoryUserStorage.users.get(id).getFriendsList().get(friendId));
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @DeleteMapping("/{id}/friends/{friendId}")
-    public void removeFriend(@PathVariable int id, int friendId) {
-        inMemoryUserStorage.users.get(id).getFriendsList().remove(friendId);
+    public ResponseEntity<User> removeFriend(@PathVariable int id, int friendId) {
+        if (inMemoryUserStorage.users.get(id) != null) {
+            if (inMemoryUserStorage.users.get(id).getFriendsList().get(friendId) != null) {
+                inMemoryUserStorage.users.get(id).getFriendsList().remove(friendId);
+                return ResponseEntity.ok(inMemoryUserStorage.users.get(id));
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @GetMapping("/{id}/friends/common/{otherId}")
@@ -84,6 +89,6 @@ public class UserService {
             }
         }
         return commonFriends;
-    }*/
+    }
 
 }
