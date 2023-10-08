@@ -84,13 +84,20 @@ public class UserService {
     @GetMapping("/{id}/friends/common/{otherId}")
     public ResponseEntity<List<User>> getCommonFriends(@PathVariable int id, int otherId) {
         ArrayList<User> commonFriends = new ArrayList<>();
-        if (inMemoryUserStorage.users.get(id) != null || inMemoryUserStorage.users.get(otherId) != null) {
+        if (inMemoryUserStorage.users.get(id) != null & inMemoryUserStorage.users.get(otherId) != null) {
+            if (inMemoryUserStorage.users.get(id).getFriendsList().isEmpty()) {
+                return ResponseEntity.ok(commonFriends);
+            }
+
             for (User firstUser : inMemoryUserStorage.users.get(id).getFriendsList()) {
                 for (User secondUser : inMemoryUserStorage.users.get(otherId).getFriendsList()) {
                     if (firstUser == secondUser) {
                         commonFriends.add(inMemoryUserStorage.users.get(id));
                     }
                 }
+            }
+            if (commonFriends.isEmpty()) {
+                return ResponseEntity.ok(commonFriends);
             }
             return ResponseEntity.ok(commonFriends);
         } else {
