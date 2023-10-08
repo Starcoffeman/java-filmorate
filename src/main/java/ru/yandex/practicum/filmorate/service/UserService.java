@@ -10,6 +10,7 @@ import ru.yandex.practicum.filmorate.storage.user.InMemoryUserStorage;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 @Service
 @RestController
@@ -39,7 +40,7 @@ public class UserService {
         if (inMemoryUserStorage.users.get(id) != null) {
             return ResponseEntity.ok(inMemoryUserStorage.users.get(id));
         } else {
-            return ResponseEntity.noContent().build();
+            return ResponseEntity.notFound().build();
         }
     }
 
@@ -55,10 +56,10 @@ public class UserService {
     }
 
     @PutMapping("/{id}/friends/{friendId}")
-    public ResponseEntity<Integer> addFriend(@PathVariable int id, int friendId) {
+    public ResponseEntity<User> addFriend(@PathVariable int id, int friendId) {
         if (inMemoryUserStorage.users.get(id) != null) {
-            inMemoryUserStorage.users.get(id).getFriendsList().add(friendId);
-            return ResponseEntity.ok(inMemoryUserStorage.users.get(id).getFriendsList().get(friendId));
+            inMemoryUserStorage.users.get(id).getFriendsList().add(inMemoryUserStorage.users.get(friendId));
+            return ResponseEntity.ok(inMemoryUserStorage.users.get(id));
         } else {
             return ResponseEntity.notFound().build();
         }
@@ -69,6 +70,7 @@ public class UserService {
         if (inMemoryUserStorage.users.get(id) != null) {
             if (inMemoryUserStorage.users.get(id).getFriendsList().get(friendId) != null) {
                 inMemoryUserStorage.users.get(id).getFriendsList().remove(friendId);
+                inMemoryUserStorage.users.get(friendId).getFriendsList().remove(id);
                 return ResponseEntity.ok(inMemoryUserStorage.users.get(id));
             } else {
                 return ResponseEntity.notFound().build();
@@ -79,16 +81,41 @@ public class UserService {
     }
 
     @GetMapping("/{id}/friends/common/{otherId}")
-    public ArrayList<Integer> getCommonFriends(@PathVariable int id, int otherId) {
-        ArrayList<Integer> commonFriends = new ArrayList<>();
-        for (Integer i : inMemoryUserStorage.users.get(id).getFriendsList()) {
-            for (Integer j : inMemoryUserStorage.users.get(otherId).getFriendsList()) {
-                if (i == j) {
-                    commonFriends.add(i);
+    public ResponseEntity<List<User>> getCommonFriends(@PathVariable int id, int otherId) {
+        ArrayList<User> commonFriends = new ArrayList<>();
+        if (inMemoryUserStorage.users.get(id) != null & inMemoryUserStorage.users.get(otherId) != null) {
+            for (User firstUser : inMemoryUserStorage.users.get(id).getFriendsList()) {
+                for (User secondUser : inMemoryUserStorage.users.get(otherId).getFriendsList()) {
+                    if (firstUser == secondUser) {
+                        commonFriends.add(inMemoryUserStorage.users.get(id));
+                    }
                 }
             }
+            return ResponseEntity.ok(commonFriends);
+        } else {
+            return ResponseEntity.notFound().build();
         }
-        return commonFriends;
     }
+
+    @GetMapping("/{id}/friends")
+    public ResponseEntity<List<User>> putCommonFriends(@PathVariable int id) {
+        if (inMemoryUserStorage.users.get(id) != null) {
+            return ResponseEntity.ok(inMemoryUserStorage.users.get(id).getFriendsList());
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PutMapping("/{id}/friends/common/{otherId}")
+    public ResponseEntity<User> putCommonFriends(@PathVariable int id, int otherId) {
+        if (inMemoryUserStorage.users.get(id) != null) {
+            inMemoryUserStorage.users.get(id).getFriendsList().add(inMemoryUserStorage.users.get(otherId));
+            inMemoryUserStorage.users.get(otherId).getFriendsList().add(inMemoryUserStorage.users.get(id));
+            return ResponseEntity.ok(inMemoryUserStorage.users.get(id));
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
 
 }

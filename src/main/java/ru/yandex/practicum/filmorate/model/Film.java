@@ -26,7 +26,7 @@ public class Film {
     @Positive(message = "Продолжительность фильма должна быть положительной")
     private int duration;
 
-    List<Integer> likes;
+    List<Film> likes;
 
     public Film(String name, String description, LocalDate releaseDate, int duration) {
         LocalDate minReleaseDate = LocalDate.of(1895, 12, 28); // 28 декабря 1895 года

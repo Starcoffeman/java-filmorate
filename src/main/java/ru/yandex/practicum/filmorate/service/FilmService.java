@@ -53,9 +53,9 @@ public class FilmService {
     }
 
     @PutMapping("/{id}/like/{userId}")
-    public ResponseEntity<Integer> putLike(@PathVariable int id, int userid) {
+    public ResponseEntity<Film> putLike(@PathVariable int id, int userid) {
         if (inMemoryFilmStorage.films.get(id) != null) {
-            inMemoryFilmStorage.films.get(id).getLikes().add(userid);
+            inMemoryFilmStorage.films.get(id).getLikes().add(inMemoryFilmStorage.films.get(userid));
             return ResponseEntity.ok(inMemoryFilmStorage.films.get(id).getLikes().get(userid));
         } else {
             return ResponseEntity.notFound().build();
