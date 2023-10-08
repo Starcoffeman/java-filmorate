@@ -33,7 +33,7 @@ public class FilmService {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Film> getFilmById(@PathVariable int id) throws UserNotFoundException {
+    public ResponseEntity<Film> getFilmById(@PathVariable int id){
         if (inMemoryFilmStorage.films.get(id) != null) {
             return ResponseEntity.ok(inMemoryFilmStorage.films.get(id));
         } else {
@@ -53,7 +53,7 @@ public class FilmService {
     }
 
     @PutMapping("/{id}/like/{userId}")
-    public ResponseEntity<Film> putLike(@PathVariable int id, int userid) {
+    public ResponseEntity<Film> putLike(@PathVariable int id, @PathVariable int userid) {
         if (inMemoryFilmStorage.films.get(id) != null) {
             inMemoryFilmStorage.films.get(id).getLikes().add(inMemoryFilmStorage.films.get(userid));
             return ResponseEntity.ok(inMemoryFilmStorage.films.get(id).getLikes().get(userid));
@@ -64,7 +64,7 @@ public class FilmService {
 
 
     @DeleteMapping("/films/{id}/like/{userId}")
-    public ResponseEntity<Film> deleteLike(@PathVariable int id, int userid) {
+    public ResponseEntity<Film> deleteLike(@PathVariable int id, @PathVariable int userid) {
         if (inMemoryFilmStorage.films.get(id) != null) {
             if (inMemoryFilmStorage.films.get(id).getLikes().get(userid) != null) {
                 inMemoryFilmStorage.films.get(id).getLikes().remove(userid);
