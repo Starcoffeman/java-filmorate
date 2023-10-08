@@ -67,7 +67,7 @@ public class UserService {
     }
 
     @DeleteMapping("/{id}/friends/{friendId}")
-    public ResponseEntity<User> removeFriend(@PathVariable int id, @PathVariable int friendId) {
+    public ResponseEntity<User> removeFriend(@PathVariable int id, int friendId) {
         if (inMemoryUserStorage.users.get(id) != null) {
             if (inMemoryUserStorage.users.get(id).getFriendsList().get(friendId) != null) {
                 inMemoryUserStorage.users.get(id).getFriendsList().remove(friendId);
@@ -82,7 +82,7 @@ public class UserService {
     }
 
     @GetMapping("/{id}/friends/common/{otherId}")
-    public ResponseEntity<List<User>> getCommonFriends(@PathVariable int id, @PathVariable int otherId) {
+    public ResponseEntity<List<User>> getCommonFriends(@PathVariable int id, int otherId) {
         ArrayList<User> commonFriends = new ArrayList<>();
         if (inMemoryUserStorage.users.get(id) != null & inMemoryUserStorage.users.get(otherId) != null) {
             if (inMemoryUserStorage.users.get(id).getFriendsList().isEmpty()) {
@@ -115,7 +115,7 @@ public class UserService {
     }
 
     @PutMapping("/{id}/friends/common/{otherId}")
-    public ResponseEntity<User> putCommonFriends(@PathVariable int id,@PathVariable int otherId) {
+    public ResponseEntity<User> putCommonFriends(@PathVariable int id, int otherId) {
         if (inMemoryUserStorage.users.get(id) != null) {
             inMemoryUserStorage.users.get(id).getFriendsList().add(inMemoryUserStorage.users.get(otherId));
             inMemoryUserStorage.users.get(otherId).getFriendsList().add(inMemoryUserStorage.users.get(id));
