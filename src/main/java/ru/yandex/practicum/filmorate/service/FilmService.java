@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.storage.film.InMemoryFilmStorage;
+
 import javax.validation.Valid;
 import java.util.Collection;
 
@@ -33,7 +34,7 @@ public class FilmService {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Film> getFilmById(@PathVariable int id){
+    public ResponseEntity<Film> getFilmById(@PathVariable int id) {
         if (inMemoryFilmStorage.films.get(id) != null) {
             return ResponseEntity.ok(inMemoryFilmStorage.films.get(id));
         } else {
