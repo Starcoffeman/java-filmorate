@@ -82,13 +82,12 @@ public class UserService {
     }
 
     @GetMapping("/{id}/friends/common/{otherId}")
-    public ResponseEntity<List<User>> getCommonFriends(@PathVariable int id, int otherId) {
+    public ResponseEntity<List<User>> getCommonFriends(@PathVariable int id, @PathVariable int otherId) {
         ArrayList<User> commonFriends = new ArrayList<>();
         if (inMemoryUserStorage.users.get(id) != null & inMemoryUserStorage.users.get(otherId) != null) {
             if (inMemoryUserStorage.users.get(id).getFriendsList().isEmpty()) {
                 return ResponseEntity.ok(commonFriends);
             }
-
             for (User firstUser : inMemoryUserStorage.users.get(id).getFriendsList()) {
                 for (User secondUser : inMemoryUserStorage.users.get(otherId).getFriendsList()) {
                     if (firstUser == secondUser) {
@@ -115,7 +114,7 @@ public class UserService {
     }
 
     @PutMapping("/{id}/friends/common/{otherId}")
-    public ResponseEntity<User> putCommonFriends(@PathVariable int id, @PathVariable int otherId) {
+    public ResponseEntity<User> putCommonFriends(@PathVariable int id, int otherId) {
         if (inMemoryUserStorage.users.get(id) != null) {
             inMemoryUserStorage.users.get(id).getFriendsList().add(inMemoryUserStorage.users.get(otherId));
             inMemoryUserStorage.users.get(otherId).getFriendsList().add(inMemoryUserStorage.users.get(id));
