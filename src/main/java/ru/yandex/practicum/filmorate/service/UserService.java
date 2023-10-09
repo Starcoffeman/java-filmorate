@@ -105,7 +105,7 @@ public class UserService {
     }
 
     @GetMapping("/{id}/friends")
-    public ResponseEntity<List<User>> putCommonFriends(@PathVariable int id) {
+    public ResponseEntity<List<User>> putCommonFriends(@PathVariable Integer id) {
         if (inMemoryUserStorage.users.get(id) != null) {
             return ResponseEntity.ok(inMemoryUserStorage.users.get(id).getFriendsList());
         } else {
