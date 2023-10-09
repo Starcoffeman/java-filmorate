@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.service;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
@@ -55,8 +56,12 @@ public class UserService {
         return updateUser;
     }
 
+    @ResponseStatus(HttpStatus.NOT_FOUND)
     @PutMapping("/{id}/friends/{friendId}")
-    public void addFriend(@PathVariable Integer id, @PathVariable Integer friendId) {
+    public void addFriend(@PathVariable Integer id, @PathVariable Integer friendId) throws UserNotFoundException {
+        if(friendId<1){
+            throw new UserNotFoundException("Не найден");
+        }
         inMemoryUserStorage.putFriends(id, friendId);
     }
 
