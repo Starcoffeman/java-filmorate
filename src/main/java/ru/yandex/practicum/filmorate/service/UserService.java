@@ -58,10 +58,12 @@ public class UserService {
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @PutMapping("/{id}/friends/{friendId}")
-    public void addFriend(@PathVariable Integer id, @PathVariable Integer friendId) {
-        if (friendId > 0) {
-            inMemoryUserStorage.putFriends(id, friendId);
+    public User addFriend(@PathVariable Integer id, @PathVariable Integer friendId) throws UserNotFoundException {
+        if (friendId < 1) {
+            throw new UserNotFoundException("dad");
         }
+        inMemoryUserStorage.putFriends(id, friendId);
+        return inMemoryUserStorage.users.get(id);
     }
 
     @DeleteMapping("/{id}/friends/{friendId}")
