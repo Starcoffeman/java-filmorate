@@ -23,12 +23,12 @@ public class FilmService {
     }
 
     @DeleteMapping("/{id}")
-    public void removeFilm(@PathVariable Integer id) {
+    public void removeFilm(@PathVariable int id) {
         inMemoryFilmStorage.removeFilm(id);
     }
 
     @GetMapping("/{id}")
-    public Film getFilmById(@PathVariable Integer id) {
+    public Film getFilmById(@PathVariable int id) {
         return inMemoryFilmStorage.films.get(id);
     }
 
@@ -38,12 +38,12 @@ public class FilmService {
     }
 
     @PutMapping("/{id}/like/{userId}")
-    public void putLike(@PathVariable Integer id, @PathVariable Integer userid) {
+    public void putLike(@PathVariable int id, int userid) {
         inMemoryFilmStorage.films.get(id).getLikes().add(userid);
     }
 
     @DeleteMapping("/films/{id}/like/{userId}")
-    public void deleteLike(@PathVariable Integer id,@PathVariable Integer userid) {
+    public void deleteLike(@PathVariable int id, int userid) {
         inMemoryFilmStorage.films.get(id).getLikes().remove(userid);
     }
 

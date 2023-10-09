@@ -11,7 +11,6 @@ import java.util.ArrayList;
 
 @RestController
 @Service
-@RequestMapping("/users")
 public class UserService {
 
     InMemoryUserStorage inMemoryUserStorage = new InMemoryUserStorage();
@@ -23,12 +22,12 @@ public class UserService {
     }
 
     @DeleteMapping("/{id}")
-    public void removeUser(@PathVariable Integer id) {
+    public void removeUser(@PathVariable int id) {
         inMemoryUserStorage.removeUser(id);
     }
 
     @GetMapping("/{id}")
-    public User getUserById(@PathVariable Integer id) {
+    public User getUserById(@PathVariable int id) {
         return inMemoryUserStorage.users.get(id);
     }
 
@@ -38,18 +37,17 @@ public class UserService {
     }
 
     @PutMapping("/{id}/friends/{friendId}")
-    public void addFriend(@PathVariable Integer id,@PathVariable Integer friendId) {
+    public void addFriend(@PathVariable int id, int friendId) {
         inMemoryUserStorage.users.get(id).getFriendsList().add(friendId);
-        inMemoryUserStorage.users.get(friendId).getFriendsList().add(id);
     }
 
     @DeleteMapping("/{id}/friends/{friendId}")
-    public void removeFriend(@PathVariable Integer id, @PathVariable Integer friendId) {
+    public void removeFriend(@PathVariable int id, int friendId) {
         inMemoryUserStorage.users.get(id).getFriendsList().remove(friendId);
     }
 
     @GetMapping("/{id}/friends/common/{otherId}")
-    public ArrayList<Integer> getCommonFriends(@PathVariable Integer id,@PathVariable Integer otherId) {
+    public ArrayList<Integer> getCommonFriends(@PathVariable int id, int otherId) {
         ArrayList<Integer> commonFriends = new ArrayList<>();
         for (Integer i : inMemoryUserStorage.users.get(id).getFriendsList()) {
             for (Integer j : inMemoryUserStorage.users.get(otherId).getFriendsList()) {
