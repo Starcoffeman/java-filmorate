@@ -52,12 +52,12 @@ public class UserService {
     @PutMapping
     public ResponseEntity<User> updateUser(@PathVariable User updateUser) throws UserNotFoundException {
         inMemoryUserStorage.updateUser(updateUser);
-        return ResponseEntity.ok(inMemoryUserStorage.users.get(updateUser.getId()));
+        return ResponseEntity.ok(updateUser);
     }
 
     @PutMapping("/{id}/friends/{friendId}")
     public ResponseEntity<HashMap<Integer, User>> addFriend(@PathVariable Integer id, @PathVariable Integer friendId) {
-        if (inMemoryUserStorage.users.get(id) != null & inMemoryUserStorage.users.get(friendId) != null) {
+        if (inMemoryUserStorage.users.get(id) != null & id > 0 & friendId > 0 & inMemoryUserStorage.users.get(friendId) != null) {
             inMemoryUserStorage.users.get(id).getFriendsList().add(friendId);
             inMemoryUserStorage.users.get(friendId).getFriendsList().add(id);
             return ResponseEntity.ok(inMemoryUserStorage.users);
