@@ -50,7 +50,7 @@ public class UserService {
     }
 
     @PutMapping
-    public ResponseEntity<User> updateUser(@PathVariable User updateUser) throws UserNotFoundException {
+    public ResponseEntity<User> updateUser(@RequestBody User updateUser) throws UserNotFoundException {
         inMemoryUserStorage.updateUser(updateUser);
         return ResponseEntity.ok(updateUser);
     }
