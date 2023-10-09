@@ -105,9 +105,9 @@ public class UserService {
     }
 
     @GetMapping("/{id}/friends")
-    public List<User> putCommonFriends(@PathVariable int id) {
+    public ResponseEntity<List<User>> putCommonFriends(@PathVariable int id) {
         if (inMemoryUserStorage.users.get(id) != null) {
-            return inMemoryUserStorage.users.get(id).getFriendsList();
+            return ResponseEntity.ok(inMemoryUserStorage.users.get(id).getFriendsList());
         } else {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "dasd");
         }
