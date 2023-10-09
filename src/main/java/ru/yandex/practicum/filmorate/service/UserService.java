@@ -11,6 +11,7 @@ import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 
 @RestController
 @Service
@@ -40,8 +41,17 @@ public class UserService {
         }
     }
 
+    @GetMapping("/{id}/friends")
+    public ResponseEntity<List<Integer>> getUserById(@PathVariable Integer id) {
+        if (inMemoryUserStorage.users.get(id) != null) {
+            return ResponseEntity.ok(inMemoryUserStorage.users.get(id).getFriendsList());
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
     @GetMapping("/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable Integer id) {
+    public ResponseEntity<User> getUserFriends(@PathVariable Integer id) {
         if (inMemoryUserStorage.users.get(id) != null) {
             return ResponseEntity.ok(inMemoryUserStorage.users.get(id));
         } else {
@@ -57,7 +67,7 @@ public class UserService {
 
     @PutMapping("/{id}/friends/{friendId}")
     public ResponseEntity<HashMap<Integer, User>> addFriend(@PathVariable Integer id, @PathVariable Integer friendId) {
-        if (inMemoryUserStorage.users.get(id) != null & id > 0 & friendId > 0 & inMemoryUserStorage.users.get(friendId) != null) {
+        if (inMemoryUserStorage.users.get(id) != null & (id > 0 || friendId > 0) & inMemoryUserStorage.users.get(friendId) != null) {
             inMemoryUserStorage.users.get(id).getFriendsList().add(friendId);
             inMemoryUserStorage.users.get(friendId).getFriendsList().add(id);
             return ResponseEntity.ok(inMemoryUserStorage.users);
