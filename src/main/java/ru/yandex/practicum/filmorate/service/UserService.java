@@ -10,48 +10,33 @@ import ru.yandex.practicum.filmorate.storage.user.InMemoryUserStorage;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 
-@RestController
 @Service
+@RestController
 @RequestMapping("/users")
 public class UserService {
 
     InMemoryUserStorage inMemoryUserStorage = new InMemoryUserStorage();
 
     @PostMapping
-    public ResponseEntity<User> createFilm(@RequestBody @Valid User user) {
+    public User createUser(@RequestBody @Valid User user) {
         inMemoryUserStorage.addUser(user);
-        return ResponseEntity.ok(user);
-    }
-
-    @GetMapping
-    public ResponseEntity<Collection<User>> getAllUser() {
-        return ResponseEntity.ok(inMemoryUserStorage.users.values());
+        return user;
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<HashMap<Integer, User>> removeUser(@PathVariable Integer id) {
+    public ResponseEntity<User> removeUser(@PathVariable int id) {
         if (inMemoryUserStorage.users.get(id) != null) {
             inMemoryUserStorage.removeUser(id);
-            return ResponseEntity.ok(inMemoryUserStorage.users);
+            return ResponseEntity.ok(inMemoryUserStorage.users.get(id));
         } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
-
-    @GetMapping("/{id}/friends")
-    public ResponseEntity<List<User>> getUserById(@PathVariable Integer id) {
-        if (inMemoryUserStorage.users.get(id) != null) {
-            return ResponseEntity.ok(inMemoryUserStorage.users.get(id).getFriendsList());
-        } else {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.noContent().build();
         }
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<User> getUserFriends(@PathVariable Integer id) {
+    public ResponseEntity<User> getUserById(@PathVariable int id) {
         if (inMemoryUserStorage.users.get(id) != null) {
             return ResponseEntity.ok(inMemoryUserStorage.users.get(id));
         } else {
@@ -59,49 +44,85 @@ public class UserService {
         }
     }
 
-    @PutMapping
-    public ResponseEntity<User> updateUser(@RequestBody User updateUser) throws UserNotFoundException {
-        inMemoryUserStorage.updateUser(updateUser);
-        return ResponseEntity.ok(updateUser);
+    @GetMapping()
+    public Collection<User> getAllUsers() {
+        return inMemoryUserStorage.users.values();
     }
 
-/*    @PutMapping("/{id}/friends/{friendId}")
-    public ResponseEntity<HashMap<Integer, User>> addFriend(@PathVariable Integer id, @PathVariable Integer friendId) {
-        if (inMemoryUserStorage.users.get(id) != null & (id > 0 || friendId > 0) & inMemoryUserStorage.users.get(friendId) != null) {
+    @PutMapping
+    public User updateUser(@RequestBody @Valid User updateUser) throws UserNotFoundException {
+        inMemoryUserStorage.updateUser(updateUser);
+        return updateUser;
+    }
+
+    @PutMapping("/{id}/friends/{friendId}")
+    public ResponseEntity<User> addFriend(@PathVariable int id,@PathVariable int friendId) {
+        if (inMemoryUserStorage.users.get(id) != null & inMemoryUserStorage.users.get(friendId) != null) {
             inMemoryUserStorage.users.get(id).getFriendsList().add(inMemoryUserStorage.users.get(friendId));
             inMemoryUserStorage.users.get(friendId).getFriendsList().add(inMemoryUserStorage.users.get(id));
-            return ResponseEntity.ok(inMemoryUserStorage.users);
+            return ResponseEntity.ok(inMemoryUserStorage.users.get(id));
         } else {
             return ResponseEntity.notFound().build();
         }
-    }*/
+    }
 
     @DeleteMapping("/{id}/friends/{friendId}")
-    public ResponseEntity<HashMap<Integer, User>> removeFriend(@PathVariable Integer id, @PathVariable Integer friendId) {
-        if (inMemoryUserStorage.users.get(id) != null & inMemoryUserStorage.users.get(friendId) != null) {
-            inMemoryUserStorage.users.get(id).getFriendsList().remove(inMemoryUserStorage.users.get(friendId));
-            inMemoryUserStorage.users.get(friendId).getFriendsList().remove(inMemoryUserStorage.users.get(id));
-            return ResponseEntity.ok(inMemoryUserStorage.users);
+    public ResponseEntity<User> removeFriend(@PathVariable int id, int friendId) {
+        if (inMemoryUserStorage.users.get(id) != null) {
+            if (inMemoryUserStorage.users.get(id).getFriendsList().get(friendId) != null) {
+                inMemoryUserStorage.users.get(id).getFriendsList().remove(friendId);
+                inMemoryUserStorage.users.get(friendId).getFriendsList().remove(id);
+                return ResponseEntity.ok(inMemoryUserStorage.users.get(id));
+            } else {
+                return ResponseEntity.notFound().build();
+            }
         } else {
             return ResponseEntity.notFound().build();
         }
     }
 
     @GetMapping("/{id}/friends/common/{otherId}")
-    public ResponseEntity<ArrayList<User>> getCommonFriends(@PathVariable Integer id, @PathVariable Integer otherId) {
+    public ResponseEntity<List<User>> getCommonFriends(@PathVariable int id, @PathVariable int otherId) {
+        ArrayList<User> commonFriends = new ArrayList<>();
         if (inMemoryUserStorage.users.get(id) != null & inMemoryUserStorage.users.get(otherId) != null) {
-            ArrayList<User> commonFriends = new ArrayList<>();
-            for (User i : inMemoryUserStorage.users.get(id).getFriendsList()) {
-                for (User j : inMemoryUserStorage.users.get(otherId).getFriendsList()) {
-                    if (i == j) {
-                        commonFriends.add(i);
+            if (inMemoryUserStorage.users.get(id).getFriendsList().isEmpty()) {
+                return ResponseEntity.ok(commonFriends);
+            }
+            for (User firstUser : inMemoryUserStorage.users.get(id).getFriendsList()) {
+                for (User secondUser : inMemoryUserStorage.users.get(otherId).getFriendsList()) {
+                    if (firstUser == secondUser) {
+                        commonFriends.add(inMemoryUserStorage.users.get(id));
                     }
                 }
+            }
+            if (commonFriends.isEmpty()) {
+                return ResponseEntity.ok(commonFriends);
             }
             return ResponseEntity.ok(commonFriends);
         } else {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @GetMapping("/{id}/friends")
+    public ResponseEntity<List<User>> putCommonFriends(@PathVariable int id) {
+        if (inMemoryUserStorage.users.get(id) != null) {
+            return ResponseEntity.ok(inMemoryUserStorage.users.get(id).getFriendsList());
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PutMapping("/{id}/friends/common/{otherId}")
+    public ResponseEntity<User> putCommonFriends(@PathVariable int id, int otherId) {
+        if (inMemoryUserStorage.users.get(id) != null) {
+            inMemoryUserStorage.users.get(id).getFriendsList().add(inMemoryUserStorage.users.get(otherId));
+            inMemoryUserStorage.users.get(otherId).getFriendsList().add(inMemoryUserStorage.users.get(id));
+            return ResponseEntity.ok(inMemoryUserStorage.users.get(id));
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
 
 }
