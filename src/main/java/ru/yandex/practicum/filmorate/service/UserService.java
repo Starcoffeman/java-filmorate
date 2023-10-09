@@ -105,7 +105,7 @@ public class UserService {
     }
 
     @GetMapping("/{id}/friends")
-    public List<User> putCommonFriends(@PathVariable Integer id) {
+    public List<User> putCommonFriends(@PathVariable int id) {
         if (inMemoryUserStorage.users.get(id) != null) {
             return inMemoryUserStorage.users.get(id).getFriendsList();
         } else {
