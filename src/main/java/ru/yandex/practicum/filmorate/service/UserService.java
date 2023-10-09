@@ -56,7 +56,7 @@ public class UserService {
     }
 
     @PutMapping("/{id}/friends/{friendId}")
-    public ResponseEntity<User> addFriend(@PathVariable int id, int friendId) {
+    public ResponseEntity<User> addFriend(@PathVariable int id, Integer friendId) {
         if (inMemoryUserStorage.users.get(id) != null || id >= 0) {
             inMemoryUserStorage.users.get(id).getFriendsList().add(inMemoryUserStorage.users.get(friendId));
             inMemoryUserStorage.users.get(friendId).getFriendsList().add(inMemoryUserStorage.users.get(id));
