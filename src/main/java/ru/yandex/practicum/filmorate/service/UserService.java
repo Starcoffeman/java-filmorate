@@ -42,7 +42,7 @@ public class UserService {
     }
 
     @GetMapping("/{id}/friends")
-    public ResponseEntity<List<Integer>> getUserById(@PathVariable Integer id) {
+    public ResponseEntity<List<User>> getUserById(@PathVariable Integer id) {
         if (inMemoryUserStorage.users.get(id) != null) {
             return ResponseEntity.ok(inMemoryUserStorage.users.get(id).getFriendsList());
         } else {
@@ -68,8 +68,8 @@ public class UserService {
     @PutMapping("/{id}/friends/{friendId}")
     public ResponseEntity<HashMap<Integer, User>> addFriend(@PathVariable Integer id, @PathVariable Integer friendId) {
         if (inMemoryUserStorage.users.get(id) != null & (id > 0 || friendId > 0) & inMemoryUserStorage.users.get(friendId) != null) {
-            inMemoryUserStorage.users.get(id).getFriendsList().add(friendId);
-            inMemoryUserStorage.users.get(friendId).getFriendsList().add(id);
+            inMemoryUserStorage.users.get(id).getFriendsList().add(inMemoryUserStorage.users.get(friendId));
+            inMemoryUserStorage.users.get(friendId).getFriendsList().add(inMemoryUserStorage.users.get(id));
             return ResponseEntity.ok(inMemoryUserStorage.users);
         } else {
             return ResponseEntity.notFound().build();
@@ -79,8 +79,8 @@ public class UserService {
     @DeleteMapping("/{id}/friends/{friendId}")
     public ResponseEntity<HashMap<Integer, User>> removeFriend(@PathVariable Integer id, @PathVariable Integer friendId) {
         if (inMemoryUserStorage.users.get(id) != null & inMemoryUserStorage.users.get(friendId) != null) {
-            inMemoryUserStorage.users.get(id).getFriendsList().remove(friendId);
-            inMemoryUserStorage.users.get(friendId).getFriendsList().remove(id);
+            inMemoryUserStorage.users.get(id).getFriendsList().remove(inMemoryUserStorage.users.get(friendId));
+            inMemoryUserStorage.users.get(friendId).getFriendsList().remove(inMemoryUserStorage.users.get(id));
             return ResponseEntity.ok(inMemoryUserStorage.users);
         } else {
             return ResponseEntity.notFound().build();
@@ -88,11 +88,11 @@ public class UserService {
     }
 
     @GetMapping("/{id}/friends/common/{otherId}")
-    public ResponseEntity<ArrayList<Integer>> getCommonFriends(@PathVariable Integer id, @PathVariable Integer otherId) {
+    public ResponseEntity<ArrayList<User>> getCommonFriends(@PathVariable Integer id, @PathVariable Integer otherId) {
         if (inMemoryUserStorage.users.get(id) != null & inMemoryUserStorage.users.get(otherId) != null) {
-            ArrayList<Integer> commonFriends = new ArrayList<>();
-            for (Integer i : inMemoryUserStorage.users.get(id).getFriendsList()) {
-                for (Integer j : inMemoryUserStorage.users.get(otherId).getFriendsList()) {
+            ArrayList<User> commonFriends = new ArrayList<>();
+            for (User i : inMemoryUserStorage.users.get(id).getFriendsList()) {
+                for (User j : inMemoryUserStorage.users.get(otherId).getFriendsList()) {
                     if (i == j) {
                         commonFriends.add(i);
                     }
