@@ -56,8 +56,8 @@ public class UserService {
     }
 
     @PutMapping("/{id}/friends/{friendId}")
-    public ResponseEntity<Object> addFriend(@PathVariable Integer id, @PathVariable Integer friendId) throws UserNotFoundException {
-        if(friendId>0){
+    public void addFriend(@PathVariable Integer id, @PathVariable Integer friendId) throws UserNotFoundException {
+        if (friendId > 0) {
             inMemoryUserStorage.putFriends(id, friendId);
         }
         throw new UserNotFoundException("Dasd");
