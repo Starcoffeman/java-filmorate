@@ -65,7 +65,7 @@ public class UserService {
         return ResponseEntity.ok(updateUser);
     }
 
-    @PutMapping("/{id}/friends/{friendId}")
+/*    @PutMapping("/{id}/friends/{friendId}")
     public ResponseEntity<HashMap<Integer, User>> addFriend(@PathVariable Integer id, @PathVariable Integer friendId) {
         if (inMemoryUserStorage.users.get(id) != null & (id > 0 || friendId > 0) & inMemoryUserStorage.users.get(friendId) != null) {
             inMemoryUserStorage.users.get(id).getFriendsList().add(inMemoryUserStorage.users.get(friendId));
@@ -74,7 +74,7 @@ public class UserService {
         } else {
             return ResponseEntity.notFound().build();
         }
-    }
+    }*/
 
     @DeleteMapping("/{id}/friends/{friendId}")
     public ResponseEntity<HashMap<Integer, User>> removeFriend(@PathVariable Integer id, @PathVariable Integer friendId) {
