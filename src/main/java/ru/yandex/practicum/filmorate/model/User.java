@@ -26,7 +26,7 @@ public class User {
     @Past(message = "Дата рождения не может быть в будущем и должна соответствовать формату yyyy-MM-dd")
     private LocalDate birthday;
 
-    private List<User> friendsList;
+    private List<Integer> friendsList;
 
     public User(String email, String login, String name, LocalDate birthday) {
 
