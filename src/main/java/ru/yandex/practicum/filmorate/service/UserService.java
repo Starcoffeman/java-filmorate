@@ -9,6 +9,7 @@ import ru.yandex.practicum.filmorate.storage.user.InMemoryUserStorage;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 
 @RestController
@@ -22,6 +23,11 @@ public class UserService {
     public ResponseEntity<User> createFilm(@RequestBody @Valid User user) {
         inMemoryUserStorage.addUser(user);
         return ResponseEntity.ok(user);
+    }
+
+    @GetMapping
+    public ResponseEntity<Collection<User>> getAllUser() {
+        return ResponseEntity.ok(inMemoryUserStorage.users.values());
     }
 
     @DeleteMapping("/{id}")
@@ -41,12 +47,12 @@ public class UserService {
         } else {
             return ResponseEntity.notFound().build();
         }
-
     }
 
     @PutMapping
-    public void updateUser(@PathVariable User updateUser) throws UserNotFoundException {
+    public ResponseEntity<User> updateUser(@PathVariable User updateUser) throws UserNotFoundException {
         inMemoryUserStorage.updateUser(updateUser);
+        return ResponseEntity.ok(inMemoryUserStorage.users.get(updateUser.getId()));
     }
 
     @PutMapping("/{id}/friends/{friendId}")
