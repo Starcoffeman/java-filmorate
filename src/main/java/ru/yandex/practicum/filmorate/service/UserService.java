@@ -56,14 +56,8 @@ public class UserService {
     }
 
     @PutMapping("/{id}/friends/{friendId}")
-    public ResponseEntity<User> addFriend(@PathVariable int id, Integer friendId) {
-        if (inMemoryUserStorage.users.get(id) != null || id >= 0) {
-            inMemoryUserStorage.users.get(id).getFriendsList().add(inMemoryUserStorage.users.get(friendId));
-            inMemoryUserStorage.users.get(friendId).getFriendsList().add(inMemoryUserStorage.users.get(id));
-            return ResponseEntity.ok(inMemoryUserStorage.users.get(id));
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    public void addFriend(@PathVariable Integer id, @PathVariable Integer friendId) {
+        inMemoryUserStorage.putFriends(id, friendId);
     }
 
     @DeleteMapping("/{id}/friends/{friendId}")

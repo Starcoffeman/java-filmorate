@@ -1,6 +1,7 @@
 package ru.yandex.practicum.filmorate.storage.user;
 
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.PathVariable;
 import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
 
@@ -16,6 +17,11 @@ public class InMemoryUserStorage implements UserStorage {
     public void addUser(User user) {
         user.setId(++id);
         users.put(id, user);
+    }
+
+    public void putFriends(Integer id, Integer friendId) {
+        users.get(id).getFriendsList().add(users.get(friendId));
+        users.get(friendId).getFriendsList().add(users.get(id));
     }
 
     @Override
