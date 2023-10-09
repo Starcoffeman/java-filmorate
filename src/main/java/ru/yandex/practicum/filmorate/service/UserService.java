@@ -1,8 +1,10 @@
 package ru.yandex.practicum.filmorate.service;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.user.InMemoryUserStorage;
@@ -56,12 +58,11 @@ public class UserService {
     }
 
     @PutMapping("/{id}/friends/{friendId}")
-    public ResponseEntity<Object> addFriend(@PathVariable Integer id, @PathVariable Integer friendId) {
+    public void addFriend(@PathVariable Integer id, @PathVariable Integer friendId) throws UserNotFoundException {
         if (friendId > 0 & id > 0) {
             inMemoryUserStorage.putFriends(id, friendId);
-            return null;
         } else {
-            return ResponseEntity.notFound().build();
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "dasd");
         }
     }
 
