@@ -106,11 +106,12 @@ public class UserService {
 
 
     @GetMapping("/{id}/friends")
-    public ResponseEntity<List<User>> putCommonFriends(@PathVariable Integer id) {
-        if (inMemoryUserStorage.users.get(id) == null) {
-            return ResponseEntity.notFound().build();
+    public List<User> putCommonFriends(@PathVariable Integer id) {
+        if (id > 0) {
+            return inMemoryUserStorage.users.get(id).getFriendsList();
+        } else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "dasd");
         }
-        return ResponseEntity.ok(inMemoryUserStorage.users.get(id).getFriendsList());
     }
 
     @PutMapping("/{id}/friends/common/{otherId}")
