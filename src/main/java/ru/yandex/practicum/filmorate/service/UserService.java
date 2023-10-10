@@ -106,17 +106,11 @@ public class UserService {
 
 
     @GetMapping("/{id}/friends")
-    public ResponseEntity<List<User>> putCommonFriends(@PathVariable int id) {
-        if (inMemoryUserStorage.users.get(id) != null) {
-            return ResponseEntity.ok(inMemoryUserStorage.users.get(id).getFriendsList());
-        } else {
+    public ResponseEntity<List<User>> putCommonFriends(@PathVariable Integer id) {
+        if (inMemoryUserStorage.users.get(id) == null) {
             return ResponseEntity.notFound().build();
         }
-        /*try {
-            return ResponseEntity.ok(inMemoryUserStorage.users.get(id).getFriendsList());
-        } catch (ResponseStatusException exception) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "dasd");
-        }*/
+        return ResponseEntity.ok(inMemoryUserStorage.users.get(id).getFriendsList());
     }
 
     @PutMapping("/{id}/friends/common/{otherId}")
