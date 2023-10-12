@@ -88,6 +88,10 @@ public class InMemoryUserStorage implements UserStorage {
             throw new UserNotFoundException("Пользователя(-ей) под таким индексом нет");
         }
 
+        if (friendsList.get(users.get(firstId)).isEmpty()) {
+            return common;
+        }
+
         for (User first : friendsList.get(users.get(firstId))) {
             for (User second : friendsList.get((users.get(secondId)))) {
                 if (first == second) {
