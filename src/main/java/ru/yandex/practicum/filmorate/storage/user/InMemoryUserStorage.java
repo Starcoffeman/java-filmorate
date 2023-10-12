@@ -91,7 +91,7 @@ public class InMemoryUserStorage implements UserStorage {
             if (users.get(firstId).getFriends().isEmpty() || users.get(secondId).getFriends().isEmpty()) {
                 for (User firstUser : users.get(firstId).getFriends()) {
                     for (User secondUser : users.get(firstId).getFriends()) {
-                        if (firstUser == secondUser) {
+                        if (firstUser.getId() == secondUser.getId()) {
                             common.add(firstUser);
                         }
                     }
