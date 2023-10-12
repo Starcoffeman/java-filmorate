@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.storage.user;
 
+import org.springframework.http.ResponseEntity;
 import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
 
@@ -82,7 +83,7 @@ public class InMemoryUserStorage implements UserStorage {
     }
 
     @Override
-    public List<User> getCommonFriendList(Integer firstId, Integer secondId) throws UserNotFoundException {
+    public List<User> getCommonFriendList(Integer firstId, Integer secondId) {
         List<User> common = new ArrayList<>();
 
         if (users.get(firstId) != null & users.get(secondId) != null) {
@@ -95,7 +96,8 @@ public class InMemoryUserStorage implements UserStorage {
                     }
                 }
             }
+
         }
-        return common;
+        return ResponseEntity.ok(common).getBody();
     }
 }
