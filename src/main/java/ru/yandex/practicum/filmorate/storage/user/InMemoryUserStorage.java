@@ -74,8 +74,13 @@ public class InMemoryUserStorage implements UserStorage {
         if (users.get(firstId) == null || (firstId < 1 || secondId < 1) || users.get(secondId) == null) {
             throw new UserNotFoundException("Пользователя(-ей) под таким индексом нет");
         }
-        users.get(firstId).getFriends().add(users.get(secondId));
-        users.get(secondId).getFriends().add(users.get(firstId));
+        List<User> a = users.get(firstId).getFriends();
+        a.add(users.get(secondId));
+        users.get(firstId).setFriends(a);
+
+        List<User> b = users.get(secondId).getFriends();
+        b.add(users.get(secondId));
+        users.get(secondId).setFriends(b);
     }
 
     @Override
