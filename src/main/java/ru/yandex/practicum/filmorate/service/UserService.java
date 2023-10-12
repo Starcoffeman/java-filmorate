@@ -23,6 +23,10 @@ public class UserService {
         return user;
     }
 
+    public void updateUser(User updateUser) throws UserNotFoundException {
+        userStorage.updateUser(updateUser);
+    }
+
     public void removeUser(Integer id) throws UserNotFoundException {
         userStorage.removeUser(id);
     }
