@@ -1,6 +1,7 @@
 package ru.yandex.practicum.filmorate.model;
 
 import lombok.Data;
+
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Past;
@@ -40,7 +41,7 @@ public class User {
         this.email = email;
         this.login = login;
         this.birthday = birthday;
-        this.friends =new ArrayList<>();
+        this.friends = new ArrayList<>();
     }
 
     @Override

@@ -44,7 +44,7 @@ public class UserService {
     }
 
     public void addFriend(Integer firstId, Integer secondId) throws UserNotFoundException {
-        userStorage.addFriend(firstId,secondId);
+        userStorage.addFriend(firstId, secondId);
     }
 
 
