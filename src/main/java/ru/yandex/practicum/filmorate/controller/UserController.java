@@ -52,7 +52,7 @@ public class UserController {
         return ResponseEntity.ok(userService.getFriendListById(id));
     }
 
-    @PutMapping("/{id}/like/{friendId}")
+    @PutMapping("/{id}/friends/{friendId}")
     public ResponseEntity<Object> addFriendById(@PathVariable("id") Integer id, @PathVariable("friendId") Integer friendId) throws UserNotFoundException {
         userService.addFriendById(id, friendId);
         return ResponseEntity.ok().build();
