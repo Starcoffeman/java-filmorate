@@ -73,7 +73,7 @@ public class InMemoryUserStorage implements UserStorage {
 
     @Override
     public void addFriend(Integer firstId, Integer secondId) throws UserNotFoundException {
-        if (users.get(firstId) == null || users.get(secondId) == null) {
+        if (users.get(firstId) == null || firstId < 1 || secondId < 1 || users.get(secondId) == null) {
             throw new UserNotFoundException("Пользователя(-ей) под таким индексом нет");
         }
         users.get(firstId).getFriends().add(users.get(secondId));
