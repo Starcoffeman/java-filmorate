@@ -89,7 +89,8 @@ public class InMemoryUserStorage implements UserStorage {
         }
 
         if (friendsList.get(users.get(firstId)).isEmpty()) {
-            return common;
+            List<User> a = new ArrayList<>();
+            return a;
         }
 
         for (User first : friendsList.get(users.get(firstId))) {
