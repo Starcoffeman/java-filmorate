@@ -1,13 +1,11 @@
 package ru.yandex.practicum.filmorate.storage.film;
 
-import org.springframework.web.bind.annotation.RequestBody;
 import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
 
-import javax.validation.Valid;
 import java.util.HashMap;
 
-public class InMemoryFilmStorage implements FilmStorage{
+public class InMemoryFilmStorage implements FilmStorage {
 
     public HashMap<Integer, Film> films = new HashMap<>();
     private int id = 0;
@@ -20,7 +18,7 @@ public class InMemoryFilmStorage implements FilmStorage{
 
     @Override
     public void removeFilm(int id) throws UserNotFoundException {
-        if(films.get(id)!=null){
+        if (films.get(id) != null) {
             films.remove(id);
         } else {
             throw new UserNotFoundException("Нет такого фильма");
