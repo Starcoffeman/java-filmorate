@@ -58,11 +58,6 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/{id}/friends")
-    public ResponseEntity<Object> getFriendsListById(@PathVariable("id") Integer id) throws UserNotFoundException {
-        return ResponseEntity.ok(userService.getFriendListById(id));
-    }
-
     @DeleteMapping("/{id}/friends/{friendId}")
     public ResponseEntity<Object> removeFriendById(@PathVariable("id") Integer id, @PathVariable("friendId") Integer friendId) throws UserNotFoundException {
         userService.removeFriendById(id, friendId);
