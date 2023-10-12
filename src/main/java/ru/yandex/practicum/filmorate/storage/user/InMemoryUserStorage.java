@@ -90,8 +90,8 @@ public class InMemoryUserStorage implements UserStorage {
         if (users.get(firstId) != null & users.get(secondId) != null) {
             if (users.get(firstId).getFriends().isEmpty() || users.get(secondId).getFriends().isEmpty()) {
                 for (User firstUser : users.get(firstId).getFriends()) {
-                    for (User secondUser : users.get(firstId).getFriends()) {
-                        if (firstUser.getId() == secondUser.getId()) {
+                    for (User secondUser : users.get(secondId).getFriends()) {
+                        if (firstUser == secondUser) {
                             common.add(firstUser);
                         }
                     }
@@ -102,4 +102,5 @@ public class InMemoryUserStorage implements UserStorage {
         }
         return common;
     }
+
 }
