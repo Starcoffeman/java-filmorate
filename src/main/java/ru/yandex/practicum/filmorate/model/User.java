@@ -6,6 +6,8 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Past;
 import javax.validation.constraints.Pattern;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Data
@@ -25,6 +27,7 @@ public class User {
     @Past(message = "Дата рождения не может быть в будущем и должна соответствовать формату yyyy-MM-dd")
     private LocalDate birthday;
 
+    private List<User> friends;
 
     public User(String email, String login, String name, LocalDate birthday) {
 
@@ -37,6 +40,17 @@ public class User {
         this.email = email;
         this.login = login;
         this.birthday = birthday;
+        this.friends =new ArrayList<>();
     }
 
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", email='" + email + '\'' +
+                ", login='" + login + '\'' +
+                ", name='" + name + '\'' +
+                ", birthday=" + birthday +
+                '}';
+    }
 }

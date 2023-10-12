@@ -1,6 +1,5 @@
 package ru.yandex.practicum.filmorate.storage.user;
 
-import org.springframework.http.ResponseEntity;
 import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
 
@@ -8,7 +7,6 @@ import java.util.*;
 
 public class InMemoryUserStorage implements UserStorage {
     public HashMap<Integer, User> users = new HashMap<>();
-    public Map<User, List<User>> friendsList = new HashMap<>();
 
     private int id = 0;
 
@@ -16,7 +14,6 @@ public class InMemoryUserStorage implements UserStorage {
     public void addUser(User user) {
         user.setId(++id);
         users.put(id, user);
-        friendsList.put(user, new ArrayList<>());
     }
 
     @Override
@@ -24,7 +21,6 @@ public class InMemoryUserStorage implements UserStorage {
         if (users.get(id) == null) {
             throw new UserNotFoundException("Пользователя под таким индексом нет");
         }
-        friendsList.remove(users.get(id));
         users.remove(id);
     }
 
@@ -54,15 +50,15 @@ public class InMemoryUserStorage implements UserStorage {
         if (users.get(id) == null || users.get(friend) == null) {
             throw new UserNotFoundException("Пользователя(-ей) под таким индексом нет");
         }
-        friendsList.remove(users.get(id));
+        users.get(id).getFriends().remove(users.get(friend));
     }
 
     @Override
     public List<User> getFriendListById(Integer id) throws UserNotFoundException {
-        if (friendsList.get(users.get(id)) == null) {
+        if (users.get(id) == null) {
             throw new UserNotFoundException("Пользователя(-ей) под таким индексом нет");
         }
-        return friendsList.get(users.get(id));
+        return users.get(id).getFriends();
     }
 
     @Override
@@ -70,7 +66,7 @@ public class InMemoryUserStorage implements UserStorage {
         if (users.get(id) == null || users.get(friend) == null) {
             throw new UserNotFoundException("Пользователя(-ей) под таким индексом нет");
         }
-        return friendsList.get(users.get(id)).get(friend);
+        return users.get(id).getFriends().get(friend);
     }
 
     @Override
@@ -78,8 +74,8 @@ public class InMemoryUserStorage implements UserStorage {
         if (users.get(firstId) == null || (firstId < 1 || secondId < 1) || users.get(secondId) == null) {
             throw new UserNotFoundException("Пользователя(-ей) под таким индексом нет");
         }
-        friendsList.get(users.get(firstId)).add(users.get(secondId));
-        friendsList.get(users.get(secondId)).add(users.get(firstId));
+        users.get(firstId).getFriends().add(users.get(secondId));
+        users.get(secondId).getFriends().add(users.get(firstId));
     }
 
     @Override
@@ -87,14 +83,16 @@ public class InMemoryUserStorage implements UserStorage {
         List<User> common = new ArrayList<>();
 
         if (users.get(firstId) != null & users.get(secondId) != null) {
-            if (friendsList.get(users.get(firstId)).isEmpty() || friendsList.get(users.get(secondId)).isEmpty()) {
-                for (User user : friendsList.get(users.get(firstId))) {
-                    for (User user1 : friendsList.get(users.get(secondId))) {
-                        if (user == user1) {
-                            common.add(user);
+            if (users.get(firstId).getFriends().isEmpty() || users.get(secondId).getFriends().isEmpty()) {
+                for (User firstUser : users.get(firstId).getFriends()) {
+                    for (User secondUser : users.get(firstId).getFriends()) {
+                        if (firstUser == secondUser) {
+                            common.add(firstUser);
                         }
                     }
                 }
+            } else {
+                return new ArrayList<>();
             }
         }
         return common;
