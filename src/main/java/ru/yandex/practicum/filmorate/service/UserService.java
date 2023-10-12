@@ -43,9 +43,10 @@ public class UserService {
         userStorage.removeFriendById(id, friend);
     }
 
-    public void addFriendById(Integer firstId, Integer secondId) throws UserNotFoundException {
-        userStorage.addFriend(firstId, secondId);
+    public void addFriend(Integer firstId, Integer secondId) throws UserNotFoundException {
+        userStorage.addFriend(firstId,secondId);
     }
+
 
     public List<User> getFriendListById(Integer id) throws UserNotFoundException {
         return userStorage.getFriendListById(id);

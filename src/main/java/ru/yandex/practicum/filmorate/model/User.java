@@ -9,6 +9,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+
 @Data
 public class User {
     private int id;
@@ -26,7 +27,6 @@ public class User {
     @Past(message = "Дата рождения не может быть в будущем и должна соответствовать формату yyyy-MM-dd")
     private LocalDate birthday;
 
-    private List<User> friends;
 
     public User(String email, String login, String name, LocalDate birthday) {
 
@@ -39,6 +39,6 @@ public class User {
         this.email = email;
         this.login = login;
         this.birthday = birthday;
-        this.friends = new ArrayList<>();
     }
+
 }

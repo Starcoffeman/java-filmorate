@@ -1,51 +1,39 @@
-/*
+
 package ru.yandex.practicum.filmorate.controller;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.service.FilmService;
 
 import javax.validation.Valid;
 import java.util.Collection;
-import java.util.HashMap;
 
 @RestController
 @RequestMapping("/films")
-public class FilmController  {
+public class FilmController {
 
-    private static final Logger log = LoggerFactory.getLogger(FilmController.class);
-    private final HashMap<Integer, Film> films = new HashMap<>();
-    private int id = 0;
+    @Autowired
+    FilmService filmService = new FilmService();
 
     @PostMapping
     public Film createFilm(@RequestBody @Valid Film film) {
-        film.setId(++id);
-        films.put(id, film);
-        log.debug("User создан");
-        return film;
-    }
-
-    @PutMapping
-    public Film updateFilm(@RequestBody @Valid Film updatedFilm) throws UserNotFoundException {
-        if (films.get(updatedFilm.getId()) != null) {
-            films.replace(updatedFilm.getId(), updatedFilm);
-            log.debug("Фильм обновлен!");
-            return updatedFilm;
-        } else {
-            throw new UserNotFoundException("Пользователя под таким индексом нет");
-        }
+        return filmService.addFilm(film);
     }
 
     @GetMapping
-    public Collection<Film> getAllFilms() {
-        log.debug("Текущее количество фильмов: {}", films.size());
-        return films.values();
+    public ResponseEntity<Collection<Film>> getAllUser() {
+        return ResponseEntity.ok(filmService.getAllFilm());
+    }
+
+    @PutMapping
+    public ResponseEntity<Film> updateFILM(@RequestBody @Valid Film updateFilm) throws InternalError, UserNotFoundException {
+        filmService.updateFilm(updateFilm);
+        return ResponseEntity.ok(updateFilm);
     }
 
 
-    @GetMapping("")
-    public void
 }
-*/
+

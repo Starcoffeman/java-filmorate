@@ -2,13 +2,14 @@ package ru.yandex.practicum.filmorate.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.UserService;
-
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -16,13 +17,13 @@ import java.util.List;
 @RequestMapping("/users")
 public class UserController {
 
-    private static final Logger log = LoggerFactory.getLogger(UserController.class);
+    @Autowired
     UserService userService = new UserService();
 
 
     @PostMapping
-    public User createUser(@RequestBody @Valid User user) {
-        return userService.addUser(user);
+    public ResponseEntity<User> createUser(@RequestBody @Valid User user) {
+        return ResponseEntity.ok(userService.addUser(user));
     }
 
     @GetMapping
@@ -47,14 +48,24 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
+
     @GetMapping("/{id}/friends")
     public ResponseEntity<List<User>> getFriendListById(@PathVariable("id") Integer id) throws UserNotFoundException {
+        if (userService.getFriendListById(id).isEmpty()) {
+            ArrayList<User> a = new ArrayList<>();
+            return ResponseEntity.ok(a);
+        }
         return ResponseEntity.ok(userService.getFriendListById(id));
+    }
+
+    @GetMapping("/{id}/friends/{friendId}")
+    public ResponseEntity<User> getFriendById(@PathVariable("id") Integer id, @PathVariable("friendId") Integer friendId) throws UserNotFoundException {
+        return ResponseEntity.ok(userService.getFriendById(id,friendId));
     }
 
     @PutMapping("/{id}/friends/{friendId}")
     public ResponseEntity<Object> addFriendById(@PathVariable("id") Integer id, @PathVariable("friendId") Integer friendId) throws UserNotFoundException {
-        userService.addFriendById(id, friendId);
+        userService.addFriend(id, friendId);
         return ResponseEntity.ok().build();
     }
 
