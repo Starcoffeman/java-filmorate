@@ -79,7 +79,7 @@ public class InMemoryUserStorage implements UserStorage {
         users.get(firstId).setFriends(a);
 
         List<User> b = users.get(secondId).getFriends();
-        b.add(users.get(secondId));
+        b.add(users.get(firstId));
         users.get(secondId).setFriends(b);
     }
 
