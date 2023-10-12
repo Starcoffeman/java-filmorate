@@ -31,7 +31,7 @@ public class UserController {
     }
 
     @PutMapping
-    public ResponseEntity<User> updateUser(@RequestBody @Valid User updateUser) throws UserNotFoundException {
+    public ResponseEntity<User> updateUser(@RequestBody @Valid User updateUser) throws InternalError, UserNotFoundException {
         userService.updateUser(updateUser);
         return ResponseEntity.ok(updateUser);
     }

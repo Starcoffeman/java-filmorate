@@ -28,9 +28,9 @@ public class InMemoryUserStorage implements UserStorage {
 
     @Override
     public void updateUser(User updatedUser) {
-/*        if (users.get(updatedUser.getId()) == null) {
-            throw new UserNotFoundException("Пользователя под таким индексом нет");
-        }*/
+        if (users.get(updatedUser.getId()) == null) {
+            throw new InternalError("Пользователя под таким индексом нет");
+        }
         users.replace(updatedUser.getId(), updatedUser);
     }
 
