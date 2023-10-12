@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.UserService;
+
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -60,7 +61,7 @@ public class UserController {
 
     @GetMapping("/{id}/friends/{friendId}")
     public ResponseEntity<User> getFriendById(@PathVariable("id") Integer id, @PathVariable("friendId") Integer friendId) throws UserNotFoundException {
-        return ResponseEntity.ok(userService.getFriendById(id,friendId));
+        return ResponseEntity.ok(userService.getFriendById(id, friendId));
     }
 
     @PutMapping("/{id}/friends/{friendId}")
