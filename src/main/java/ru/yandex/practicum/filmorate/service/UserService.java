@@ -14,11 +14,11 @@ public class UserService {
 
     final UserStorage userStorage = new InMemoryUserStorage();
 
-    public Collection<User> getAllUser(){
+    public Collection<User> getAllUser() {
         return userStorage.getAllUsers();
     }
 
-    public User addUser(User user){
+    public User addUser(User user) {
         userStorage.addUser(user);
         return user;
     }
@@ -31,16 +31,16 @@ public class UserService {
         return userStorage.getUserById(id);
     }
 
-    public User getFriendById(Integer id,Integer friend) throws UserNotFoundException {
-        return userStorage.getFriendById(id,friend);
+    public User getFriendById(Integer id, Integer friend) throws UserNotFoundException {
+        return userStorage.getFriendById(id, friend);
     }
 
-    public void removeFriendById(Integer id,Integer friend) throws UserNotFoundException {
-        userStorage.removeFriendById(id,friend);
+    public void removeFriendById(Integer id, Integer friend) throws UserNotFoundException {
+        userStorage.removeFriendById(id, friend);
     }
 
-    public void addFriendById(Integer firstId,Integer secondId) throws UserNotFoundException {
-        userStorage.addFriend(firstId,secondId);
+    public void addFriendById(Integer firstId, Integer secondId) throws UserNotFoundException {
+        userStorage.addFriend(firstId, secondId);
     }
 
     public List<User> getFriendListById(Integer id) throws UserNotFoundException {
@@ -48,7 +48,7 @@ public class UserService {
     }
 
     public List<User> getCommonFriendList(Integer firstId, Integer secondId) throws UserNotFoundException {
-        return userStorage.getCommonFriendList(firstId,secondId);
+        return userStorage.getCommonFriendList(firstId, secondId);
     }
 
 }
