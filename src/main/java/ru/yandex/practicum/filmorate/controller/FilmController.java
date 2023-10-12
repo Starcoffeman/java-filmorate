@@ -34,6 +34,11 @@ public class FilmController {
         return ResponseEntity.ok(updateFilm);
     }
 
+    @PostMapping("/{id}")
+    public ResponseEntity<Film> getFilmById(@PathVariable("id") Integer id) throws InternalError, UserNotFoundException {
+        return ResponseEntity.ok(filmService.getFilmById(id));
+    }
+
 
 }
 
