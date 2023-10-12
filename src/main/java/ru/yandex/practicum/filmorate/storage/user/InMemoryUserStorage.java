@@ -84,11 +84,11 @@ public class InMemoryUserStorage implements UserStorage {
     @Override
     public List<User> getCommonFriendList(Integer firstId, Integer secondId) throws UserNotFoundException {
         List<User> common = new ArrayList<>();
-        if (users.get(firstId) == null || users.get(secondId) == null) {
+        if (users.get(firstId) == null & users.get(secondId) == null) {
             throw new UserNotFoundException("Пользователя(-ей) под таким индексом нет");
         }
 
-        if (friendsList.get(users.get(firstId)).isEmpty()) {
+        if(friendsList.get(users.get(firstId)).isEmpty()){
             return common;
         }
 
@@ -99,6 +99,7 @@ public class InMemoryUserStorage implements UserStorage {
                 }
             }
         }
+
         return common;
     }
 }

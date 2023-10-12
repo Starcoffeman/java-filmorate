@@ -29,7 +29,7 @@ public class FilmController {
     }
 
     @PutMapping
-    public ResponseEntity<Film> updateFILM(@RequestBody @Valid Film updateFilm) throws InternalError, UserNotFoundException {
+    public ResponseEntity<Film> updateFilm(@RequestBody @Valid Film updateFilm) throws InternalError, UserNotFoundException {
         filmService.updateFilm(updateFilm);
         return ResponseEntity.ok(updateFilm);
     }
