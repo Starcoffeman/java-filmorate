@@ -88,7 +88,7 @@ public class InMemoryUserStorage implements UserStorage {
             throw new UserNotFoundException("Пользователя(-ей) под таким индексом нет");
         }
 
-        if(friendsList.get(users.get(firstId)).isEmpty()){
+        if (friendsList.get(users.get(firstId)).isEmpty()) {
             return common;
         }
 
