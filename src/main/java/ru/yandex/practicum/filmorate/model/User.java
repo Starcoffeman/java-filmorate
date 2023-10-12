@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import javax.validation.constraints.Email;
@@ -28,6 +29,7 @@ public class User {
     @Past(message = "Дата рождения не может быть в будущем и должна соответствовать формату yyyy-MM-dd")
     private LocalDate birthday;
 
+    @JsonIgnore
     private List<User> friends;
 
     public User(String email, String login, String name, LocalDate birthday) {

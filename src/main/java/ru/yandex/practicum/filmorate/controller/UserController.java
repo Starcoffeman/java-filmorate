@@ -50,10 +50,6 @@ public class UserController {
 
     @GetMapping("/{id}/friends")
     public ResponseEntity<List<User>> getFriendListById(@PathVariable("id") Integer id) throws UserNotFoundException {
-        if (userService.getFriendListById(id).isEmpty()) {
-            ArrayList<User> a = new ArrayList<>();
-            return ResponseEntity.ok(a);
-        }
         return ResponseEntity.ok(userService.getFriendListById(id));
     }
 
