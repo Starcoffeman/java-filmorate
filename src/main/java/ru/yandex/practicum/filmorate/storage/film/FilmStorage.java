@@ -7,7 +7,9 @@ public interface FilmStorage {
 
     void addFilm(Film film);
 
-    void removeFilm(int id);
+    void removeFilm(int id) throws UserNotFoundException;
 
     void updateFilm(Film updateFilm) throws UserNotFoundException;
+
+
 }

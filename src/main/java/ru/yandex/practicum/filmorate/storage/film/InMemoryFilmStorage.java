@@ -1,14 +1,15 @@
 package ru.yandex.practicum.filmorate.storage.film;
 
-import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.RequestBody;
 import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
+
+import javax.validation.Valid;
 import java.util.HashMap;
 
-@Component
-public class InMemoryFilmStorage implements FilmStorage {
+public class InMemoryFilmStorage implements FilmStorage{
 
-    public final HashMap<Integer, Film> films = new HashMap<>();
+    public HashMap<Integer, Film> films = new HashMap<>();
     private int id = 0;
 
     @Override
@@ -18,8 +19,14 @@ public class InMemoryFilmStorage implements FilmStorage {
     }
 
     @Override
-    public void removeFilm(int id) {
-        films.remove(id);
+    public void removeFilm(int id) throws UserNotFoundException {
+        if(films.get(id)!=null){
+            films.remove(id);
+        } else {
+            throw new UserNotFoundException("Нет такого фильма");
+        }
+
+
     }
 
     @Override
@@ -27,7 +34,7 @@ public class InMemoryFilmStorage implements FilmStorage {
         if (films.get(updatedFilm.getId()) != null) {
             films.replace(updatedFilm.getId(), updatedFilm);
         } else {
-            throw new UserNotFoundException("Пользователя под таким индексом нет");
+            throw new UserNotFoundException("Пользователя под таким id нет");
         }
     }
 }
