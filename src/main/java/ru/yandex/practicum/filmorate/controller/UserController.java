@@ -1,8 +1,8 @@
 package ru.yandex.practicum.filmorate.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.yandex.practicum.filmorate.exception.IdIsNegativeException;
 import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.UserService;
@@ -15,9 +15,7 @@ import java.util.List;
 @RequestMapping("/users")
 public class UserController {
 
-    @Autowired
-    UserService userService = new UserService();
-
+    private UserService userService = new UserService();
 
     @PostMapping
     public ResponseEntity<User> createUser(@RequestBody @Valid User user) {
@@ -36,7 +34,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable("id") Integer id) throws UserNotFoundException {
+    public ResponseEntity<User> getUserById(@PathVariable("id") Integer id) throws UserNotFoundException, IdIsNegativeException {
         return ResponseEntity.ok(userService.getUserById(id));
     }
 
@@ -48,29 +46,33 @@ public class UserController {
 
 
     @GetMapping("/{id}/friends")
-    public ResponseEntity<List<User>> getFriendListById(@PathVariable("id") Integer id) throws UserNotFoundException {
+    public ResponseEntity<List<User>> getFriendListById(@PathVariable("id") Integer id) throws UserNotFoundException, IdIsNegativeException {
         return ResponseEntity.ok(userService.getFriendListById(id));
     }
 
     @GetMapping("/{id}/friends/{friendId}")
-    public ResponseEntity<User> getFriendById(@PathVariable("id") Integer id, @PathVariable("friendId") Integer friendId) throws UserNotFoundException {
+    public ResponseEntity<User> getFriendById(@PathVariable("id") Integer id,
+                                              @PathVariable("friendId") Integer friendId) throws UserNotFoundException {
         return ResponseEntity.ok(userService.getFriendById(id, friendId));
     }
 
     @PutMapping("/{id}/friends/{friendId}")
-    public ResponseEntity<Object> addFriendById(@PathVariable("id") Integer id, @PathVariable("friendId") Integer friendId) throws UserNotFoundException {
+    public ResponseEntity<Object> addFriendById(@PathVariable("id") Integer id,
+                                                @PathVariable("friendId") Integer friendId) throws UserNotFoundException {
         userService.addFriend(id, friendId);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{id}/friends/{friendId}")
-    public ResponseEntity<Object> removeFriendById(@PathVariable("id") Integer id, @PathVariable("friendId") Integer friendId) throws UserNotFoundException {
+    public ResponseEntity<Object> removeFriendById(@PathVariable("id") Integer id,
+                                                   @PathVariable("friendId") Integer friendId) throws UserNotFoundException, IdIsNegativeException {
         userService.removeFriendById(id, friendId);
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/{id}/friends/common/{otherId}")
-    public ResponseEntity<List<User>> getCommonFriendList(@PathVariable("id") Integer id, @PathVariable("otherId") Integer otherId) throws UserNotFoundException {
+    public ResponseEntity<List<User>> getCommonFriendList(@PathVariable("id") Integer id,
+                                                          @PathVariable("otherId") Integer otherId) throws UserNotFoundException, IdIsNegativeException {
         return ResponseEntity.ok(userService.getCommonFriendList(id, otherId));
     }
 }

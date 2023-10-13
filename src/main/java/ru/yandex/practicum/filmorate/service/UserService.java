@@ -1,6 +1,7 @@
 package ru.yandex.practicum.filmorate.service;
 
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.filmorate.exception.IdIsNegativeException;
 import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.user.InMemoryUserStorage;
@@ -12,7 +13,11 @@ import java.util.List;
 @Service
 public class UserService {
 
-    final UserStorage userStorage = new InMemoryUserStorage();
+    private UserStorage userStorage;
+
+    public UserService() {
+        this.userStorage = new InMemoryUserStorage();
+    }
 
     public Collection<User> getAllUser() {
         return userStorage.getAllUsers();
@@ -31,29 +36,28 @@ public class UserService {
         userStorage.removeUser(id);
     }
 
-    public User getUserById(Integer id) throws UserNotFoundException {
+    public User getUserById(Integer id) throws UserNotFoundException, IdIsNegativeException {
         return userStorage.getUserById(id);
     }
 
-    public User getFriendById(Integer id, Integer friend) throws UserNotFoundException {
-        return userStorage.getFriendById(id, friend);
+    public User getFriendById(Integer id, Integer otherId) throws UserNotFoundException {
+        return userStorage.getFriendById(id, otherId);
     }
 
-    public void removeFriendById(Integer id, Integer friend) throws UserNotFoundException {
-        userStorage.removeFriendById(id, friend);
+    public void removeFriendById(Integer id, Integer otherId) throws UserNotFoundException, IdIsNegativeException {
+        userStorage.removeFriendById(id, otherId);
     }
 
-    public void addFriend(Integer firstId, Integer secondId) throws UserNotFoundException {
-        userStorage.addFriend(firstId, secondId);
+    public void addFriend(Integer id, Integer otherId) throws UserNotFoundException {
+        userStorage.addFriend(id, otherId);
     }
 
 
-    public List<User> getFriendListById(Integer id) throws UserNotFoundException {
+    public List<User> getFriendListById(Integer id) throws UserNotFoundException, IdIsNegativeException {
         return userStorage.getFriendListById(id);
     }
 
-    public List<User> getCommonFriendList(Integer firstId, Integer secondId) throws UserNotFoundException {
-        return userStorage.getCommonFriendList(firstId, secondId);
+    public List<User> getCommonFriendList(Integer id, Integer otherId) throws UserNotFoundException, IdIsNegativeException {
+        return userStorage.getCommonFriendList(id, otherId);
     }
-
 }

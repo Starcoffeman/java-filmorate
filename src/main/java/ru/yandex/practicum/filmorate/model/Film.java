@@ -8,8 +8,8 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 public class Film {
@@ -29,7 +29,7 @@ public class Film {
     private int duration;
 
     @Getter
-    private List<Integer> likes;
+    private Set<Integer> likes;
 
     public Film(String name, String description, LocalDate releaseDate, int duration) {
         LocalDate minReleaseDate = LocalDate.of(1895, 12, 28); // 28 декабря 1895 года
@@ -40,7 +40,7 @@ public class Film {
         this.description = description;
         this.releaseDate = releaseDate;
         this.duration = duration;
-        this.likes = new ArrayList<>();
+        this.likes = new HashSet<>();
     }
 
 }

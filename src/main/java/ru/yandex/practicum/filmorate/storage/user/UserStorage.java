@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.storage.user;
 
+import ru.yandex.practicum.filmorate.exception.IdIsNegativeException;
 import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
 
@@ -16,16 +17,16 @@ public interface UserStorage {
 
     Collection<User> getAllUsers();
 
-    User getUserById(Integer id) throws UserNotFoundException;
+    User getUserById(Integer id) throws UserNotFoundException, IdIsNegativeException;
 
-    User getFriendById(Integer id, Integer friend) throws UserNotFoundException;
+    User getFriendById(Integer id, Integer otherId) throws UserNotFoundException;
 
-    void removeFriendById(Integer id, Integer friend) throws UserNotFoundException;
+    void removeFriendById(Integer id, Integer otherId) throws UserNotFoundException, IdIsNegativeException;
 
-    List<User> getFriendListById(Integer id) throws UserNotFoundException;
+    List<User> getFriendListById(Integer id) throws UserNotFoundException, IdIsNegativeException;
 
-    void addFriend(Integer firstId, Integer secondId) throws UserNotFoundException;
+    void addFriend(Integer id, Integer otherId) throws UserNotFoundException;
 
-    List<User> getCommonFriendList(Integer firstId, Integer secondId) throws UserNotFoundException;
+    List<User> getCommonFriendList(Integer id, Integer otherId) throws UserNotFoundException, IdIsNegativeException;
 
 }

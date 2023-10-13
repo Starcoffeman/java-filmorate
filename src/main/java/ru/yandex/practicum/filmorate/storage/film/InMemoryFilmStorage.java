@@ -1,5 +1,7 @@
 package ru.yandex.practicum.filmorate.storage.film;
 
+import ru.yandex.practicum.filmorate.exception.FilmNotFoundException;
+import ru.yandex.practicum.filmorate.exception.IdIsNegativeException;
 import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.storage.user.InMemoryUserStorage;
@@ -8,7 +10,7 @@ import java.util.*;
 
 public class InMemoryFilmStorage implements FilmStorage {
 
-    public HashMap<Integer, Film> films = new HashMap<>();
+    private final HashMap<Integer, Film> films = new HashMap<>();
     private int id = 0;
 
     @Override
@@ -18,18 +20,25 @@ public class InMemoryFilmStorage implements FilmStorage {
     }
 
     @Override
-    public void removeFilm(int id) throws UserNotFoundException {
+    public void removeFilm(int id) throws FilmNotFoundException, IdIsNegativeException {
         if (films.get(id) == null) {
-            throw new UserNotFoundException("Нет такого фильма");
+            throw new FilmNotFoundException("Фильма под таким id нет");
+        }
+
+        if (id < 1) {
+            throw new IdIsNegativeException("Отрицательный id");
         }
         films.remove(id);
     }
 
     @Override
-    public void updateFilm(Film updatedFilm) throws UserNotFoundException {
+    public void updateFilm(Film updatedFilm) throws FilmNotFoundException, IdIsNegativeException {
         if (films.get(updatedFilm.getId()) == null) {
-            throw new UserNotFoundException("Фильма под таким id нет");
+            throw new FilmNotFoundException("Фильма под таким id нет");
+        }
 
+        if (updatedFilm.getId() < 1) {
+            throw new IdIsNegativeException("Отрицательный id");
         }
         films.replace(updatedFilm.getId(), updatedFilm);
     }
@@ -40,13 +49,17 @@ public class InMemoryFilmStorage implements FilmStorage {
     }
 
     @Override
-    public Film getFilmById(Integer id) throws UserNotFoundException {
-        if (films.get(id) == null || id < 1) {
-            throw new UserNotFoundException("Фильма под таким id нет");
+    public Film getFilmById(Integer id) throws FilmNotFoundException, IdIsNegativeException {
+        if (films.get(id) == null) {
+            throw new FilmNotFoundException("Фильма под таким id нет");
         }
+
+        if (id < 1) {
+            throw new IdIsNegativeException("Отрицательный id");
+        }
+
         return films.get(id);
     }
-
 
     @Override
     public List<Film> getPopularsFilm(Integer count) {
@@ -63,16 +76,31 @@ public class InMemoryFilmStorage implements FilmStorage {
         return popularFilms;
     }
 
-    public void addLike(Integer id, Integer likeId) throws UserNotFoundException {
-        if (films.get(id) == null || InMemoryUserStorage.users.get(likeId) == null) {
-            throw new UserNotFoundException("Нет такого фильма или пользователя");
+    public void addLike(Integer id, Integer likeId) throws FilmNotFoundException, UserNotFoundException, IdIsNegativeException {
+        if (films.get(id) == null) {
+            throw new FilmNotFoundException("Фильма под таким id нет");
+        }
+
+        if (InMemoryUserStorage.users.get(likeId) == null) {
+            throw new UserNotFoundException("Пользователя под таким id нет");
+        }
+
+        if (id < 1 || likeId < 1) {
+            throw new IdIsNegativeException("Отрицательный id");
         }
         films.get(id).getLikes().add(likeId);
     }
 
-    public void removeLike(Integer id, Integer likeId) throws UserNotFoundException {
-        if (films.get(id) == null || InMemoryUserStorage.users.get(likeId) == null) {
-            throw new UserNotFoundException("Нет такого фильма или пользователя");
+    public void removeLike(Integer id, Integer likeId) throws FilmNotFoundException, UserNotFoundException, IdIsNegativeException {
+        if (films.get(id) == null) {
+            throw new FilmNotFoundException("Фильма под таким id нет");
+        }
+        if (InMemoryUserStorage.users.get(likeId) == null) {
+            throw new UserNotFoundException("Пользователя под таким id нет");
+        }
+
+        if (id < 1 || likeId < 1) {
+            throw new IdIsNegativeException("Отрицательный id");
         }
         films.get(id).getLikes().remove(likeId);
     }
