@@ -50,26 +50,13 @@ public class InMemoryFilmStorage implements FilmStorage {
 
     @Override
     public List<Film> getPopularsFilm(Integer count) {
-        if (count == null) {
-            count = 10; // Значение по умолчанию, если count не задан
-        }
-
-        // Создаем список фильмов для сортировки
         List<Film> popularFilms = new ArrayList<>(films.values());
-
-        // Сортируем список фильмов в порядке убывания количества лайков
         Collections.sort(popularFilms, new Comparator<Film>() {
             @Override
             public int compare(Film film1, Film film2) {
                 return Integer.compare(film2.getLikes().size(), film1.getLikes().size());
             }
         });
-
-        // Ограничиваем результат с помощью count
-        if (popularFilms.size() > count) {
-            popularFilms = popularFilms.subList(0, count);
-        }
-
         return popularFilms;
     }
 
