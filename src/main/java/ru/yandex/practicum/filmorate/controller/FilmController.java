@@ -47,18 +47,20 @@ public class FilmController {
     }
 
     @GetMapping("/popular")
-    public List<Film> getPopularFilms(@RequestParam(name = "count", required = false, defaultValue = "10") int count) {
-        return filmService.getPopularsFilm(count);
+    public ResponseEntity<List<Film>> getPopularFilms(@RequestParam(name = "count", required = false, defaultValue = "10") int count) {
+        return ResponseEntity.ok(filmService.getPopularsFilm(count));
     }
 
-    @PostMapping("/{id}/like/{likeId}")
-    public void addLike(@PathVariable("id") Integer id, @PathVariable("likeId") Integer likeId) {
+    @PutMapping("/{id}/like/{likeId}")
+    public ResponseEntity<Object> addLike(@PathVariable("id") Integer id, @PathVariable("likeId") Integer likeId) throws UserNotFoundException {
         filmService.addLike(id, likeId);
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{id}/like/{likeId}")
-    public void removeLike(@PathVariable("id") Integer id, @PathVariable("likeId") Integer likeId) {
+    public void removeLike(@PathVariable("id") Integer id, @PathVariable("likeId") Integer likeId) throws UserNotFoundException {
         filmService.removeLike(id, likeId);
+
     }
 
 
