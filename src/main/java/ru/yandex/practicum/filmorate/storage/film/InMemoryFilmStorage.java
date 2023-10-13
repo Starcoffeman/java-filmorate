@@ -74,14 +74,14 @@ public class InMemoryFilmStorage implements FilmStorage {
     }
 
     public void addLike(Integer id, Integer likeId) throws UserNotFoundException {
-        if (films.get(id) == null || InMemoryUserStorage.users.get(likeId)==null) {
+        if (films.get(id) == null || InMemoryUserStorage.users.get(likeId) == null) {
             throw new UserNotFoundException("Нет такого фильма или пользователя");
         }
         films.get(id).getLikes().add(likeId);
     }
 
     public void removeLike(Integer id, Integer likeId) throws UserNotFoundException {
-        if (films.get(id) == null || InMemoryUserStorage.users.get(likeId)==null) {
+        if (films.get(id) == null || InMemoryUserStorage.users.get(likeId) == null) {
             throw new UserNotFoundException("Нет такого фильма или пользователя");
         }
         films.get(id).getLikes().remove(likeId);
