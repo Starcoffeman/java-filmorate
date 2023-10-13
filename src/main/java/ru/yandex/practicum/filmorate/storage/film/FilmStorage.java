@@ -18,9 +18,11 @@ public interface FilmStorage {
     Collection<Film> getAllFilms();
 
     Film getFilmById(Integer id) throws UserNotFoundException;
-    public List<Film> getPopularsFilm(Integer count);
-    void addLike(Integer id,Integer likeId);
-    void removeLike(Integer id,Integer likeId);
 
+    public List<Film> getPopularsFilm(Integer count);
+
+    void addLike(Integer id, Integer likeId);
+
+    void removeLike(Integer id, Integer likeId);
 }
 
