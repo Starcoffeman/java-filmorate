@@ -57,11 +57,9 @@ public class InMemoryFilmStorage implements FilmStorage {
                 return Integer.compare(film2.getLikes().size(), film1.getLikes().size());
             }
         });
-        
         if (popularFilms.size() > count) {
             popularFilms = popularFilms.subList(0, count);
         }
-
         return popularFilms;
     }
 
@@ -78,5 +76,4 @@ public class InMemoryFilmStorage implements FilmStorage {
         }
         films.get(id).getLikes().remove(likeId);
     }
-
 }
