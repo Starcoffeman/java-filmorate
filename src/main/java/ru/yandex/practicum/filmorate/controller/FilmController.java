@@ -10,6 +10,7 @@ import ru.yandex.practicum.filmorate.service.FilmService;
 
 import javax.validation.Valid;
 import java.util.Collection;
+import java.util.List;
 
 @RestController
 @RequestMapping("/films")
@@ -43,6 +44,21 @@ public class FilmController {
     public ResponseEntity<Object> removeFilmById(@PathVariable("id") Integer id) throws InternalError, UserNotFoundException {
         filmService.removeFilm(id);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/popular")
+    public List<Film> getPopularFilms(@RequestParam(name = "count", required = false, defaultValue = "10") int count) {
+        return filmService.getPopularsFilm(count);
+    }
+
+    @PostMapping("/{id}/like/{likeId}")
+    public void addLike(@PathVariable("id") Integer id, @PathVariable("likeId") Integer likeId) {
+        filmService.addLike(id, likeId);
+    }
+
+    @DeleteMapping("/{id}/like/{likeId}")
+    public void removeLike(@PathVariable("id") Integer id, @PathVariable("likeId") Integer likeId) {
+        filmService.removeLike(id, likeId);
     }
 
 

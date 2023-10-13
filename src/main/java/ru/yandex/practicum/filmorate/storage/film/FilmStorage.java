@@ -5,6 +5,7 @@ import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
 
 import java.util.Collection;
+import java.util.List;
 
 public interface FilmStorage {
 
@@ -17,7 +18,9 @@ public interface FilmStorage {
     Collection<Film> getAllFilms();
 
     Film getFilmById(Integer id) throws UserNotFoundException;
-
+    public List<Film> getPopularsFilm(Integer count);
+    void addLike(Integer id,Integer likeId);
+    void removeLike(Integer id,Integer likeId);
 
 }
 

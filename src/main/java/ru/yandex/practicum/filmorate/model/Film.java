@@ -1,6 +1,8 @@
 package ru.yandex.practicum.filmorate.model;
 
 import lombok.Data;
+import lombok.Getter;
+
 import javax.validation.ValidationException;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;
@@ -26,6 +28,7 @@ public class Film {
     @Positive(message = "Продолжительность фильма должна быть положительной")
     private int duration;
 
+    @Getter
     private List<Integer> likes;
 
     public Film(String name, String description, LocalDate releaseDate, int duration) {
@@ -39,4 +42,5 @@ public class Film {
         this.duration = duration;
         this.likes = new ArrayList<>();
     }
+
 }

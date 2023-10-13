@@ -6,7 +6,7 @@ import ru.yandex.practicum.filmorate.model.User;
 import java.util.*;
 
 public class InMemoryUserStorage implements UserStorage {
-    public HashMap<Integer, User> users = new HashMap<>();
+    public static HashMap<Integer, User> users = new HashMap<>();
 
     private int id = 0;
 

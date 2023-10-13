@@ -2,8 +2,8 @@ package ru.yandex.practicum.filmorate.storage.film;
 
 import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
-import java.util.Collection;
-import java.util.HashMap;
+
+import java.util.*;
 
 public class InMemoryFilmStorage implements FilmStorage {
 
@@ -46,5 +46,38 @@ public class InMemoryFilmStorage implements FilmStorage {
         return films.get(id);
     }
 
+
+    @Override
+    public List<Film> getPopularsFilm(Integer count) {
+        if (count == null) {
+            count = 10; // Значение по умолчанию, если count не задан
+        }
+
+        // Создаем список фильмов для сортировки
+        List<Film> popularFilms = new ArrayList<>(films.values());
+
+        // Сортируем список фильмов в порядке убывания количества лайков
+        Collections.sort(popularFilms, new Comparator<Film>() {
+            @Override
+            public int compare(Film film1, Film film2) {
+                return Integer.compare(film2.getLikes().size(), film1.getLikes().size());
+            }
+        });
+
+        // Ограничиваем результат с помощью count
+        if (popularFilms.size() > count) {
+            popularFilms = popularFilms.subList(0, count);
+        }
+
+        return popularFilms;
+    }
+
+    public void addLike(Integer id, Integer likeId) {
+        films.get(id).getLikes().add(likeId);
+    }
+
+    public void removeLike(Integer id, Integer likeId) {
+        films.get(id).getLikes().remove(likeId);
+    }
 
 }
