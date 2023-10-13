@@ -46,9 +46,5 @@ public class InMemoryFilmStorage implements FilmStorage {
         return films.get(id);
     }
 
-    @Override
-    public void removeFriendById(Integer id, Integer friend) throws UserNotFoundException {
-
-    }
 
 }

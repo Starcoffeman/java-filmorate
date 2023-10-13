@@ -18,8 +18,6 @@ public interface FilmStorage {
 
     Film getFilmById(Integer id) throws UserNotFoundException;
 
-    void removeFriendById(Integer id, Integer friend) throws UserNotFoundException;
-
 
 }
 

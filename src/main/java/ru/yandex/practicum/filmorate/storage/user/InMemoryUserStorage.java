@@ -86,12 +86,9 @@ public class InMemoryUserStorage implements UserStorage {
     @Override
     public List<User> getCommonFriendList(Integer firstId, Integer secondId) throws UserNotFoundException {
         List<User> common = new ArrayList<>();
-        System.out.println("dsadas");
         if (users.get(firstId) != null & users.get(secondId) != null) {
             for (User firstUser : getFriendListById(firstId)) {
                 for (User secondUser : getFriendListById(secondId)) {
-                    System.out.println(users.get(firstId).getFriends());
-                    System.out.println(users.get(secondId).getFriends());
                     if (firstUser.getId() == secondUser.getId()) {
                         common.add(firstUser);
                     }

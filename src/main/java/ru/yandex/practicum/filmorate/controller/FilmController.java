@@ -34,9 +34,15 @@ public class FilmController {
         return ResponseEntity.ok(updateFilm);
     }
 
-    @PostMapping("/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<Film> getFilmById(@PathVariable("id") Integer id) throws InternalError, UserNotFoundException {
         return ResponseEntity.ok(filmService.getFilmById(id));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Object> removeFilmById(@PathVariable("id") Integer id) throws InternalError, UserNotFoundException {
+        filmService.removeFilm(id);
+        return ResponseEntity.ok().build();
     }
 
 
