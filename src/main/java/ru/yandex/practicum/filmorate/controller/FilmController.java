@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exception.FilmNotFoundException;
 import ru.yandex.practicum.filmorate.exception.IdIsNegativeException;
+import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.FilmService;
 
@@ -40,7 +41,7 @@ public class FilmController {
 
     @PutMapping
     public ResponseEntity<Film> updateFilm(@RequestBody @Valid Film updateFilm) throws InternalError,
-                                                FilmNotFoundException, IdIsNegativeException {
+            FilmNotFoundException, IdIsNegativeException {
         filmService.updateFilm(updateFilm);
         logger.info("Фильм обновлён");
         return ResponseEntity.ok(updateFilm);
@@ -48,14 +49,14 @@ public class FilmController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Film> getFilmById(@PathVariable("id") Integer id) throws InternalError,
-                                                FilmNotFoundException, IdIsNegativeException {
+            FilmNotFoundException, IdIsNegativeException {
         logger.info("Фильм выведен по id");
         return ResponseEntity.ok(filmService.getFilmById(id));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> removeFilmById(@PathVariable("id") Integer id) throws InternalError,
-                                                    FilmNotFoundException, IdIsNegativeException {
+            FilmNotFoundException, IdIsNegativeException {
         filmService.removeFilmById(id);
         logger.info("Фильм удалён по id");
         return ResponseEntity.ok().build();
@@ -63,9 +64,23 @@ public class FilmController {
 
     @GetMapping("/popular")
     public ResponseEntity<List<Film>> getPopularFilms(@RequestParam(name = "count", required = false,
-                                                        defaultValue = "10") int count) {
+            defaultValue = "10") int count) {
         logger.info("Получен фильм по id");
         return ResponseEntity.ok(filmService.getPopularsFilms(count));
     }
+
+    @PutMapping("/{id}/like/{likeId}")
+    public ResponseEntity<Object> addLike(@PathVariable("id") Integer id, @PathVariable("likeId") Integer likeId) throws UserNotFoundException {
+        filmService.addLike(id, likeId);
+        logger.info("Поставлен лайк");
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/{id}/like/{likeId}")
+    public void removeLike(@PathVariable("id") Integer id, @PathVariable("likeId") Integer likeId) throws UserNotFoundException {
+        filmService.removeLike(id, likeId);
+        logger.info("Удалён лайк");
+    }
+
 }
 
