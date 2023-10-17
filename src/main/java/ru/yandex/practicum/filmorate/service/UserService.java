@@ -13,7 +13,7 @@ import java.util.List;
 @Service
 public class UserService {
 
-    private UserStorage userStorage;
+    private final UserStorage userStorage;
 
     public UserService() {
         this.userStorage = new InMemoryUserStorage();

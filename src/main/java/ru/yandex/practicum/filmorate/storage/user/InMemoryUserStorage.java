@@ -8,7 +8,7 @@ import java.util.*;
 
 public class InMemoryUserStorage implements UserStorage {
 
-    public static HashMap<Integer, User> users = new HashMap<>();
+    private final HashMap<Integer, User> users = new HashMap<>();
     private int id = 0;
 
     @Override
@@ -24,7 +24,7 @@ public class InMemoryUserStorage implements UserStorage {
         }
         users.remove(id);
     }
-
+    
     @Override
     public void updateUser(User updatedUser) {
         if (users.get(updatedUser.getId()) == null) {

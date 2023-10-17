@@ -4,8 +4,6 @@ import ru.yandex.practicum.filmorate.exception.FilmNotFoundException;
 import ru.yandex.practicum.filmorate.exception.IdIsNegativeException;
 import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.storage.user.InMemoryUserStorage;
-
 import java.util.*;
 
 public class InMemoryFilmStorage implements FilmStorage {
@@ -76,32 +74,19 @@ public class InMemoryFilmStorage implements FilmStorage {
         return popularFilms;
     }
 
-    public void addLike(Integer id, Integer likeId) throws FilmNotFoundException, UserNotFoundException, IdIsNegativeException {
+    public void addLike(Integer id, Integer likeId) throws UserNotFoundException {
         if (films.get(id) == null) {
-            throw new FilmNotFoundException("Фильма под таким id нет");
-        }
-
-        if (InMemoryUserStorage.users.get(likeId) == null) {
-            throw new UserNotFoundException("Пользователя под таким id нет");
-        }
-
-        if (id < 1 || likeId < 1) {
-            throw new IdIsNegativeException("Отрицательный id");
+            throw new UserNotFoundException("Нет такого фильма или пользователя");
         }
         films.get(id).getLikes().add(likeId);
     }
 
-    public void removeLike(Integer id, Integer likeId) throws FilmNotFoundException, UserNotFoundException, IdIsNegativeException {
+    public void removeLike(Integer id, Integer likeId) throws UserNotFoundException {
         if (films.get(id) == null) {
-            throw new FilmNotFoundException("Фильма под таким id нет");
-        }
-        if (InMemoryUserStorage.users.get(likeId) == null) {
-            throw new UserNotFoundException("Пользователя под таким id нет");
-        }
-
-        if (id < 1 || likeId < 1) {
-            throw new IdIsNegativeException("Отрицательный id");
+            throw new UserNotFoundException("Нет такого фильма или пользователя");
         }
         films.get(id).getLikes().remove(likeId);
     }
+
+
 }

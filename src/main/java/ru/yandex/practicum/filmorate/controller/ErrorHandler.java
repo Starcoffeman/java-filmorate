@@ -16,7 +16,7 @@ public class ErrorHandler {
     @ExceptionHandler(ValidationException.class)
     public ResponseEntity<ErrorResponse> handleException(ValidationException e) {
         ErrorResponse response = new ErrorResponse(e.getMessage());
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(UserNotFoundException.class)

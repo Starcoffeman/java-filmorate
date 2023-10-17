@@ -21,10 +21,7 @@ public interface FilmStorage {
 
     Film getFilmById(Integer id) throws FilmNotFoundException, IdIsNegativeException;
 
-    public List<Film> getPopularsFilm(Integer count);
+    List<Film> getPopularsFilm(Integer count);
 
-    void addLike(Integer id, Integer likeId) throws UserNotFoundException, FilmNotFoundException, IdIsNegativeException;
-
-    void removeLike(Integer id, Integer likeId) throws UserNotFoundException, FilmNotFoundException, IdIsNegativeException;
 }
 
