@@ -24,7 +24,7 @@ public class InMemoryUserStorage implements UserStorage {
         }
         users.remove(id);
     }
-    
+
     @Override
     public void updateUser(User updatedUser) {
         if (users.get(updatedUser.getId()) == null) {
