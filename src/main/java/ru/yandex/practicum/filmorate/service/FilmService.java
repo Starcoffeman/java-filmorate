@@ -45,11 +45,11 @@ public class FilmService {
         return filmStorage.getPopularsFilm(id);
     }
 
-    public void addLike(Integer id, Integer likeId) throws UserNotFoundException {
+    public void addLike(Integer id, Integer likeId) throws UserNotFoundException, IdIsNegativeException {
         filmStorage.addLike(id, likeId);
     }
 
-    public void removeLike(Integer id, Integer likeId) throws UserNotFoundException {
+    public void removeLike(Integer id, Integer likeId) throws UserNotFoundException, IdIsNegativeException {
         filmStorage.removeLike(id, likeId);
     }
 
