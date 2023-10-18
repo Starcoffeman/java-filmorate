@@ -69,18 +69,23 @@ public class FilmController {
         return ResponseEntity.ok(filmService.getPopularsFilms(count));
     }
 
+
     @PutMapping("/{id}/like/{likeId}")
-    public ResponseEntity<Object> addLike(@PathVariable("id") Integer id, @PathVariable("likeId") Integer likeId) throws UserNotFoundException {
+    public ResponseEntity<Object> addLike(@PathVariable("id") Integer id,
+                                          @PathVariable("likeId") Integer likeId) throws UserNotFoundException,
+            FilmNotFoundException, IdIsNegativeException {
         filmService.addLike(id, likeId);
         logger.info("Поставлен лайк");
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{id}/like/{likeId}")
-    public void removeLike(@PathVariable("id") Integer id, @PathVariable("likeId") Integer likeId) throws UserNotFoundException {
+    public ResponseEntity<Object> removeLike(@PathVariable("id") Integer id,
+                                             @PathVariable("likeId") Integer likeId) throws UserNotFoundException,
+            FilmNotFoundException, IdIsNegativeException {
         filmService.removeLike(id, likeId);
         logger.info("Удалён лайк");
+        return ResponseEntity.ok().build();
     }
-
 }
 

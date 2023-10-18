@@ -75,12 +75,14 @@ public class InMemoryFilmStorage implements FilmStorage {
         return popularFilms;
     }
 
+
     public void addLike(Integer id, Integer likeId) throws UserNotFoundException {
         if (films.get(id) == null) {
             throw new UserNotFoundException("Нет такого фильма или пользователя");
         }
         films.get(id).getLikes().add(likeId);
     }
+
 
     public void removeLike(Integer id, Integer likeId) throws UserNotFoundException {
         if (films.get(id) == null) {

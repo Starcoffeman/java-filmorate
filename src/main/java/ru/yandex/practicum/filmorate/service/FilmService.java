@@ -4,8 +4,8 @@ package ru.yandex.practicum.filmorate.service;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.FilmNotFoundException;
 import ru.yandex.practicum.filmorate.exception.IdIsNegativeException;
+import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.film.InMemoryFilmStorage;
 
 import java.util.Collection;
@@ -14,7 +14,7 @@ import java.util.List;
 @Service
 public class FilmService {
 
-    private final FilmStorage filmStorage;
+    private final InMemoryFilmStorage filmStorage;
 
     public FilmService() {
         this.filmStorage = new InMemoryFilmStorage();
@@ -45,12 +45,13 @@ public class FilmService {
         return filmStorage.getPopularsFilm(id);
     }
 
-    public void addLike(Integer id, Integer likeId) {
-        addLike(id,likeId);
+    public void addLike(Integer id, Integer likeId) throws UserNotFoundException {
+        filmStorage.addLike(id, likeId);
     }
 
-    public void removeLike(Integer id, Integer likeId) {
-        removeLike(id,likeId);
+    public void removeLike(Integer id, Integer likeId) throws UserNotFoundException {
+        filmStorage.removeLike(id, likeId);
     }
+
 }
 
