@@ -6,6 +6,7 @@ import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.user.InMemoryUserStorage;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -40,7 +41,10 @@ public class UserService {
     }
 
     public User getFriendById(Integer id, Integer otherId) throws UserNotFoundException {
-        return userStorage.getFriendById(id, otherId);
+        if (userStorage.getUsers().get(id) == null || userStorage.getUsers().get(otherId) == null) {
+            throw new UserNotFoundException("Пользователя(-ей) под таким индексом нет");
+        }
+        return userStorage.getUsers().get(id).getFriends().get(otherId);
     }
 
     public void removeFriendById(Integer id, Integer otherId) throws UserNotFoundException, IdIsNegativeException {
@@ -48,15 +52,43 @@ public class UserService {
     }
 
     public void addFriend(Integer id, Integer otherId) throws UserNotFoundException {
-        userStorage.addFriend(id, otherId);
+        if (userStorage.getUsers().get(id) == null || (id < 1 || otherId < 1) || userStorage.getUsers().get(otherId) == null) {
+            throw new UserNotFoundException("Пользователя(-ей) под таким индексом нет");
+        }
+        List<User> a = userStorage.getUsers().get(id).getFriends();
+        a.add(userStorage.getUsers().get(otherId));
+        userStorage.getUsers().get(id).setFriends(a);
+
+        List<User> b = userStorage.getUsers().get(otherId).getFriends();
+        b.add(userStorage.getUsers().get(id));
+        userStorage.getUsers().get(otherId).setFriends(b);
     }
 
 
     public List<User> getFriendListById(Integer id) throws UserNotFoundException, IdIsNegativeException {
-        return userStorage.getFriendListById(id);
+        if (userStorage.getUsers().get(id) == null) {
+            throw new UserNotFoundException("Пользователя(-ей) под таким индексом нет");
+        }
+
+        if (id < 1) {
+            throw new IdIsNegativeException("Отрицательный id");
+        }
+
+        return userStorage.getUsers().get(id).getFriends();
     }
 
+
     public List<User> getCommonFriendList(Integer id, Integer otherId) throws UserNotFoundException, IdIsNegativeException {
-        return userStorage.getCommonFriendList(id, otherId);
+        List<User> common = new ArrayList<>();
+        if (userStorage.getUsers().get(id) != null & userStorage.getUsers().get(otherId) != null) {
+            for (User firstUser : getFriendListById(id)) {
+                for (User secondUser : getFriendListById(otherId)) {
+                    if (firstUser.getId() == secondUser.getId()) {
+                        common.add(firstUser);
+                    }
+                }
+            }
+        }
+        return common;
     }
 }

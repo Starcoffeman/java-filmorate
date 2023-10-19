@@ -46,11 +46,25 @@ public class FilmService {
     }
 
     public void addLike(Integer id, Integer likeId) throws UserNotFoundException, IdIsNegativeException {
-        filmStorage.addLike(id, likeId);
+        if (filmStorage.getFilms().get(id) == null) {
+            throw new UserNotFoundException("Нет такого фильма или пользователя");
+        }
+
+        if (likeId < 1) {
+            throw new IdIsNegativeException("Отрицательный id");
+        }
+        filmStorage.getFilms().get(id).getLikes().add(likeId);
     }
 
     public void removeLike(Integer id, Integer likeId) throws UserNotFoundException, IdIsNegativeException {
-        filmStorage.removeLike(id, likeId);
+        if (filmStorage.getFilms().get(id) == null) {
+            throw new UserNotFoundException("Нет такого фильма или пользователя");
+        }
+
+        if (likeId < 1) {
+            throw new IdIsNegativeException("Отрицательный id");
+        }
+        filmStorage.getFilms().get(id).getLikes().remove(likeId);
     }
 
 }

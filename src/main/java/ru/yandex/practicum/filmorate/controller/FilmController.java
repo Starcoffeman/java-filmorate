@@ -63,8 +63,7 @@ public class FilmController {
     }
 
     @GetMapping("/popular")
-    public ResponseEntity<List<Film>> getPopularFilms(@RequestParam(name = "count", required = false,
-            defaultValue = "10") int count) {
+    public ResponseEntity<List<Film>> getPopularFilms(@RequestParam(name = "count", defaultValue = "10") int count) {
         logger.info("Получен фильм по id");
         return ResponseEntity.ok(filmService.getPopularsFilms(count));
     }
@@ -73,7 +72,7 @@ public class FilmController {
     @PutMapping("/{id}/like/{likeId}")
     public ResponseEntity<Object> addLike(@PathVariable("id") Integer id,
                                           @PathVariable("likeId") Integer likeId) throws UserNotFoundException,
-            FilmNotFoundException, IdIsNegativeException {
+            IdIsNegativeException {
         filmService.addLike(id, likeId);
         logger.info("Поставлен лайк");
         return ResponseEntity.ok().build();
@@ -82,7 +81,7 @@ public class FilmController {
     @DeleteMapping("/{id}/like/{likeId}")
     public ResponseEntity<Object> removeLike(@PathVariable("id") Integer id,
                                              @PathVariable("likeId") Integer likeId) throws UserNotFoundException,
-            FilmNotFoundException, IdIsNegativeException {
+            IdIsNegativeException {
         filmService.removeLike(id, likeId);
         logger.info("Удалён лайк");
         return ResponseEntity.ok().build();

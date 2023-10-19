@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.storage.film;
 
+import lombok.Getter;
 import ru.yandex.practicum.filmorate.exception.FilmNotFoundException;
 import ru.yandex.practicum.filmorate.exception.IdIsNegativeException;
 import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
@@ -9,6 +10,7 @@ import java.util.*;
 
 public class InMemoryFilmStorage implements FilmStorage {
 
+    @Getter
     private final HashMap<Integer, Film> films = new HashMap<>();
     private int id = 0;
 
@@ -74,30 +76,4 @@ public class InMemoryFilmStorage implements FilmStorage {
         }
         return popularFilms;
     }
-
-
-    public void addLike(Integer id, Integer likeId) throws UserNotFoundException, IdIsNegativeException {
-        if (films.get(id) == null) {
-            throw new UserNotFoundException("Нет такого фильма или пользователя");
-        }
-
-        if (likeId < 1) {
-            throw new IdIsNegativeException("Отрицательный id");
-        }
-        films.get(id).getLikes().add(likeId);
-    }
-
-
-    public void removeLike(Integer id, Integer likeId) throws UserNotFoundException, IdIsNegativeException {
-        if (films.get(id) == null) {
-            throw new UserNotFoundException("Нет такого фильма или пользователя");
-        }
-
-        if (likeId < 1) {
-            throw new IdIsNegativeException("Отрицательный id");
-        }
-        films.get(id).getLikes().remove(likeId);
-    }
-
-
 }
