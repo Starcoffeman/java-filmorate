@@ -21,8 +21,8 @@ public class UserController {
 
     private final UserService userService;
 
-    public UserController() {
-        this.userService = new UserService();
+    public UserController(UserService userService) {
+        this.userService = userService;
     }
 
     @PostMapping
@@ -58,7 +58,7 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
-
+/*
     @GetMapping("/{id}/friends")
     public ResponseEntity<List<User>> getFriendListById(@PathVariable("id") Integer id) throws UserNotFoundException, IdIsNegativeException {
         logger.info("Получение списка друзей у конкретного пользователя");
@@ -93,5 +93,5 @@ public class UserController {
                                                           @PathVariable("otherId") Integer otherId) throws UserNotFoundException, IdIsNegativeException {
         logger.info("Вывод общего списка друзей");
         return ResponseEntity.ok(userService.getCommonFriendList(id, otherId));
-    }
+    }*/
 }

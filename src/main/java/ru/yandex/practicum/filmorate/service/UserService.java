@@ -1,10 +1,12 @@
 package ru.yandex.practicum.filmorate.service;
 
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.IdIsNegativeException;
 import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.user.InMemoryUserStorage;
+import ru.yandex.practicum.filmorate.storage.user.UserDbStorage;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -13,10 +15,10 @@ import java.util.List;
 @Service
 public class UserService {
 
-    private final InMemoryUserStorage userStorage;
+    private final UserDbStorage userStorage;
 
-    public UserService() {
-        this.userStorage = new InMemoryUserStorage();
+    public UserService(JdbcTemplate jdbcTemplate) {
+        this.userStorage = new UserDbStorage(jdbcTemplate);
     }
 
     public Collection<User> getAllUser() {
@@ -40,7 +42,9 @@ public class UserService {
         return userStorage.getUserById(id);
     }
 
-    public User getFriendById(Integer id, Integer otherId) throws UserNotFoundException {
+
+
+    /*public User getFriendById(Integer id, Integer otherId) throws UserNotFoundException {
         if (userStorage.getUsers().get(id) == null || userStorage.getUsers().get(otherId) == null) {
             throw new UserNotFoundException("Пользователя(-ей) под таким индексом нет");
         }
@@ -90,5 +94,5 @@ public class UserService {
             }
         }
         return common;
-    }
+    }*/
 }
