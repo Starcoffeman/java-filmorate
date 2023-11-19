@@ -73,7 +73,6 @@ public class UserDbStorage implements UserStorage {
     }
 
 
-
     @Override
     public User getUserById(Integer id) throws UserNotFoundException, IdIsNegativeException {
         if (id < 0) {

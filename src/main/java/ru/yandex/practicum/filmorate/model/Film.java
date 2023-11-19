@@ -3,6 +3,7 @@ package ru.yandex.practicum.filmorate.model;
 import com.sun.istack.NotNull;
 import lombok.Data;
 import lombok.Getter;
+
 import javax.validation.ValidationException;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;

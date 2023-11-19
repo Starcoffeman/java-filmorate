@@ -19,11 +19,10 @@ public class GenreController {
     private final GenreService service;
 
     @GetMapping
-    public List<Genre> getAll(){
+    public List<Genre> getAll() {
         final List<Genre> genres = service.getAll();
         return genres;
     }
-
 
 
     @GetMapping("/{id}")

@@ -28,9 +28,9 @@ public class MpaDbStorage implements MpaStorage {
     @Override
     public Mpa getById(int id) throws MpaNotFoundException {
         String sql = "select * from MPA where id=?";
-        List<Mpa> mpas = jdbcTemplate.query(sql, MpaDbStorage::createMpa,id);
+        List<Mpa> mpas = jdbcTemplate.query(sql, MpaDbStorage::createMpa, id);
 
-        if(!mpas.isEmpty()){
+        if (!mpas.isEmpty()) {
             return mpas.get(0);
         } else {
             throw new MpaNotFoundException("Mpa not found");
