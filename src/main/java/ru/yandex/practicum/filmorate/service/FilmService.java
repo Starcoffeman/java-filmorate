@@ -6,7 +6,8 @@ import ru.yandex.practicum.filmorate.exception.FilmNotFoundException;
 import ru.yandex.practicum.filmorate.exception.IdIsNegativeException;
 import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.storage.film.InMemoryFilmStorage;
+import ru.yandex.practicum.filmorate.storage.db.FilmDbStorage;
+import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 
 import java.util.Collection;
 import java.util.List;
@@ -14,10 +15,10 @@ import java.util.List;
 @Service
 public class FilmService {
 
-    private final InMemoryFilmStorage filmStorage;
+    private final FilmStorage filmStorage;
 
     public FilmService() {
-        this.filmStorage = new InMemoryFilmStorage();
+        this.filmStorage = new FilmDbStorage();
     }
 
     public Collection<Film> getAllFilm() {
@@ -45,7 +46,7 @@ public class FilmService {
         return filmStorage.getPopularsFilm(id);
     }
 
-    public void addLike(Integer id, Integer likeId) throws UserNotFoundException, IdIsNegativeException {
+/*    public void addLike(Integer id, Integer likeId) throws UserNotFoundException, IdIsNegativeException {
         if (filmStorage.getFilms().get(id) == null) {
             throw new UserNotFoundException("Нет такого фильма или пользователя");
         }
@@ -65,7 +66,7 @@ public class FilmService {
             throw new IdIsNegativeException("Отрицательный id");
         }
         filmStorage.getFilms().get(id).getLikes().remove(likeId);
-    }
+    }*/
 
 }
 

@@ -5,14 +5,15 @@ import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.IdIsNegativeException;
 import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.storage.user.UserDbStorage;
+import ru.yandex.practicum.filmorate.storage.db.UserDbStorage;
+import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
 import java.util.Collection;
 
 @Service
 public class UserService {
 
-    private final UserDbStorage userStorage;
+    private final UserStorage userStorage;
 
     public UserService(JdbcTemplate jdbcTemplate) {
         this.userStorage = new UserDbStorage(jdbcTemplate);
@@ -39,9 +40,7 @@ public class UserService {
         return userStorage.getUserById(id);
     }
 
-
-
-    /*public User getFriendById(Integer id, Integer otherId) throws UserNotFoundException {
+ /*   public User getFriendById(Integer id, Integer otherId) throws UserNotFoundException {
         if (userStorage.getUsers().get(id) == null || userStorage.getUsers().get(otherId) == null) {
             throw new UserNotFoundException("Пользователя(-ей) под таким индексом нет");
         }
@@ -64,8 +63,8 @@ public class UserService {
         b.add(userStorage.getUsers().get(id));
         userStorage.getUsers().get(otherId).setFriends(b);
     }
-
-
+*/
+/*
     public List<User> getFriendListById(Integer id) throws UserNotFoundException, IdIsNegativeException {
         if (userStorage.getUsers().get(id) == null) {
             throw new UserNotFoundException("Пользователя(-ей) под таким индексом нет");

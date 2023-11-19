@@ -69,7 +69,7 @@ public class FilmController {
     }
 
 
-    @PutMapping("/{id}/like/{likeId}")
+/*    @PutMapping("/{id}/like/{likeId}")
     public ResponseEntity<Object> addLike(@PathVariable("id") Integer id,
                                           @PathVariable("likeId") Integer likeId) throws UserNotFoundException,
             IdIsNegativeException {
@@ -85,6 +85,6 @@ public class FilmController {
         filmService.removeLike(id, likeId);
         logger.info("Удалён лайк");
         return ResponseEntity.ok().build();
-    }
+    }*/
 }
 

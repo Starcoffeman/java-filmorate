@@ -3,6 +3,7 @@ package ru.yandex.practicum.filmorate.controller;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exception.IdIsNegativeException;
 import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
@@ -11,6 +12,7 @@ import ru.yandex.practicum.filmorate.service.UserService;
 
 import javax.validation.Valid;
 import java.util.Collection;
+import java.util.List;
 
 @RestController
 @RequestMapping("/users")
@@ -20,8 +22,8 @@ public class UserController {
 
     private final UserService userService;
 
-    public UserController(UserService userService) {
-        this.userService = userService;
+    public UserController(JdbcTemplate jdbcTemplate) {
+        this.userService = new UserService(jdbcTemplate);
     }
 
     @PostMapping
@@ -57,8 +59,8 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
-/*
-    @GetMapping("/{id}/friends")
+
+/*    @GetMapping("/{id}/friends")
     public ResponseEntity<List<User>> getFriendListById(@PathVariable("id") Integer id) throws UserNotFoundException, IdIsNegativeException {
         logger.info("Получение списка друзей у конкретного пользователя");
         return ResponseEntity.ok(userService.getFriendListById(id));
