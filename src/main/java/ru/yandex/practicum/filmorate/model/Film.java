@@ -3,14 +3,12 @@ package ru.yandex.practicum.filmorate.model;
 import com.sun.istack.NotNull;
 import lombok.Data;
 import lombok.Getter;
-
 import javax.validation.ValidationException;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.Set;
 
 @Data
@@ -37,7 +35,7 @@ public class Film {
     @Getter
     private Set<Integer> likes;
 
-    public Film(String name, String description, LocalDate releaseDate, int duration,Mpa mpa,Genre genre) {
+    public Film(String name, String description, LocalDate releaseDate, int duration, Mpa mpa, Genre genre) {
         LocalDate minReleaseDate = LocalDate.of(1895, 12, 28); // 28 декабря 1895 года
         if (releaseDate == null || releaseDate.isBefore(minReleaseDate)) {
             throw new ValidationException("Дата релиза должна быть не ранее 28 декабря 1895 года");
@@ -47,7 +45,7 @@ public class Film {
         this.releaseDate = releaseDate;
         this.duration = duration;
         this.mpa = mpa;
-        this.genre =genre;
+        this.genre = genre;
         this.likes = new HashSet<>();
     }
 
