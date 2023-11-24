@@ -7,7 +7,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exception.FilmNotFoundException;
 import ru.yandex.practicum.filmorate.exception.IdIsNegativeException;
-import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.FilmService;
 
@@ -23,9 +22,10 @@ public class FilmController {
 
     private final FilmService filmService;
 
-    public FilmController() {
-        this.filmService = new FilmService();
+    public FilmController(FilmService filmService) {
+        this.filmService = filmService;
     }
+
 
     @PostMapping
     public ResponseEntity<Film> addFilm(@RequestBody @Valid Film film) {
@@ -69,7 +69,7 @@ public class FilmController {
     }
 
 
-    @PutMapping("/{id}/like/{likeId}")
+/*    @PutMapping("/{id}/like/{likeId}")
     public ResponseEntity<Object> addLike(@PathVariable("id") Integer id,
                                           @PathVariable("likeId") Integer likeId) throws UserNotFoundException,
             IdIsNegativeException {
@@ -85,6 +85,6 @@ public class FilmController {
         filmService.removeLike(id, likeId);
         logger.info("Удалён лайк");
         return ResponseEntity.ok().build();
-    }
+    }*/
 }
 

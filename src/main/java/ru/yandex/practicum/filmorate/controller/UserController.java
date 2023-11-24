@@ -3,6 +3,7 @@ package ru.yandex.practicum.filmorate.controller;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exception.IdIsNegativeException;
 import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
@@ -19,10 +20,11 @@ public class UserController {
 
     private static final Logger logger = LogManager.getLogger(UserController.class);
 
+
     private final UserService userService;
 
-    public UserController() {
-        this.userService = new UserService();
+    public UserController(JdbcTemplate jdbcTemplate) {
+        this.userService = new UserService(jdbcTemplate);
     }
 
     @PostMapping
@@ -65,16 +67,16 @@ public class UserController {
         return ResponseEntity.ok(userService.getFriendListById(id));
     }
 
-    @GetMapping("/{id}/friends/{friendId}")
-    public ResponseEntity<User> getFriendById(@PathVariable("id") Integer id,
-                                              @PathVariable("friendId") Integer friendId) throws UserNotFoundException {
-        logger.info("Получение конкретного друзей у конкретного пользователя");
-        return ResponseEntity.ok(userService.getFriendById(id, friendId));
-    }
+//    @GetMapping("/{id}/friends/{friendId}")
+//    public ResponseEntity<User> getFriendById(@PathVariable("id") Integer id,
+//                                              @PathVariable("friendId") Integer friendId) throws UserNotFoundException {
+//        logger.info("Получение конкретного друзей у конкретного пользователя");
+//        return ResponseEntity.ok(userService.getFriendById(id, friendId));
+//    }
 
     @PutMapping("/{id}/friends/{friendId}")
     public ResponseEntity<Object> addFriendById(@PathVariable("id") Integer id,
-                                                @PathVariable("friendId") Integer friendId) throws UserNotFoundException {
+                                                @PathVariable("friendId") Integer friendId) throws IdIsNegativeException {
         userService.addFriend(id, friendId);
         logger.info("Добавление конкретного друзей у конкретного пользователя");
         return ResponseEntity.ok().build();
@@ -90,7 +92,7 @@ public class UserController {
 
     @GetMapping("/{id}/friends/common/{otherId}")
     public ResponseEntity<List<User>> getCommonFriendList(@PathVariable("id") Integer id,
-                                                          @PathVariable("otherId") Integer otherId) throws UserNotFoundException, IdIsNegativeException {
+                                                          @PathVariable("otherId") Integer otherId) {
         logger.info("Вывод общего списка друзей");
         return ResponseEntity.ok(userService.getCommonFriendList(id, otherId));
     }

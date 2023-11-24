@@ -5,6 +5,7 @@ import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.util.Collection;
+import java.util.List;
 
 public interface UserStorage {
 
@@ -20,5 +21,9 @@ public interface UserStorage {
 
     void removeFriendById(Integer id, Integer otherId) throws UserNotFoundException, IdIsNegativeException;
 
+    List<User> getCommonFriendList(Integer id, Integer otherId);
 
+    void addFriend(Integer id, Integer friendId) throws IdIsNegativeException;
+
+    List<User> getFriendListById(Integer id);
 }

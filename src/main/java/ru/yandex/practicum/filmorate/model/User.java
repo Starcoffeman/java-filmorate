@@ -1,8 +1,10 @@
 package ru.yandex.practicum.filmorate.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.AllArgsConstructor;
 import lombok.Data;
-
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Past;
@@ -13,7 +15,11 @@ import java.util.List;
 
 
 @Data
+@SuperBuilder
+@NoArgsConstructor
+@AllArgsConstructor
 public class User {
+
     private int id;
 
     @NotBlank(message = "Электронная почта не может быть пустой")
