@@ -1,6 +1,8 @@
 
 package ru.yandex.practicum.filmorate.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.FilmNotFoundException;
 import ru.yandex.practicum.filmorate.exception.IdIsNegativeException;
@@ -14,10 +16,11 @@ import java.util.List;
 @Service
 public class FilmService {
 
+
     private final FilmStorage filmStorage;
 
-    public FilmService() {
-        this.filmStorage = new FilmDbStorage();
+    public FilmService(JdbcTemplate jdbcTemplate) {
+        this.filmStorage = new FilmDbStorage(jdbcTemplate);
     }
 
     public Collection<Film> getAllFilm() {

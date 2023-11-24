@@ -8,7 +8,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.yandex.practicum.filmorate.exception.MpaNotFoundException;
 import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
+import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.model.Mpa;
+import ru.yandex.practicum.filmorate.service.GenreService;
 import ru.yandex.practicum.filmorate.service.MpaService;
 
 import java.util.List;
@@ -23,7 +25,7 @@ public class MpaController {
 
 
     @GetMapping
-    public List<Mpa> getAll() {
+    public List<Mpa> getAll(){
         final List<Mpa> mpas = service.getAll();
         return mpas;
     }
