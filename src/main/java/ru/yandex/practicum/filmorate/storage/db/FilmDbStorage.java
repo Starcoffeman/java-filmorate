@@ -9,18 +9,14 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.exception.FilmNotFoundException;
-import ru.yandex.practicum.filmorate.exception.GenreNotFoundException;
 import ru.yandex.practicum.filmorate.exception.IdIsNegativeException;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 
 import javax.validation.ValidationException;
 import java.time.LocalDate;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Component
 @Repository
@@ -88,7 +84,7 @@ public class FilmDbStorage implements FilmStorage {
                 "release_date = ?, " +
                 "rate = ?, " +
                 "duration = ?, " +
-                "mpa_id = ? " +
+                "mpa = ? " +
                 "WHERE id = ?";
 
         jdbcTemplate.update(

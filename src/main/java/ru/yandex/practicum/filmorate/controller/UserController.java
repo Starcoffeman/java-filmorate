@@ -2,7 +2,6 @@ package ru.yandex.practicum.filmorate.controller;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.*;
@@ -62,7 +61,7 @@ public class UserController {
     }
 
 
-   @GetMapping("/{id}/friends")
+    @GetMapping("/{id}/friends")
     public ResponseEntity<List<User>> getFriendListById(@PathVariable("id") Integer id) throws UserNotFoundException, IdIsNegativeException {
         logger.info("Получение списка друзей у конкретного пользователя");
         return ResponseEntity.ok(userService.getFriendListById(id));
@@ -93,7 +92,7 @@ public class UserController {
 
     @GetMapping("/{id}/friends/common/{otherId}")
     public ResponseEntity<List<User>> getCommonFriendList(@PathVariable("id") Integer id,
-                                                          @PathVariable("otherId") Integer otherId)  {
+                                                          @PathVariable("otherId") Integer otherId) {
         logger.info("Вывод общего списка друзей");
         return ResponseEntity.ok(userService.getCommonFriendList(id, otherId));
     }
