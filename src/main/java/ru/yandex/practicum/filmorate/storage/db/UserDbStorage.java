@@ -13,6 +13,7 @@ import ru.yandex.practicum.filmorate.exception.IdIsNegativeException;
 import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
+
 import java.util.Collection;
 import java.util.List;
 
@@ -28,7 +29,6 @@ public class UserDbStorage implements UserStorage {
         String sql = "select * from USERS";
         return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(User.class));
     }
-
 
 
     @Override
@@ -76,7 +76,6 @@ public class UserDbStorage implements UserStorage {
     }
 
 
-
     @Override
     public User getUserById(Integer id) throws UserNotFoundException, IdIsNegativeException {
         if (id < 0) {
@@ -90,7 +89,6 @@ public class UserDbStorage implements UserStorage {
             throw new UserNotFoundException("User with ID " + id + " not found.");
         }
     }
-
 
 
     @Override
@@ -119,7 +117,7 @@ public class UserDbStorage implements UserStorage {
 
     @Override
     public void addFriend(Integer id, Integer friendId) throws IdIsNegativeException {
-        if (id<1 ||friendId<1){
+        if (id < 1 || friendId < 1) {
             throw new IdIsNegativeException("Id is negative");
         }
 

@@ -14,11 +14,11 @@ public class GenreService {
 
     private final GenreStorage genreStorage;
 
-    public GenreService(JdbcTemplate jdbcTemplate){
+    public GenreService(JdbcTemplate jdbcTemplate) {
         this.genreStorage = new GenreDbStorage(jdbcTemplate);
     }
 
-    public List<Genre> getAll(){
+    public List<Genre> getAll() {
         return genreStorage.getAll();
     }
 

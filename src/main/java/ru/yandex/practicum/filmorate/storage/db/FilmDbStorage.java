@@ -68,8 +68,8 @@ public class FilmDbStorage implements FilmStorage {
     }
 
     @Override
-    public void updateFilm(Film updateFilm) throws  IdIsNegativeException {
-        if (updateFilm.getId() <= 0 || updateFilm.getId()>=1000 ) {
+    public void updateFilm(Film updateFilm) throws IdIsNegativeException {
+        if (updateFilm.getId() <= 0 || updateFilm.getId() >= 1000) {
             throw new IdIsNegativeException("Film ID should be a positive integer.");
         }
 
@@ -98,7 +98,6 @@ public class FilmDbStorage implements FilmStorage {
                 updateFilm.getId()
         );
     }
-
 
 
     @Override
