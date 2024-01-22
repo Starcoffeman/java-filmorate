@@ -24,6 +24,7 @@ public interface FilmStorage {
     List<Film> getPopularsFilm(Integer count);
 
     void addLike(Integer id, Integer likeId);
+
     void removeLike(Integer filmId, Integer userId) throws LikeNotFoundException, IdIsNegativeException;
 }
 
