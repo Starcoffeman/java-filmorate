@@ -9,11 +9,24 @@ import javax.validation.constraints.NotBlank;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Genre {
+public class Genre implements Comparable<Genre> {
 
 
     int id;
 
     @NotBlank
     String name;
+
+
+    @Override
+    public int compareTo(Genre genre) {
+        if (id == genre.getId()) {
+            return 0;
+        }
+        if (id < genre.getId()) {
+            return -1;
+        }
+
+        return 1;
+    }
 }

@@ -4,9 +4,11 @@ package ru.yandex.practicum.filmorate.controller;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exception.FilmNotFoundException;
 import ru.yandex.practicum.filmorate.exception.IdIsNegativeException;
+import ru.yandex.practicum.filmorate.exception.LikeNotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.FilmService;
 
@@ -22,10 +24,9 @@ public class FilmController {
 
     private final FilmService filmService;
 
-    public FilmController(FilmService filmService) {
-        this.filmService = filmService;
+    public FilmController(JdbcTemplate jdbcTemplate) {
+        this.filmService = new FilmService(jdbcTemplate);
     }
-
 
     @PostMapping
     public ResponseEntity<Film> addFilm(@RequestBody @Valid Film film) {
@@ -42,8 +43,8 @@ public class FilmController {
     @PutMapping
     public ResponseEntity<Film> updateFilm(@RequestBody @Valid Film updateFilm) throws InternalError,
             FilmNotFoundException, IdIsNegativeException {
-        filmService.updateFilm(updateFilm);
         logger.info("Фильм обновлён");
+        filmService.updateFilm(updateFilm);
         return ResponseEntity.ok(updateFilm);
     }
 
@@ -69,22 +70,21 @@ public class FilmController {
     }
 
 
-/*    @PutMapping("/{id}/like/{likeId}")
+    @PutMapping("/{id}/like/{likeId}")
     public ResponseEntity<Object> addLike(@PathVariable("id") Integer id,
-                                          @PathVariable("likeId") Integer likeId) throws UserNotFoundException,
-            IdIsNegativeException {
-        filmService.addLike(id, likeId);
+                                          @PathVariable("likeId") Integer likeId) {
+        filmService.addLike(likeId, id);
         logger.info("Поставлен лайк");
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{id}/like/{likeId}")
     public ResponseEntity<Object> removeLike(@PathVariable("id") Integer id,
-                                             @PathVariable("likeId") Integer likeId) throws UserNotFoundException,
-            IdIsNegativeException {
+                                             @PathVariable("likeId") Integer likeId) throws
+            IdIsNegativeException, LikeNotFoundException {
         filmService.removeLike(id, likeId);
         logger.info("Удалён лайк");
         return ResponseEntity.ok().build();
-    }*/
+    }
 }
 

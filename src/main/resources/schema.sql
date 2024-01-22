@@ -17,6 +17,7 @@ CREATE TABLE IF NOT EXISTS MPA
     name VARCHAR(255)
 );
 
+
 CREATE TABLE IF NOT EXISTS FILMS
 (
     id           INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
@@ -25,10 +26,8 @@ CREATE TABLE IF NOT EXISTS FILMS
     release_date TIMESTAMP,
     rate         INT,
     duration     INT,
-    mpa      INT REFERENCES MPA (id),
-    deleted      BOOL DEFAULT FALSE
+    mpa_id       INT REFERENCES MPA (id)
 );
-
 
 CREATE TABLE IF NOT EXISTS GENRES
 (
@@ -56,3 +55,4 @@ CREATE TABLE IF NOT EXISTS LIKES
     film_id INT references USERS (id),
     PRIMARY KEY (user_id, film_id)
 );
+

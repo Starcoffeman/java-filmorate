@@ -29,11 +29,11 @@ public class UserService {
         return user;
     }
 
-    public void updateUser(User updateUser) throws UserNotFoundException {
+    public void updateUser(User updateUser) throws UserNotFoundException, IdIsNegativeException {
         userStorage.updateUser(updateUser);
     }
 
-    public void removeUser(Integer id) throws UserNotFoundException {
+    public void removeUser(Integer id) throws UserNotFoundException, IdIsNegativeException {
         userStorage.removeUser(id);
     }
 
@@ -41,20 +41,24 @@ public class UserService {
         return userStorage.getUserById(id);
     }
 
-    public List<User> getCommonFriendList(Integer id, Integer otherId) {
-        return userStorage.getCommonFriendList(id, otherId);
+
+    public List<User> getFriendListById(Integer id) {
+        return userStorage.getFriendListById(id);
+    }
+
+    public User getFriendById(Integer id, Integer friendId) {
+        return userStorage.getFriendById(id, friendId);
     }
 
     public void addFriend(Integer id, Integer friendId) throws IdIsNegativeException {
         userStorage.addFriend(id, friendId);
     }
 
-    public List<User> getFriendListById(Integer id) {
-        return userStorage.getFriendListById(id);
-    }
-
     public void removeFriendById(Integer id, Integer friendId) throws UserNotFoundException, IdIsNegativeException {
         userStorage.removeFriendById(id, friendId);
     }
 
+    public List<User> getCommonFriendList(Integer id, Integer otherId) {
+        return userStorage.getCommonFriendList(id, otherId);
+    }
 }

@@ -5,6 +5,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.FilmNotFoundException;
 import ru.yandex.practicum.filmorate.exception.IdIsNegativeException;
+import ru.yandex.practicum.filmorate.exception.LikeNotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.storage.db.FilmDbStorage;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
@@ -15,11 +16,11 @@ import java.util.List;
 @Service
 public class FilmService {
 
-
     private final FilmStorage filmStorage;
 
     public FilmService(JdbcTemplate jdbcTemplate) {
-        this.filmStorage = new FilmDbStorage(jdbcTemplate);
+        this.filmStorage = new FilmDbStorage(jdbcTemplate) {
+        };
     }
 
     public Collection<Film> getAllFilm() {
@@ -47,27 +48,19 @@ public class FilmService {
         return filmStorage.getPopularsFilm(id);
     }
 
-/*    public void addLike(Integer id, Integer likeId) throws UserNotFoundException, IdIsNegativeException {
-        if (filmStorage.getFilms().get(id) == null) {
-            throw new UserNotFoundException("Нет такого фильма или пользователя");
-        }
 
-        if (likeId < 1) {
-            throw new IdIsNegativeException("Отрицательный id");
-        }
-        filmStorage.getFilms().get(id).getLikes().add(likeId);
+    public void addLike(Integer userId, Integer filmId) {
+        filmStorage.addLike(userId, filmId);
     }
 
-    public void removeLike(Integer id, Integer likeId) throws UserNotFoundException, IdIsNegativeException {
-        if (filmStorage.getFilms().get(id) == null) {
-            throw new UserNotFoundException("Нет такого фильма или пользователя");
-        }
 
-        if (likeId < 1) {
+    public void removeLike(Integer filmId, Integer userId) throws IdIsNegativeException, LikeNotFoundException {
+
+        if (userId < 1) {
             throw new IdIsNegativeException("Отрицательный id");
         }
-        filmStorage.getFilms().get(id).getLikes().remove(likeId);
-    }*/
+        filmStorage.removeLike(filmId, userId);
+    }
 
 }
 
