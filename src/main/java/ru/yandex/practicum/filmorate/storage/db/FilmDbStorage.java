@@ -1,6 +1,7 @@
 package ru.yandex.practicum.filmorate.storage.db;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -26,6 +27,7 @@ import java.util.*;
 public class FilmDbStorage implements FilmStorage {
 
     private final JdbcTemplate jdbcTemplate;
+
 
     @Override
     public void addFilm(Film film) {
@@ -83,17 +85,11 @@ public class FilmDbStorage implements FilmStorage {
 
     @Override
     public void updateFilm(Film updateFilm) throws FilmNotFoundException, IdIsNegativeException {
-        int filmId = updateFilm.getId();
-
-        if (filmId < 0) {
+        if (updateFilm.getId() < 0) {
             throw new IdIsNegativeException("Film ID cannot be negative.");
         }
 
-        Film existingFilm = getFilmById(filmId);
-
-        if (existingFilm == null) {
-            throw new FilmNotFoundException("Film with ID " + filmId + " not found.");
-        }
+        getFilmById(updateFilm.getId());
 
         String updateFilmSql = "UPDATE FILMS SET name = ?, description = ?, " +
                 "release_date = ?, rate = ?, duration = ?, mpa_id = ? " +
@@ -102,13 +98,12 @@ public class FilmDbStorage implements FilmStorage {
         jdbcTemplate.update(updateFilmSql, updateFilm.getName(), updateFilm.getDescription(),
                 Date.valueOf(updateFilm.getReleaseDate()), updateFilm.getRate(),
                 updateFilm.getDuration(), updateFilm.getMpa().getId(),
-                filmId);
+                updateFilm.getId());
 
-        deleteGenresForFilm(filmId);
+        deleteGenresForFilm(updateFilm.getId());
 
-        insertGenresForFilm(filmId, updateFilm.getGenres());
+        insertGenresForFilm(updateFilm.getId(), updateFilm.getGenres());
     }
-
 
     private void insertGenresForFilm(int filmId, Set<Genre> genres) {
         String sqlInsertGenre = "MERGE INTO FILM_GENRES (film_id, genres_id) VALUES (?, ?)";
@@ -128,8 +123,7 @@ public class FilmDbStorage implements FilmStorage {
 
     @Override
     public Collection<Film> getAllFilms() {
-        String sql = "SELECT FILMS.ID AS id, FILMS.NAME, DESCRIPTION, RELEASE_DATE, RATE, DURATION, MPA.ID AS mpa_id, " +
-                "MPA.NAME AS mpa_name, GENRES.ID AS genre_id, GENRES.NAME AS genre_name, " +
+        String sql = "SELECT FILMS.ID AS id, FILMS.NAME, DESCRIPTION, RELEASE_DATE, RATE, DURATION, MPA.ID AS mpa_id, MPA.NAME AS mpa_name, GENRES.ID AS genre_id, GENRES.NAME AS genre_name, " +
                 "LIKES.USER_ID AS like_user_id " +
                 "FROM FILMS " +
                 "JOIN MPA ON FILMS.MPA_ID = MPA.ID " +
@@ -181,13 +175,102 @@ public class FilmDbStorage implements FilmStorage {
 
 
     @Override
-    public Film getFilmById(Integer id) throws IdIsNegativeException {
-        if (id == null || id < 0 || id > 1000) {
+    public Film getFilmById(Integer id) throws FilmNotFoundException, IdIsNegativeException {
+        if (id == null || id < 0) {
             throw new IdIsNegativeException("Film ID cannot be negative.");
         }
-        ArrayList<Film> a = (ArrayList<Film>) getAllFilms();
-        return a.get(id - 1);
+
+        String sql = "SELECT FILMS.ID AS id, FILMS.NAME, DESCRIPTION, RELEASE_DATE, RATE, DURATION, MPA.ID AS mpa_id, " +
+                "MPA.NAME AS mpa_name, GENRES.ID AS genre_id, GENRES.NAME AS genre_name " +
+                "FROM FILMS " +
+                "JOIN MPA ON FILMS.MPA_ID = MPA.ID " +
+                "LEFT JOIN FILM_GENRES ON FILMS.ID = FILM_GENRES.FILM_ID " +
+                "LEFT JOIN GENRES ON FILM_GENRES.GENRES_ID = GENRES.ID " +
+                "WHERE FILMS.ID = ?";
+
+        try {
+            // Use a Map to store films based on their IDs
+            Map<Integer, Film> filmMap = new HashMap<>();
+
+            jdbcTemplate.query(sql, preparedStatement -> preparedStatement.setInt(1, id),
+                    (rs, rowNum) -> {
+                        int filmId = rs.getInt("id");
+
+                        // If the film is already in the map, update it; otherwise, create a new film
+                        Film film = filmMap.computeIfAbsent(filmId, key -> {
+                            Film newFilm = new Film();
+                            newFilm.setId(filmId);
+                            try {
+                                newFilm.setName(rs.getString("NAME"));
+                            } catch (SQLException e) {
+                                throw new RuntimeException(e);
+                            }
+                            try {
+                                newFilm.setDescription(rs.getString("DESCRIPTION"));
+                            } catch (SQLException e) {
+                                throw new RuntimeException(e);
+                            }
+                            try {
+                                newFilm.setReleaseDate(rs.getDate("RELEASE_DATE").toLocalDate());
+                            } catch (SQLException e) {
+                                throw new RuntimeException(e);
+                            }
+                            try {
+                                newFilm.setRate(rs.getInt("RATE"));
+                            } catch (SQLException e) {
+                                throw new RuntimeException(e);
+                            }
+                            try {
+                                newFilm.setDuration(rs.getInt("DURATION"));
+                            } catch (SQLException e) {
+                                throw new RuntimeException(e);
+                            }
+
+                            Mpa mpa = new Mpa();
+                            try {
+                                mpa.setId(rs.getInt("mpa_id"));
+                            } catch (SQLException e) {
+                                throw new RuntimeException(e);
+                            }
+                            try {
+                                mpa.setName(rs.getString("mpa_name"));
+                            } catch (SQLException e) {
+                                throw new RuntimeException(e);
+                            }
+                            newFilm.setMpa(mpa);
+
+                            newFilm.setGenres(new LinkedHashSet<>());
+                            return newFilm;
+                        });
+
+                        int genreId = rs.getInt("genre_id");
+                        String genreName = rs.getString("genre_name");
+                        if (genreId > 0 && genreName != null) {
+                            // Add each genre to the film's set of genres
+                            Genre genre = new Genre();
+                            genre.setId(genreId);
+                            genre.setName(genreName);
+                            film.getGenres().add(genre);
+                        }
+
+                        return film;
+                    });
+
+            // Retrieve the film from the map based on the provided ID
+            Film film = filmMap.get(id);
+
+            // Check if the film was found
+            if (film == null) {
+                throw new FilmNotFoundException("Film with ID " + id + " not found.");
+            }
+
+            return film;
+
+        } catch (EmptyResultDataAccessException e) {
+            throw new FilmNotFoundException("Film with ID " + id + " not found.");
+        }
     }
+
 
     @Override
     public List<Film> getPopularsFilm(Integer count) {
@@ -195,8 +278,7 @@ public class FilmDbStorage implements FilmStorage {
             throw new IllegalArgumentException("Count should be a positive integer");
         }
 
-        String sql = "SELECT FILMS.ID AS id, FILMS.NAME, DESCRIPTION, RELEASE_DATE, RATE, DURATION, MPA.ID AS mpa_id," +
-                " MPA.NAME AS mpa_name, " +
+        String sql = "SELECT FILMS.ID AS id, FILMS.NAME, DESCRIPTION, RELEASE_DATE, RATE, DURATION, MPA.ID AS mpa_id, MPA.NAME AS mpa_name, " +
                 "GENRES.ID AS genre_id, GENRES.NAME AS genre_name, COUNT(LIKES.FILM_ID) AS like_count " +
                 "FROM FILMS " +
                 "JOIN MPA ON FILMS.MPA_ID = MPA.ID " +
