@@ -86,8 +86,8 @@ public class UserController {
 
     @DeleteMapping("/{id}/friends/{friendId}")
     public ResponseEntity<Object> removeFriendById(@PathVariable("id") Integer id,
-                                                   @PathVariable("friendId") Integer friendId) throws IdIsNegativeException
-            , EntityNotFoundException {
+                                                   @PathVariable("friendId") Integer friendId)
+            throws IdIsNegativeException, EntityNotFoundException {
         userService.removeFriendById(id, friendId);
         logger.info("Удаление конкретного друзей у конкретного пользователя");
         return ResponseEntity.ok().build();
