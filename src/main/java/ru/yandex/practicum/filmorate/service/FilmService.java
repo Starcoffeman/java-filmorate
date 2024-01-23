@@ -3,9 +3,8 @@ package ru.yandex.practicum.filmorate.service;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.filmorate.exception.FilmNotFoundException;
+import ru.yandex.practicum.filmorate.exception.EntityNotFoundException;
 import ru.yandex.practicum.filmorate.exception.IdIsNegativeException;
-import ru.yandex.practicum.filmorate.exception.LikeNotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.storage.db.FilmDbStorage;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
@@ -32,15 +31,15 @@ public class FilmService {
         return film;
     }
 
-    public void updateFilm(Film updateFilm) throws FilmNotFoundException, IdIsNegativeException {
+    public void updateFilm(Film updateFilm) throws EntityNotFoundException, IdIsNegativeException {
         filmStorage.updateFilm(updateFilm);
     }
 
-    public void removeFilmById(Integer id) throws FilmNotFoundException, IdIsNegativeException {
+    public void removeFilmById(Integer id) throws EntityNotFoundException, IdIsNegativeException {
         filmStorage.removeFilm(id);
     }
 
-    public Film getFilmById(Integer id) throws FilmNotFoundException, IdIsNegativeException {
+    public Film getFilmById(Integer id) throws EntityNotFoundException, IdIsNegativeException {
         return filmStorage.getFilmById(id);
     }
 
@@ -48,14 +47,11 @@ public class FilmService {
         return filmStorage.getPopularsFilm(id);
     }
 
-
     public void addLike(Integer userId, Integer filmId) {
         filmStorage.addLike(userId, filmId);
     }
 
-
-    public void removeLike(Integer filmId, Integer userId) throws IdIsNegativeException, LikeNotFoundException {
-
+    public void removeLike(Integer filmId, Integer userId) throws IdIsNegativeException {
         if (userId < 1) {
             throw new IdIsNegativeException("Отрицательный id");
         }

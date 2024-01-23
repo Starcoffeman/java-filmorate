@@ -13,7 +13,6 @@ public class MpaService {
 
     private final MpaDbStorage mpaStorage;
 
-
     public MpaService(JdbcTemplate jdbcTemplate) {
         this.mpaStorage = new MpaDbStorage(jdbcTemplate);
     }
@@ -25,6 +24,5 @@ public class MpaService {
     public List<Mpa> getAllMpa() {
         return mpaStorage.getAllMpa();
     }
-
 
 }

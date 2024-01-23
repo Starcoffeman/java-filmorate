@@ -1,12 +1,11 @@
 package ru.yandex.practicum.filmorate.model;
 
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import javax.validation.ValidationException;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
@@ -16,42 +15,26 @@ import java.util.*;
 @NoArgsConstructor
 public class Film {
 
-    @Setter
-    @Getter
     private int id;
 
-    @Setter
     @NotBlank(message = "Название не может быть пустым")
     private String name;
 
-    @Setter
-    @Getter
     @Size(max = 200, message = "Максимальная длина описания - 200 символов")
     private String description;
 
-    @Setter
-    @Getter
     private LocalDate releaseDate;
 
-    @Setter
-    @Getter
     @Positive(message = "Продолжительность фильма должна быть положительной")
     private int duration;
 
-    @Getter
-    @Setter
     private int rate;
 
-    @Getter
-    @Setter
+    @NotNull
     private Mpa mpa;
 
-    @Getter
-    @Setter
     private Set<Integer> likes = new HashSet<>();
 
-    @Getter
-    @Setter
     private LinkedHashSet<Genre> genres = new LinkedHashSet<>();
 
     public Film(String name, String description, LocalDate releaseDate, int duration, Mpa mpa) {

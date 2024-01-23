@@ -8,8 +8,8 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
+import ru.yandex.practicum.filmorate.exception.EntityNotFoundException;
 import ru.yandex.practicum.filmorate.exception.IdIsNegativeException;
-import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
@@ -51,7 +51,7 @@ public class UserDbStorage implements UserStorage {
     }
 
     @Override
-    public void removeUser(Integer id) throws UserNotFoundException, IdIsNegativeException {
+    public void removeUser(Integer id) throws IdIsNegativeException, EntityNotFoundException {
         if (id < 0) {
             throw new IdIsNegativeException("User ID cannot be negative.");
         }
@@ -59,12 +59,12 @@ public class UserDbStorage implements UserStorage {
         String sql = "DELETE FROM USERS WHERE id = ?";
         int affectedRows = jdbcTemplate.update(sql, id);
         if (affectedRows == 0) {
-            throw new UserNotFoundException("User with ID " + id + " not found.");
+            throw new EntityNotFoundException("User with ID " + id + " not found.");
         }
     }
 
     @Override
-    public void updateUser(User updateUser) throws UserNotFoundException, IdIsNegativeException {
+    public User updateUser(User updateUser) throws IdIsNegativeException, EntityNotFoundException {
         if (updateUser.getId() < 0) {
             throw new IdIsNegativeException("User ID cannot be negative.");
         }
@@ -73,8 +73,9 @@ public class UserDbStorage implements UserStorage {
         int affectedRows = jdbcTemplate.update(sql, updateUser.getEmail(), updateUser.getLogin(),
                 updateUser.getName(), updateUser.getBirthday(), updateUser.getId());
         if (affectedRows == 0) {
-            throw new UserNotFoundException("User with ID " + updateUser.getId() + " not found.");
+            throw new EntityNotFoundException("User with ID " + updateUser.getId() + " not found.");
         }
+        return updateUser;
     }
 
     @Override
@@ -84,7 +85,7 @@ public class UserDbStorage implements UserStorage {
     }
 
     @Override
-    public User getUserById(Integer id) throws UserNotFoundException, IdIsNegativeException {
+    public User getUserById(Integer id) throws IdIsNegativeException, EntityNotFoundException {
         if (id < 0) {
             throw new IdIsNegativeException("User ID cannot be negative.");
         }
@@ -93,12 +94,12 @@ public class UserDbStorage implements UserStorage {
         try {
             return jdbcTemplate.queryForObject(sql, BeanPropertyRowMapper.newInstance(User.class), id);
         } catch (EmptyResultDataAccessException e) {
-            throw new UserNotFoundException("User with ID " + id + " not found.");
+            throw new EntityNotFoundException("User with ID " + id + " not found.");
         }
     }
 
     @Override
-    public void removeFriendById(Integer id, Integer otherId) throws UserNotFoundException, IdIsNegativeException {
+    public void removeFriendById(Integer id, Integer otherId) throws IdIsNegativeException, EntityNotFoundException {
         if (id < 0 || otherId < 0) {
             throw new IdIsNegativeException("User ID cannot be negative.");
         }
@@ -109,7 +110,7 @@ public class UserDbStorage implements UserStorage {
         int affectedRows = jdbcTemplate.update(sql, id, otherId, otherId, id);
 
         if (affectedRows == 0) {
-            throw new UserNotFoundException("Friendship not found between users with ID " + id + " and " + otherId);
+            throw new EntityNotFoundException("Friendship not found between users with ID " + id + " and " + otherId);
         }
     }
 
@@ -119,14 +120,13 @@ public class UserDbStorage implements UserStorage {
         return jdbcTemplate.query(sql, BeanPropertyRowMapper.newInstance(User.class), id);
     }
 
-
     @Override
     public User getFriendById(Integer id, Integer friendId) {
         String sql = "SELECT u.* FROM USERS u INNER JOIN FRIENDS f ON u.id = f.friend_id WHERE f.user_id = ? AND f.friend_id = ?";
         try {
             return jdbcTemplate.queryForObject(sql, BeanPropertyRowMapper.newInstance(User.class), id, friendId);
         } catch (EmptyResultDataAccessException e) {
-            return null; // Друг не найден
+            return null;
         }
     }
 

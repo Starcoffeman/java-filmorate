@@ -11,12 +11,10 @@ import javax.validation.constraints.NotBlank;
 @AllArgsConstructor
 public class Genre implements Comparable<Genre> {
 
-
-    int id;
+    private int id;
 
     @NotBlank
-    String name;
-
+    private String name;
 
     @Override
     public int compareTo(Genre genre) {

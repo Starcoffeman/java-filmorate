@@ -2,8 +2,8 @@ package ru.yandex.practicum.filmorate.service;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.filmorate.exception.EntityNotFoundException;
 import ru.yandex.practicum.filmorate.exception.IdIsNegativeException;
-import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.db.UserDbStorage;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
@@ -29,18 +29,17 @@ public class UserService {
         return user;
     }
 
-    public void updateUser(User updateUser) throws UserNotFoundException, IdIsNegativeException {
+    public void updateUser(User updateUser) throws IdIsNegativeException, EntityNotFoundException {
         userStorage.updateUser(updateUser);
     }
 
-    public void removeUser(Integer id) throws UserNotFoundException, IdIsNegativeException {
+    public void removeUser(Integer id) throws IdIsNegativeException, EntityNotFoundException {
         userStorage.removeUser(id);
     }
 
-    public User getUserById(Integer id) throws UserNotFoundException, IdIsNegativeException {
+    public User getUserById(Integer id) throws IdIsNegativeException, EntityNotFoundException {
         return userStorage.getUserById(id);
     }
-
 
     public List<User> getFriendListById(Integer id) {
         return userStorage.getFriendListById(id);
@@ -54,7 +53,7 @@ public class UserService {
         userStorage.addFriend(id, friendId);
     }
 
-    public void removeFriendById(Integer id, Integer friendId) throws UserNotFoundException, IdIsNegativeException {
+    public void removeFriendById(Integer id, Integer friendId) throws IdIsNegativeException, EntityNotFoundException {
         userStorage.removeFriendById(id, friendId);
     }
 

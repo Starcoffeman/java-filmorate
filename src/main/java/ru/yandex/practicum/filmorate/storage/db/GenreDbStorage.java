@@ -6,7 +6,7 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
-import ru.yandex.practicum.filmorate.exception.GenreNotFoundException;
+import ru.yandex.practicum.filmorate.exception.EntityNotFoundException;
 import ru.yandex.practicum.filmorate.exception.IdIsNegativeException;
 import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.storage.genre.GenreStorage;
@@ -21,7 +21,7 @@ public class GenreDbStorage implements GenreStorage {
     private final JdbcTemplate jdbcTemplate;
 
     @Override
-    public Genre getGenreById(int id) throws IdIsNegativeException, GenreNotFoundException {
+    public Genre getGenreById(int id) throws IdIsNegativeException, EntityNotFoundException {
         if (id < 0) {
             throw new IdIsNegativeException("Genre ID cannot be negative.");
         }
@@ -31,7 +31,7 @@ public class GenreDbStorage implements GenreStorage {
         try {
             return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(Genre.class), id);
         } catch (EmptyResultDataAccessException e) {
-            throw new GenreNotFoundException("Genre with ID " + id + " not found.");
+            throw new EntityNotFoundException("Genre with ID " + id + " not found.");
         }
     }
 
@@ -43,7 +43,7 @@ public class GenreDbStorage implements GenreStorage {
     }
 
     @Override
-    public void updateGenre(Genre updateGenre) throws IdIsNegativeException, GenreNotFoundException {
+    public Genre updateGenre(Genre updateGenre) throws IdIsNegativeException, EntityNotFoundException {
         if (updateGenre.getId() < 0) {
             throw new IdIsNegativeException("Genre ID cannot be negative.");
         }
@@ -52,5 +52,6 @@ public class GenreDbStorage implements GenreStorage {
 
         String sql = "UPDATE GENRES SET name = ? WHERE id = ?";
         jdbcTemplate.update(sql, updateGenre.getName(), updateGenre.getId());
+        return updateGenre;
     }
 }

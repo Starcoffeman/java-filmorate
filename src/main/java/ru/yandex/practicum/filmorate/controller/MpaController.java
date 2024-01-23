@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.yandex.practicum.filmorate.exception.IdIsNegativeException;
-import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
 import ru.yandex.practicum.filmorate.model.Mpa;
 import ru.yandex.practicum.filmorate.service.MpaService;
 
@@ -27,7 +26,6 @@ public class MpaController {
         this.mpaService = new MpaService(jdbcTemplate);
     }
 
-
     @GetMapping
     public ResponseEntity<Collection<Mpa>> getAllMpa() {
         logger.info("Вывод пользователей");
@@ -36,7 +34,7 @@ public class MpaController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Mpa> getUserById(@PathVariable("id") Integer id) throws UserNotFoundException, IdIsNegativeException {
+    public ResponseEntity<Mpa> getUserById(@PathVariable("id") Integer id) throws IdIsNegativeException {
         logger.info("Вывод пользователя по id");
         return ResponseEntity.ok(mpaService.getMpaById(id));
     }

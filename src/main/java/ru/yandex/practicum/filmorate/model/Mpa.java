@@ -14,7 +14,7 @@ import javax.validation.constraints.NotBlank;
 public class Mpa {
 
     @NotBlank
-    String name;
+    private String name;
 
-    int id;
+    private int id;
 }

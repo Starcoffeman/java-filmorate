@@ -7,7 +7,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
-import ru.yandex.practicum.filmorate.exception.FilmNotFoundException;
+import ru.yandex.practicum.filmorate.exception.EntityNotFoundException;
 import ru.yandex.practicum.filmorate.exception.IdIsNegativeException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
@@ -20,14 +20,12 @@ import java.sql.Date;
 import java.time.LocalDate;
 import java.util.*;
 
-
 @Component
 @Repository
 @RequiredArgsConstructor
 public class FilmDbStorage implements FilmStorage {
 
     private final JdbcTemplate jdbcTemplate;
-
 
     @Override
     public void addFilm(Film film) {
@@ -67,7 +65,7 @@ public class FilmDbStorage implements FilmStorage {
 
 
     @Override
-    public void removeFilm(int id) throws FilmNotFoundException, IdIsNegativeException {
+    public void removeFilm(int id) throws EntityNotFoundException, IdIsNegativeException {
         if (id < 0) {
             throw new IdIsNegativeException("Film ID cannot be negative.");
         }
@@ -79,12 +77,12 @@ public class FilmDbStorage implements FilmStorage {
         int affectedRows = jdbcTemplate.update(sql, id);
 
         if (affectedRows == 0) {
-            throw new FilmNotFoundException("Film with ID " + id + " not found.");
+            throw new EntityNotFoundException("Film with ID " + id + " not found.");
         }
     }
 
     @Override
-    public void updateFilm(Film updateFilm) throws FilmNotFoundException, IdIsNegativeException {
+    public void updateFilm(Film updateFilm) throws EntityNotFoundException, IdIsNegativeException {
         if (updateFilm.getId() < 0) {
             throw new IdIsNegativeException("Film ID cannot be negative.");
         }
@@ -175,7 +173,7 @@ public class FilmDbStorage implements FilmStorage {
 
 
     @Override
-    public Film getFilmById(Integer id) throws FilmNotFoundException, IdIsNegativeException {
+    public Film getFilmById(Integer id) throws EntityNotFoundException, IdIsNegativeException {
         if (id == null || id < 0) {
             throw new IdIsNegativeException("Film ID cannot be negative.");
         }
@@ -189,7 +187,6 @@ public class FilmDbStorage implements FilmStorage {
                 "WHERE FILMS.ID = ?";
 
         try {
-            // Use a Map to store films based on their IDs
             Map<Integer, Film> filmMap = new HashMap<>();
 
             jdbcTemplate.query(sql, preparedStatement -> preparedStatement.setInt(1, id),
@@ -256,18 +253,16 @@ public class FilmDbStorage implements FilmStorage {
                         return film;
                     });
 
-            // Retrieve the film from the map based on the provided ID
             Film film = filmMap.get(id);
 
-            // Check if the film was found
             if (film == null) {
-                throw new FilmNotFoundException("Film with ID " + id + " not found.");
+                throw new EntityNotFoundException("Film with ID " + id + " not found.");
             }
 
             return film;
 
         } catch (EmptyResultDataAccessException e) {
-            throw new FilmNotFoundException("Film with ID " + id + " not found.");
+            throw new EntityNotFoundException("Film with ID " + id + " not found.");
         }
     }
 

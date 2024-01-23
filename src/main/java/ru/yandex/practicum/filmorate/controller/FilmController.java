@@ -6,9 +6,8 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.filmorate.exception.FilmNotFoundException;
+import ru.yandex.practicum.filmorate.exception.EntityNotFoundException;
 import ru.yandex.practicum.filmorate.exception.IdIsNegativeException;
-import ru.yandex.practicum.filmorate.exception.LikeNotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.FilmService;
 
@@ -42,7 +41,7 @@ public class FilmController {
 
     @PutMapping
     public ResponseEntity<Film> updateFilm(@RequestBody @Valid Film updateFilm) throws InternalError,
-            FilmNotFoundException, IdIsNegativeException {
+            EntityNotFoundException, IdIsNegativeException {
         logger.info("Фильм обновлён");
         filmService.updateFilm(updateFilm);
         return ResponseEntity.ok(updateFilm);
@@ -50,14 +49,14 @@ public class FilmController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Film> getFilmById(@PathVariable("id") Integer id) throws InternalError,
-            FilmNotFoundException, IdIsNegativeException {
+            EntityNotFoundException, IdIsNegativeException {
         logger.info("Фильм выведен по id");
         return ResponseEntity.ok(filmService.getFilmById(id));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> removeFilmById(@PathVariable("id") Integer id) throws InternalError,
-            FilmNotFoundException, IdIsNegativeException {
+            EntityNotFoundException, IdIsNegativeException {
         filmService.removeFilmById(id);
         logger.info("Фильм удалён по id");
         return ResponseEntity.ok().build();
@@ -81,7 +80,7 @@ public class FilmController {
     @DeleteMapping("/{id}/like/{likeId}")
     public ResponseEntity<Object> removeLike(@PathVariable("id") Integer id,
                                              @PathVariable("likeId") Integer likeId) throws
-            IdIsNegativeException, LikeNotFoundException {
+            IdIsNegativeException {
         filmService.removeLike(id, likeId);
         logger.info("Удалён лайк");
         return ResponseEntity.ok().build();
