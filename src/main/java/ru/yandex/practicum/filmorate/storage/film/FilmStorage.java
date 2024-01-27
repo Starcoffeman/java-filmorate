@@ -1,7 +1,6 @@
-
 package ru.yandex.practicum.filmorate.storage.film;
 
-import ru.yandex.practicum.filmorate.exception.FilmNotFoundException;
+import ru.yandex.practicum.filmorate.exception.EntityNotFoundException;
 import ru.yandex.practicum.filmorate.exception.IdIsNegativeException;
 import ru.yandex.practicum.filmorate.model.Film;
 
@@ -12,15 +11,18 @@ public interface FilmStorage {
 
     void addFilm(Film film);
 
-    void removeFilm(int id) throws FilmNotFoundException, IdIsNegativeException;
+    void removeFilm(int id) throws EntityNotFoundException, IdIsNegativeException;
 
-    void updateFilm(Film updateFilm) throws FilmNotFoundException, IdIsNegativeException;
+    Film updateFilm(Film updateFilm) throws EntityNotFoundException, IdIsNegativeException;
 
     Collection<Film> getAllFilms();
 
-    Film getFilmById(Integer id) throws FilmNotFoundException, IdIsNegativeException;
+    Film getFilmById(Integer id) throws EntityNotFoundException, IdIsNegativeException;
 
     List<Film> getPopularsFilm(Integer count);
 
+    void addLike(Integer id, Integer likeId);
+
+    void removeLike(Integer filmId, Integer userId) throws IdIsNegativeException;
 }
 

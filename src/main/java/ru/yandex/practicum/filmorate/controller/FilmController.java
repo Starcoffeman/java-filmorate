@@ -1,13 +1,12 @@
-
 package ru.yandex.practicum.filmorate.controller;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.filmorate.exception.FilmNotFoundException;
+import ru.yandex.practicum.filmorate.exception.EntityNotFoundException;
 import ru.yandex.practicum.filmorate.exception.IdIsNegativeException;
-import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.FilmService;
 
@@ -23,8 +22,8 @@ public class FilmController {
 
     private final FilmService filmService;
 
-    public FilmController() {
-        this.filmService = new FilmService();
+    public FilmController(JdbcTemplate jdbcTemplate) {
+        this.filmService = new FilmService(jdbcTemplate);
     }
 
     @PostMapping
@@ -41,29 +40,29 @@ public class FilmController {
 
     @PutMapping
     public ResponseEntity<Film> updateFilm(@RequestBody @Valid Film updateFilm) throws InternalError,
-            FilmNotFoundException, IdIsNegativeException {
-        filmService.updateFilm(updateFilm);
+            EntityNotFoundException, IdIsNegativeException {
         logger.info("Фильм обновлён");
-        return ResponseEntity.ok(updateFilm);
+        return ResponseEntity.ok(filmService.updateFilm(updateFilm));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Film> getFilmById(@PathVariable("id") Integer id) throws InternalError,
-            FilmNotFoundException, IdIsNegativeException {
+            EntityNotFoundException, IdIsNegativeException {
         logger.info("Фильм выведен по id");
         return ResponseEntity.ok(filmService.getFilmById(id));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> removeFilmById(@PathVariable("id") Integer id) throws InternalError,
-            FilmNotFoundException, IdIsNegativeException {
+            EntityNotFoundException, IdIsNegativeException {
         filmService.removeFilmById(id);
         logger.info("Фильм удалён по id");
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/popular")
-    public ResponseEntity<List<Film>> getPopularFilms(@RequestParam(name = "count", defaultValue = "10") int count) {
+    public ResponseEntity<List<Film>> getPopularFilms(
+            @RequestParam(name = "count", defaultValue = "10") int count) {
         logger.info("Получен фильм по id");
         return ResponseEntity.ok(filmService.getPopularsFilms(count));
     }
@@ -71,16 +70,15 @@ public class FilmController {
 
     @PutMapping("/{id}/like/{likeId}")
     public ResponseEntity<Object> addLike(@PathVariable("id") Integer id,
-                                          @PathVariable("likeId") Integer likeId) throws UserNotFoundException,
-            IdIsNegativeException {
-        filmService.addLike(id, likeId);
+                                          @PathVariable("likeId") Integer likeId) {
+        filmService.addLike(likeId, id);
         logger.info("Поставлен лайк");
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{id}/like/{likeId}")
     public ResponseEntity<Object> removeLike(@PathVariable("id") Integer id,
-                                             @PathVariable("likeId") Integer likeId) throws UserNotFoundException,
+                                             @PathVariable("likeId") Integer likeId) throws
             IdIsNegativeException {
         filmService.removeLike(id, likeId);
         logger.info("Удалён лайк");

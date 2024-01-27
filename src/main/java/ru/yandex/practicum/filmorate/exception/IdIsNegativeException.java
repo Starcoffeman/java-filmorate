@@ -4,5 +4,4 @@ public class IdIsNegativeException extends Exception {
     public IdIsNegativeException(String message) {
         super(message);
     }
-
 }
