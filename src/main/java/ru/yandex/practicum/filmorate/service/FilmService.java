@@ -1,61 +1,68 @@
 package ru.yandex.practicum.filmorate.service;
 
-import org.springframework.jdbc.core.JdbcTemplate;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.filmorate.exception.EntityNotFoundException;
-import ru.yandex.practicum.filmorate.exception.IdIsNegativeException;
+import ru.yandex.practicum.filmorate.exceptions.ResourceNotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.storage.db.FilmDbStorage;
-import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
+import ru.yandex.practicum.filmorate.storage.FilmStorage;
 
-import java.util.Collection;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
+@Slf4j
 public class FilmService {
 
     private final FilmStorage filmStorage;
+    private final UserService userService;
 
-    public FilmService(JdbcTemplate jdbcTemplate) {
-        this.filmStorage = new FilmDbStorage(jdbcTemplate) {
-        };
+    public Film create(Film film) {
+        return filmStorage.create(film);
     }
 
-    public Collection<Film> getAllFilm() {
-        return filmStorage.getAllFilms();
+    public Film update(Film film) {
+        if (filmStorage.findById(film.getId()) == null) {
+            throw new ResourceNotFoundException("Фильм не найден");
+        }
+        return filmStorage.update(film);
     }
 
-    public Film addFilm(Film film) {
-        filmStorage.addFilm(film);
+    public List<Film> findAll() {
+        return filmStorage.findAll();
+    }
+
+    public Film findById(Long id) {
+        Film film = filmStorage.findById(id);
+        if (film == null) {
+            throw new ResourceNotFoundException("Фильм не найден");
+        }
         return film;
     }
 
-    public Film updateFilm(Film updateFilm) throws EntityNotFoundException, IdIsNegativeException {
-        return filmStorage.updateFilm(updateFilm);
-    }
-
-    public void removeFilmById(Integer id) throws EntityNotFoundException, IdIsNegativeException {
-        filmStorage.removeFilm(id);
-    }
-
-    public Film getFilmById(Integer id) throws EntityNotFoundException, IdIsNegativeException {
-        return filmStorage.getFilmById(id);
-    }
-
-    public List<Film> getPopularsFilms(Integer id) {
-        return filmStorage.getPopularsFilm(id);
-    }
-
-    public void addLike(Integer userId, Integer filmId) {
-        filmStorage.addLike(userId, filmId);
-    }
-
-    public void removeLike(Integer filmId, Integer userId) throws IdIsNegativeException {
-        if (userId < 1) {
-            throw new IdIsNegativeException("Отрицательный id");
+    public Film addLike(Long filmId, Long userId) {
+        if (filmStorage.findById(filmId) == null) {
+            throw new ResourceNotFoundException("Фильм не найден");
         }
-        filmStorage.removeLike(filmId, userId);
+        if (userService.findById(userId) == null) {
+            throw new ResourceNotFoundException("Пользователь не найден");
+        }
+        filmStorage.addLike(filmId, userId);
+        return filmStorage.findById(filmId);
     }
 
-}
+    public Film removeLike(Long filmId, Long userId) {
+        if (filmStorage.findById(filmId) == null) {
+            throw new ResourceNotFoundException("Фильм не найден");
+        }
+        if (userService.findById(userId) == null) {
+            throw new ResourceNotFoundException("Пользователь не найден");
+        }
+        filmStorage.deleteLike(filmId, userId);
+        return filmStorage.findById(filmId);
+    }
 
+    public List<Film> findPopular(Integer count) {
+        return filmStorage.findPopular(count);
+    }
+}

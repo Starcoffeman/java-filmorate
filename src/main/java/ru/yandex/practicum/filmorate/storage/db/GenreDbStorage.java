@@ -1,57 +1,53 @@
 package ru.yandex.practicum.filmorate.storage.db;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Component;
+import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Repository;
-import ru.yandex.practicum.filmorate.exception.EntityNotFoundException;
-import ru.yandex.practicum.filmorate.exception.IdIsNegativeException;
 import ru.yandex.practicum.filmorate.model.Genre;
-import ru.yandex.practicum.filmorate.storage.genre.GenreStorage;
+import ru.yandex.practicum.filmorate.storage.GenreStorage;
 
-import java.util.Collection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
-@Component
 @Repository
 @RequiredArgsConstructor
+@Slf4j
 public class GenreDbStorage implements GenreStorage {
-
     private final JdbcTemplate jdbcTemplate;
 
     @Override
-    public Genre getGenreById(int id) throws IdIsNegativeException, EntityNotFoundException {
-        if (id < 0) {
-            throw new IdIsNegativeException("Genre ID cannot be negative.");
+    public Optional<Genre> findById(Long id) {
+        String sqlQuery = "SELECT * FROM GENRE WHERE ID = ?";
+        SqlRowSet genreRows = jdbcTemplate.queryForRowSet(sqlQuery, id);
+        if (genreRows.next()) {
+            Genre genre = new Genre(genreRows.getLong("ID"),
+                    genreRows.getString("NAME"));
+            log.info("Найден жанр с id {}", id);
+            return Optional.of(genre);
         }
-
-        String sql = "SELECT * FROM GENRES WHERE id = ?";
-
-        try {
-            return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(Genre.class), id);
-        } catch (EmptyResultDataAccessException e) {
-            throw new EntityNotFoundException("Genre with ID " + id + " not found.");
-        }
+        log.warn("Жанр с id {} не найден", id);
+        return Optional.empty();
     }
 
     @Override
-    public Collection<Genre> getAllGenres() {
-        String sql = "SELECT * FROM GENRES";
-        return jdbcTemplate.query(sql, BeanPropertyRowMapper.newInstance(Genre.class));
-
+    public Map<Long, Genre> findAll() {
+        Map<Long, Genre> allGenre = new HashMap<>();
+        String sqlQuery = "SELECT * FROM GENRE;";
+        List<Genre> genreFromDb = jdbcTemplate.query(sqlQuery, this::mapRowToGenre);
+        for (Genre genre : genreFromDb) {
+            allGenre.put(genre.getId(), genre);
+        }
+        return allGenre;
     }
 
-    @Override
-    public Genre updateGenre(Genre updateGenre) throws IdIsNegativeException, EntityNotFoundException {
-        if (updateGenre.getId() < 0) {
-            throw new IdIsNegativeException("Genre ID cannot be negative.");
-        }
-
-        getGenreById(updateGenre.getId());
-
-        String sql = "UPDATE GENRES SET name = ? WHERE id = ?";
-        jdbcTemplate.update(sql, updateGenre.getName(), updateGenre.getId());
-        return updateGenre;
+    private Genre mapRowToGenre(ResultSet rs, int rowNum) throws SQLException {
+        return new Genre(rs.getLong("ID"), rs.getString("NAME"));
     }
 }
+

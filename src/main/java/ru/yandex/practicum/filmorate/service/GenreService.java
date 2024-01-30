@@ -1,33 +1,26 @@
 package ru.yandex.practicum.filmorate.service;
 
-import org.springframework.jdbc.core.JdbcTemplate;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.filmorate.exception.EntityNotFoundException;
-import ru.yandex.practicum.filmorate.exception.IdIsNegativeException;
+import ru.yandex.practicum.filmorate.exceptions.ResourceNotFoundException;
 import ru.yandex.practicum.filmorate.model.Genre;
-import ru.yandex.practicum.filmorate.storage.db.GenreDbStorage;
-import ru.yandex.practicum.filmorate.storage.genre.GenreStorage;
+import ru.yandex.practicum.filmorate.storage.GenreStorage;
 
 import java.util.Collection;
+import java.util.Collections;
 
 @Service
+@RequiredArgsConstructor
+@Slf4j
 public class GenreService {
-
     private final GenreStorage genreStorage;
 
-    public GenreService(JdbcTemplate jdbcTemplate) {
-        this.genreStorage = new GenreDbStorage(jdbcTemplate);
+    public Collection<Genre> findAll() {
+        return Collections.unmodifiableCollection(genreStorage.findAll().values());
     }
 
-    public Genre getGenreById(int id) throws IdIsNegativeException, EntityNotFoundException {
-        return genreStorage.getGenreById(id);
-    }
-
-    public Collection<Genre> getAllGenres() {
-        return genreStorage.getAllGenres();
-    }
-
-    public Genre updateGenre(Genre updateGenre) throws IdIsNegativeException, EntityNotFoundException {
-        return genreStorage.updateGenre(updateGenre);
+    public Genre findById(Long id) {
+        return genreStorage.findById(id).orElseThrow(() -> new ResourceNotFoundException("Что то не работает"));
     }
 }

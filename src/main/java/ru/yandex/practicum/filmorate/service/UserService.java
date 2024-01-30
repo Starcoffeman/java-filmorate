@@ -1,63 +1,92 @@
 package ru.yandex.practicum.filmorate.service;
 
-import org.springframework.jdbc.core.JdbcTemplate;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.filmorate.exception.EntityNotFoundException;
-import ru.yandex.practicum.filmorate.exception.IdIsNegativeException;
+import ru.yandex.practicum.filmorate.exceptions.ResourceNotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.storage.db.UserDbStorage;
-import ru.yandex.practicum.filmorate.storage.user.UserStorage;
+import ru.yandex.practicum.filmorate.storage.UserStorage;
 
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
+@Slf4j
 public class UserService {
 
     private final UserStorage userStorage;
 
-    public UserService(JdbcTemplate jdbcTemplate) {
-        this.userStorage = new UserDbStorage(jdbcTemplate);
+    public User create(User user) {
+        fillEmptyName(user);
+        return userStorage.create(user);
     }
 
-    public Collection<User> getAllUser() {
-        return userStorage.getAllUsers();
+    public User update(User user) {
+        if (userStorage.findById(user.getId()) == null) {
+            throw new ResourceNotFoundException("Ошибка! Невозможно обновить пользователя - его не существует.");
+        }
+        fillEmptyName(user);
+        return userStorage.update(user);
     }
 
-    public User addUser(User user) {
-        userStorage.addUser(user);
-        return user;
+    public List<User> findAll() {
+        return userStorage.findAll();
     }
 
-    public User updateUser(User updateUser) throws IdIsNegativeException, EntityNotFoundException {
-        return userStorage.updateUser(updateUser);
+    public User findById(Long id) {
+        User user = userStorage.findById(id);
+        if (user == null) {
+            throw new ResourceNotFoundException("Пользователь не найден");
+        }
+        return userStorage.findById(id);
     }
 
-    public void removeUser(Integer id) throws IdIsNegativeException, EntityNotFoundException {
-        userStorage.removeUser(id);
-    }
-
-    public User getUserById(Integer id) throws IdIsNegativeException, EntityNotFoundException {
-        return userStorage.getUserById(id);
-    }
-
-    public List<User> getFriendListById(Integer id) {
-        return userStorage.getFriendListById(id);
-    }
-
-    public User getFriendById(Integer id, Integer friendId) {
-        return userStorage.getFriendById(id, friendId);
-    }
-
-    public void addFriend(Integer id, Integer friendId) throws IdIsNegativeException {
+    public User addFriend(Long id, Long friendId) {
+        if (userStorage.findById(id) == null || userStorage.findById(friendId) == null) {
+            throw new ResourceNotFoundException("Не найден пользователь");
+        }
         userStorage.addFriend(id, friendId);
+        return userStorage.findById(id);
     }
 
-    public void removeFriendById(Integer id, Integer friendId) throws IdIsNegativeException, EntityNotFoundException {
-        userStorage.removeFriendById(id, friendId);
+    public User removeFriend(Long id, Long friendId) {
+        if (userStorage.findById(id) == null || userStorage.findById(friendId) == null) {
+            throw new ResourceNotFoundException("Не найден пользователь");
+        }
+        userStorage.removeFriend(id, friendId);
+        return userStorage.findById(id);
     }
 
-    public List<User> getCommonFriendList(Integer id, Integer otherId) {
-        return userStorage.getCommonFriendList(id, otherId);
+    public List<User> findAllFriends(Long id) {
+        if (userStorage.findById(id) == null) {
+            throw new ResourceNotFoundException("Не найден пользователь");
+        }
+        return userStorage.findAllFriends(id);
+    }
+
+    public List<User> findCommonFriends(Long id, Long friendId) {
+
+
+        if (userStorage.findById(id) == null || userStorage.findById(friendId) == null) {
+            throw new ResourceNotFoundException("Не найден пользователь");
+        }
+
+        Set<User> friends = new HashSet<>(userStorage.findAllFriends(id));
+        Set<User> otherFriends = new HashSet<>(userStorage.findAllFriends(friendId));
+
+        if (friends.isEmpty() || otherFriends.isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        return friends.stream()
+                .filter(otherFriends::contains)
+                .collect(Collectors.toList());
+    }
+
+    private void fillEmptyName(User user) {
+        if (Objects.isNull(user.getName()) || user.getName().isBlank()) {
+            user.setName(user.getLogin());
+        }
     }
 }

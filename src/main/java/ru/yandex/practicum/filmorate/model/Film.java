@@ -1,55 +1,38 @@
 package ru.yandex.practicum.filmorate.model;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
+import ru.yandex.practicum.filmorate.validator.ValidReleaseDate;
 
-import javax.validation.ValidationException;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.Set;
 
-@Data
+@Getter
+@Setter
+@EqualsAndHashCode
+@ToString
+@SuperBuilder
 @NoArgsConstructor
 public class Film {
-
-    private int id;
-
-    @NotBlank(message = "Название не может быть пустым")
-    private String name;
-
-    @Size(max = 200, message = "Максимальная длина описания - 200 символов")
-    private String description;
-
-    private LocalDate releaseDate;
-
-    @Positive(message = "Продолжительность фильма должна быть положительной")
-    private int duration;
-
-    private int rate;
-
+    @EqualsAndHashCode.Exclude
+    private long id;
+    @NotBlank(message = "название не может быть пустым")
     @NotNull
+    private String name;
+    @NotNull
+    @Size(max = 200, message = "максимальная длина описания — 200 символов")
+    private String description;
+    @ValidReleaseDate(message = "дата релиза — не раньше 28 декабря 1895 года")
+    private LocalDate releaseDate;
+    @Positive(message = "продолжительность фильма должна быть положительной")
+    private int duration;
+    private Set<Long> likesUser = new HashSet<>();
+
     private Mpa mpa;
-
-    private Set<Integer> likes = new HashSet<>();
-
-    private LinkedHashSet<Genre> genres = new LinkedHashSet<>();
-
-    public Film(String name, String description, LocalDate releaseDate, int duration, Mpa mpa) {
-        LocalDate minReleaseDate = LocalDate.of(1895, 12, 28); // 28 декабря 1895 года
-        if (releaseDate == null || releaseDate.isBefore(minReleaseDate)) {
-            throw new ValidationException("Дата релиза должна быть не ранее 28 декабря 1895 года");
-        }
-        this.name = name;
-        this.description = description;
-        this.releaseDate = releaseDate;
-        this.rate = 0;
-        this.duration = duration;
-        this.mpa = mpa;
-    }
-
+    private Set<Genre> genres = new HashSet<>();
 }

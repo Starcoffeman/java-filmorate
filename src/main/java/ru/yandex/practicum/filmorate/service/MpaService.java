@@ -1,28 +1,26 @@
 package ru.yandex.practicum.filmorate.service;
 
-import org.springframework.jdbc.core.JdbcTemplate;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.filmorate.exception.IdIsNegativeException;
+import ru.yandex.practicum.filmorate.exceptions.ResourceNotFoundException;
 import ru.yandex.practicum.filmorate.model.Mpa;
-import ru.yandex.practicum.filmorate.storage.db.MpaDbStorage;
+import ru.yandex.practicum.filmorate.storage.MpaStorage;
 
-import java.util.List;
+import java.util.Collection;
+import java.util.Collections;
 
 @Service
+@RequiredArgsConstructor
+@Slf4j
 public class MpaService {
+    private final MpaStorage mpaStorage;
 
-    private final MpaDbStorage mpaStorage;
-
-    public MpaService(JdbcTemplate jdbcTemplate) {
-        this.mpaStorage = new MpaDbStorage(jdbcTemplate);
+    public Collection<Mpa> findAll() {
+        return Collections.unmodifiableCollection(mpaStorage.findAll().values());
     }
 
-    public Mpa getMpaById(Integer id) throws IdIsNegativeException {
-        return mpaStorage.getMpaById(id);
+    public Mpa findById(Long id) {
+        return mpaStorage.findById(id).orElseThrow(() -> new ResourceNotFoundException("Что то не работает"));
     }
-
-    public List<Mpa> getAllMpa() {
-        return mpaStorage.getAllMpa();
-    }
-
 }
