@@ -67,10 +67,10 @@ public class FilmService {
     }
 
     public List<Film> findCommonFilms(Long userId, Long friendId) {
-        if (userService.findById(userId) == null || userService.findById(friendId) == null) {
-            throw new ResourceNotFoundException("Пользователь не найден");
+        try {
+            return filmStorage.findCommonFilms(userId, friendId);
+        } catch (RuntimeException e) {
+            throw new ResourceNotFoundException("Пользователь не найден " + e.getMessage());
         }
-
-        return filmStorage.findCommonFilms(userId, friendId);
     }
 }
