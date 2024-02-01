@@ -11,9 +11,9 @@ public interface DirectorsStorage {
 
     Optional<Director> findById(Long id); // получение режиссера по id
 
-    Director create(Director director); // создание режиссёра
+    Optional<Director> create(Director director); // создание режиссёра
 
-    Director update(Director director); // изменение режиссёра
+    Optional<Director> update(Director director); // изменение режиссёра
 
-    void delete(Director director); // удаление режиссёра
+    void delete(long id); // удаление режиссёра
 }

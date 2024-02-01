@@ -3,11 +3,11 @@ package ru.yandex.practicum.filmorate.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.Director;
-import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.DirectorsService;
 
 import javax.validation.Valid;
 import java.util.Collection;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/directors")
@@ -26,12 +26,18 @@ public class DirectorController {
     }
 
     @PostMapping
-    public Director create(@Valid @RequestBody Director director) {
+    public Optional<Director> create(@Valid @RequestBody Director director) {
         return directorsService.create(director);
     }
 
     @PutMapping
-    public Director update(@Valid @RequestBody Director director) {
+    public Optional<Director> update(@Valid @RequestBody Director director) {
         return directorsService.update(director);
     }
+
+    @DeleteMapping("/{id}")
+    public void deleteDirectorById(@PathVariable long id) {
+        directorsService.delete(id);
+    }
+
 }

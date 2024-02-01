@@ -9,6 +9,7 @@ import ru.yandex.practicum.filmorate.storage.DirectorsStorage;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -25,26 +26,23 @@ public class DirectorsService {
         return directorsStorage.findById(id).orElseThrow(() -> new ResourceNotFoundException("Что то не работает"));
     }
 
-    public Director create(Director director) {
+    public Optional<Director> create(Director director) {
         return directorsStorage.create(director);
     }
 
-    public Director update(Director director) {
-        if (directorsStorage.findById(director.getId()) == null) {
+    public Optional<Director> update(Director director) {
+        if (directorsStorage.findById(director.getId()).isEmpty()) {
             throw new ResourceNotFoundException("Ошибка! Невозможно обновить режиссера - его не существует.");
         }
         return directorsStorage.update(director);
     }
 
+    public void delete(long id) {
+        if (directorsStorage.findById(id).isEmpty()) {
+            throw new ResourceNotFoundException("Ошибка! Невозможно удалить режиссера - его не существует.");
+        }
+        directorsStorage.delete(id);
+    }
 
-//    GET /directors - Список всех режиссёров
-//
-//    GET /directors/{id}- Получение режиссёра по id
-//
-//    POST /directors - Создание режиссёра
-//
-//    PUT /directors - Изменение режиссёра
-//
-//
 //    DELETE /directors/{id} - Удаление режиссёра
 }

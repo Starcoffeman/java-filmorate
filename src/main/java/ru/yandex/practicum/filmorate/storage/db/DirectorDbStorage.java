@@ -3,17 +3,17 @@ package ru.yandex.practicum.filmorate.storage.db;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.model.Director;
 import ru.yandex.practicum.filmorate.storage.DirectorsStorage;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Repository
 @RequiredArgsConstructor
@@ -51,15 +51,30 @@ public class DirectorDbStorage implements DirectorsStorage {
         return Optional.empty();
     } // получение режиссера по id
 
-    public Director create(Director director) {
-        return null;
+    public Optional<Director> create(Director director) {
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        String sqlQuery = "INSERT INTO \"DIRECTORS\" (NAME) VALUES (?)";
+        jdbcTemplate.update(
+                connection -> {
+                    PreparedStatement ps =
+                            connection.prepareStatement(sqlQuery, new String[]{"id"});
+                    ps.setString(1, director.getName());
+                    return ps;
+                },
+                keyHolder);
+        director.setId(Objects.requireNonNull(keyHolder.getKey()).longValue());
+        return findById(director.getId());
     } // создание режиссёра
 
-    public Director update(Director director) {
-        return null;
+    @Override
+    public Optional<Director> update(Director director) {
+        String sqlQuery = "UPDATE \"DIRECTORS\" SET NAME = ? WHERE ID = ?";
+        jdbcTemplate.update(sqlQuery, director.getName(), director.getId());
+        return findById(director.getId());
     } // изменение режиссёра
 
-    public void delete(Director director) {
+    public void delete(long id) {
+        String sqlQuery = "DELETE FROM DIRECTORS WHERE ID = ?;";
+        jdbcTemplate.update(sqlQuery, id);
     } // удаление режиссёра
-
 }
