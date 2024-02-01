@@ -3,7 +3,6 @@ package ru.yandex.practicum.filmorate.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
 import ru.yandex.practicum.filmorate.exceptions.ResourceNotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
@@ -68,6 +67,10 @@ public class FilmService {
     }
 
     public List<Film> findCommonFilms(Long userId, Long friendId) {
+        if (userService.findById(userId) == null || userService.findById(friendId) == null) {
+            throw new ResourceNotFoundException("Пользователь не найден");
+        }
+
         return filmStorage.findCommonFilms(userId, friendId);
     }
 }

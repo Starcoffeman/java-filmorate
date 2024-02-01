@@ -56,10 +56,8 @@ public class FilmController {
         return filmService.findPopular(count);
     }
 
-//    @GetMapping("/common?userId={userId}&friendId={friendId}")
-    @GetMapping("/{userId}/com/{friendId}")
-    public List<Film> findCommonFilms(@PathVariable("userId") Long userId,
-                        @PathVariable("friendId") Long friendId) {
+    @GetMapping("/common")
+    public List<Film> findCommonFilms(@RequestParam Long userId, @RequestParam Long friendId) {
         return filmService.findCommonFilms(userId, friendId);
     }
 }
