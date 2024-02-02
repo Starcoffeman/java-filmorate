@@ -263,4 +263,23 @@ public class FilmDbStorage implements FilmStorage {
     private Director mapRowToDirector(ResultSet rs, int rowNum) throws SQLException {
         return new Director(rs.getLong("DIRECTOR_ID"), rs.getString("NAME"));
     }
+
+    @Override
+    public List<Film> findCommonFilms(Long userId, Long friendId) {
+        String sqlQuery = "SELECT f.ID, f.NAME, f.DESCRIPTION, \n" +
+                "f.RELEASE_DATE, f.DURATION, f.RATING_ID AS MPA_ID, \n" +
+                "r.name AS mpa_name, \n" +
+                "COUNT(fl3.user_id) AS likes\n" +
+                "FROM FILMS f \n" +
+                "LEFT JOIN RATING r ON f.RATING_ID = r.ID\n" +
+                "LEFT JOIN film_likes fl ON f.id = fl.film_id\n" +
+                "LEFT JOIN film_likes fl2 ON f.id = fl2.film_id\n" +
+                "LEFT JOIN film_likes fl3 ON f.id = fl3.film_id\n" +
+                "WHERE fl.user_id = ? AND fl2.user_id = ? \n" +
+                "GROUP BY f.ID \n" +
+                "ORDER BY likes DESC;";
+
+        return Optional.of(jdbcTemplate.query(sqlQuery, this::mapRowToFilm, userId, friendId))
+                .orElse(Collections.emptyList());
+    }
 }
