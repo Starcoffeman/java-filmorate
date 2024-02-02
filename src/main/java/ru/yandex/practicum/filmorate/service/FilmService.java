@@ -16,8 +16,7 @@ public class FilmService {
 
     private final FilmStorage filmStorage;
     private final UserService userService;
-    private final DirectorsService directorsService;
-
+    
     public Film create(Film film) {
         return filmStorage.create(film);
     }
@@ -73,6 +72,14 @@ public class FilmService {
             throw new ResourceNotFoundException("Режиссер не найден");
         } else {
             return films;
+        }
+    }
+      
+    public List<Film> findCommonFilms(Long userId, Long friendId) {
+        try {
+            return filmStorage.findCommonFilms(userId, friendId);
+        } catch (RuntimeException e) {
+            throw new ResourceNotFoundException("Пользователь не найден " + e.getMessage());
         }
     }
 }
