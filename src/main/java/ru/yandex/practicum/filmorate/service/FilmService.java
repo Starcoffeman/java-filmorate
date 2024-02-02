@@ -16,6 +16,7 @@ public class FilmService {
 
     private final FilmStorage filmStorage;
     private final UserService userService;
+    private final DirectorsService directorsService;
 
     public Film create(Film film) {
         return filmStorage.create(film);
@@ -64,5 +65,13 @@ public class FilmService {
 
     public List<Film> findPopular(Integer count) {
         return filmStorage.findPopular(count);
+    }
+
+    public List<Film> getFilmsOfDirectorSortByLikesOrYears(Long id, String sortBy) {
+        if (directorsService.findById(id) == null) {
+            throw new ResourceNotFoundException("Режиссер не найден");
+        } else {
+            return filmStorage.getFilmsOfDirectorSortByLikesOrYears(id, sortBy);
+        }
     }
 }

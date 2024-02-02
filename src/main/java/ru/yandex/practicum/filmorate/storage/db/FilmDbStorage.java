@@ -194,6 +194,41 @@ public class FilmDbStorage implements FilmStorage {
                 .orElse(Collections.emptyList());
     }
 
+    public List<Film> getFilmsOfDirectorSortByLikesOrYears(Long id, String sortBy) {
+        String yearSqlQuery = "SELECT f.ID, f.NAME, f.DESCRIPTION, f.RELEASE_DATE, f.DURATION, f.RATING_ID, " +
+                "r.ID AS MPA_ID, r.name AS MPA_NAME, STRING_AGG(DISTINCT g.id || '-' || g.name, ',') AS genres, " +
+                "STRING_AGG(DISTINCT l.user_id, ',') AS likes " +
+                "FROM FILM_DIRECTORS fd JOIN FILMS f ON fd.FILM_ID = f.ID " +
+                "LEFT JOIN RATING r ON f.RATING_ID = r.ID " +
+                "LEFT JOIN film_genre fg ON f.id = fg.film_id " +
+                "LEFT JOIN GENRE g ON fg.GENRE_ID = g.ID " +
+                "LEFT JOIN film_likes l ON f.ID = l.FILM_ID " +
+                "WHERE fd.DIRECTOR_ID = ? " +
+                "GROUP BY f.ID " +
+                "ORDER BY year(f.RELEASE_DATE)";
+
+        String likeSqlQuery = "SELECT f.ID, f.NAME, f.DESCRIPTION, f.RELEASE_DATE, f.DURATION, f.RATING_ID, " +
+                "r.ID AS MPA_ID, r.name AS MPA_NAME, STRING_AGG(DISTINCT g.id || '-' || g.name, ',') AS genres, " +
+                "STRING_AGG(DISTINCT l.user_id, ',') AS likes, " +
+                "LENGTH (STRING_AGG(distinct l.user_id,'' )) AS likes_count " +
+                "FROM FILM_DIRECTORS fd JOIN FILMS f ON fd.FILM_ID = f.ID " +
+                "LEFT JOIN RATING r ON f.RATING_ID = r.ID " +
+                "LEFT JOIN film_genre fg ON f.id = fg.film_id " +
+                "LEFT JOIN GENRE g ON fg.GENRE_ID = g.ID " +
+                "LEFT JOIN film_likes l ON f.ID = l.FILM_ID " +
+                "WHERE fd.DIRECTOR_ID = ? " +
+                "GROUP BY f.ID " +
+                "ORDER BY likes_count DESC";
+
+        if (sortBy.equals("year")) {
+            return Optional.of(jdbcTemplate.query(yearSqlQuery, this::mapRowToFilm, id))
+                    .orElse(Collections.emptyList());
+        } else {
+            return Optional.of(jdbcTemplate.query(likeSqlQuery, this::mapRowToFilm, id))
+                    .orElse(Collections.emptyList());
+        }
+    }
+
     private Film mapRowToFilm(ResultSet rs, int rowNum) throws SQLException {
         log.info("Film build start>>>>>");
         Film film = Film.builder()
