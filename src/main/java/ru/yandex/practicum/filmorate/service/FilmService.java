@@ -68,10 +68,11 @@ public class FilmService {
     }
 
     public List<Film> getFilmsOfDirectorSortByLikesOrYears(Long id, String sortBy) {
-        if (directorsService.findById(id) == null) {
+        List<Film> films = filmStorage.getFilmsOfDirectorSortByLikesOrYears(id, sortBy);
+        if (films.isEmpty()) {
             throw new ResourceNotFoundException("Режиссер не найден");
         } else {
-            return filmStorage.getFilmsOfDirectorSortByLikesOrYears(id, sortBy);
+            return films;
         }
     }
 }
