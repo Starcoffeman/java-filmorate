@@ -65,4 +65,12 @@ public class FilmService {
     public List<Film> findPopular(Integer count) {
         return filmStorage.findPopular(count);
     }
+
+    public List<Film> findCommonFilms(Long userId, Long friendId) {
+        try {
+            return filmStorage.findCommonFilms(userId, friendId);
+        } catch (RuntimeException e) {
+            throw new ResourceNotFoundException("Пользователь не найден " + e.getMessage());
+        }
+    }
 }
