@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exceptions.ResourceNotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
+import ru.yandex.practicum.filmorate.storage.UserStorage;
 
 import java.util.List;
 
@@ -15,7 +16,7 @@ import java.util.List;
 public class FilmService {
 
     private final FilmStorage filmStorage;
-    private final UserService userService;
+    private final UserStorage userStorage;
 
     public Film create(Film film) {
         return filmStorage.create(film);
@@ -44,7 +45,7 @@ public class FilmService {
         if (filmStorage.findById(filmId) == null) {
             throw new ResourceNotFoundException("Фильм не найден");
         }
-        if (userService.findById(userId) == null) {
+        if (userStorage.findById(userId) == null) {
             throw new ResourceNotFoundException("Пользователь не найден");
         }
         filmStorage.addLike(filmId, userId);
@@ -55,7 +56,7 @@ public class FilmService {
         if (filmStorage.findById(filmId) == null) {
             throw new ResourceNotFoundException("Фильм не найден");
         }
-        if (userService.findById(userId) == null) {
+        if (userStorage.findById(userId) == null) {
             throw new ResourceNotFoundException("Пользователь не найден");
         }
         filmStorage.deleteLike(filmId, userId);
@@ -67,10 +68,18 @@ public class FilmService {
     }
 
     public List<Film> findCommonFilms(Long userId, Long friendId) {
-        try {
-            return filmStorage.findCommonFilms(userId, friendId);
-        } catch (RuntimeException e) {
-            throw new ResourceNotFoundException("Пользователь не найден " + e.getMessage());
+        if (userStorage.findById(userId) == null || userStorage.findById(friendId) == null) {
+            throw new ResourceNotFoundException("Пользователь не найден");
         }
+
+        return filmStorage.findCommonFilms(userId, friendId);
+    }
+
+    public List<Film> findRecommendation(Long idUser) {
+        if (userStorage.findById(idUser) == null) {
+            throw new ResourceNotFoundException("Пользователь не найден");
+        }
+
+        return filmStorage.findRecommendation(idUser);
     }
 }

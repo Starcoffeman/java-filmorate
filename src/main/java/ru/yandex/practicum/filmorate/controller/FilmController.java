@@ -60,4 +60,9 @@ public class FilmController {
     public List<Film> findCommonFilms(@RequestParam Long userId, @RequestParam Long friendId) {
         return filmService.findCommonFilms(userId, friendId);
     }
+
+    @GetMapping("/users/{idUser}/recommendations")
+    public List<Film> findRecommendation(@PathVariable Long idUser) {
+        return filmService.findRecommendation(idUser);
+    }
 }
