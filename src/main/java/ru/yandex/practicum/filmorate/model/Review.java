@@ -2,10 +2,6 @@ package ru.yandex.practicum.filmorate.model;
 
 import lombok.*;
 import lombok.experimental.SuperBuilder;
-import ru.yandex.practicum.filmorate.exceptions.ResourceNotFoundException;
-import ru.yandex.practicum.filmorate.exceptions.ValidationException;
-
-import javax.validation.constraints.Positive;
 
 @Getter
 @Setter
