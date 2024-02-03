@@ -13,7 +13,7 @@ public interface DirectorsStorage {
 
     Optional<Director> create(Director director); // создание режиссёра
 
-    Optional<Director> update(Director director); // изменение режиссёра
+    int update(Director director); // изменение режиссёра
 
-    void delete(long id); // удаление режиссёра
+    int delete(long id); // удаление режиссёра
 }
