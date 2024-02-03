@@ -19,13 +19,12 @@ import java.util.*;
 public class DirectorDbStorage implements DirectorsStorage {
 
     private final JdbcTemplate jdbcTemplate;
-    private final MapDirector mapDirector = new MapDirector();
 
     @Override
     public Map<Long, Director> findAll() {
         Map<Long, Director> allDirectors = new HashMap<>();
         String sqlQuery = "SELECT * FROM DIRECTORS;";
-        List<Director> directorsFromDb = jdbcTemplate.query(sqlQuery, DirectorDbStorage.this.mapDirector::mapRowToDirector);
+        List<Director> directorsFromDb = jdbcTemplate.query(sqlQuery, MapDirector::mapRowToDirector);
         for (Director director : directorsFromDb) {
             allDirectors.put(director.getId(), director);
         }
@@ -62,14 +61,13 @@ public class DirectorDbStorage implements DirectorsStorage {
     } // создание режиссёра
 
     @Override
-    public Optional<Director> update(Director director) {
+    public int update(Director director) {
         String sqlQuery = "UPDATE \"DIRECTORS\" SET NAME = ? WHERE ID = ?";
-        jdbcTemplate.update(sqlQuery, director.getName(), director.getId());
-        return findById(director.getId());
+        return jdbcTemplate.update(sqlQuery, director.getName(), director.getId());
     } // изменение режиссёра
 
-    public void delete(long id) {
+    public int delete(long id) {
         String sqlQuery = "DELETE FROM DIRECTORS WHERE ID = ?;";
-        jdbcTemplate.update(sqlQuery, id);
+        return jdbcTemplate.update(sqlQuery, id);
     } // удаление режиссёра
 }

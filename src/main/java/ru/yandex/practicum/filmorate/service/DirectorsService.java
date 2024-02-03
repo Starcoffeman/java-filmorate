@@ -30,17 +30,16 @@ public class DirectorsService {
         return directorsStorage.create(director);
     }
 
-    public Optional<Director> update(Director director) {
-        if (directorsStorage.findById(director.getId()).isEmpty()) {
+    public Director update(Director director) {
+        if (directorsStorage.update(director) == 0) {
             throw new ResourceNotFoundException("Ошибка! Невозможно обновить режиссера - его не существует.");
         }
-        return directorsStorage.update(director);
+        return findById(director.getId());
     }
 
     public void delete(long id) {
-        if (directorsStorage.findById(id).isEmpty()) {
+        if (directorsStorage.delete(id) == 0) {
             throw new ResourceNotFoundException("Ошибка! Невозможно удалить режиссера - его не существует.");
         }
-        directorsStorage.delete(id);
     }
 }

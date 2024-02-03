@@ -31,7 +31,7 @@ public class DirectorController {
     }
 
     @PutMapping
-    public Optional<Director> update(@Valid @RequestBody Director director) {
+    public Director update(@Valid @RequestBody Director director) {
         return directorsService.update(director);
     }
 

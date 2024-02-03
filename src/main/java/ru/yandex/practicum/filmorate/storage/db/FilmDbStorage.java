@@ -25,8 +25,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Slf4j
 public class FilmDbStorage implements FilmStorage {
+
     private final JdbcTemplate jdbcTemplate;
-    private final MapDirector mapDirector = new MapDirector();
 
     @Override
     public Film create(Film film) {
@@ -135,7 +135,7 @@ public class FilmDbStorage implements FilmStorage {
     private List<Director> getDirectorsOfFilm(Long filmId) {
         String queryForFilmDirectors = "SELECT FD.FILM_ID, FD.DIRECTOR_ID AS ID, D.NAME FROM FILM_DIRECTORS FD " +
                 "JOIN DIRECTORS D ON D.ID = FD.DIRECTOR_ID WHERE FILM_ID = ?;";
-        return jdbcTemplate.query(queryForFilmDirectors, FilmDbStorage.this.mapDirector::mapRowToDirector, filmId);
+        return jdbcTemplate.query(queryForFilmDirectors, MapDirector::mapRowToDirector, filmId);
     }
 
     @Override
