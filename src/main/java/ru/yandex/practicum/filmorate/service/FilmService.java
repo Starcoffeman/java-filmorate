@@ -66,6 +66,15 @@ public class FilmService {
         return filmStorage.findPopular(count);
     }
 
+    public List<Film> getFilmsOfDirectorSortByLikesOrYears(Long id, String sortBy) {
+        List<Film> films = filmStorage.getFilmsOfDirectorSortByLikesOrYears(id, sortBy);
+        if (films.isEmpty()) {
+            throw new ResourceNotFoundException("Режиссер не найден");
+        } else {
+            return films;
+        }
+    }
+
     public List<Film> findCommonFilms(Long userId, Long friendId) {
         try {
             return filmStorage.findCommonFilms(userId, friendId);
