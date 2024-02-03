@@ -23,8 +23,8 @@ public class ReviewController {
     }
 
     @PutMapping
-    public Review update(@Valid @RequestBody Review Review) {
-        return reviewService.update(Review);
+    public Review update(@Valid @RequestBody Review review) {
+        return reviewService.update(review);
     }
 
     @GetMapping
