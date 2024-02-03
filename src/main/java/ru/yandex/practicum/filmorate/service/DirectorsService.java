@@ -43,6 +43,4 @@ public class DirectorsService {
         }
         directorsStorage.delete(id);
     }
-
-//    DELETE /directors/{id} - Удаление режиссёра
 }

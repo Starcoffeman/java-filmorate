@@ -11,8 +11,6 @@ import ru.yandex.practicum.filmorate.model.Director;
 import ru.yandex.practicum.filmorate.storage.DirectorsStorage;
 
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.*;
 
 @Repository
@@ -21,21 +19,18 @@ import java.util.*;
 public class DirectorDbStorage implements DirectorsStorage {
 
     private final JdbcTemplate jdbcTemplate;
+    private final MapDirector mapDirector = new MapDirector();
 
     @Override
     public Map<Long, Director> findAll() {
         Map<Long, Director> allDirectors = new HashMap<>();
         String sqlQuery = "SELECT * FROM DIRECTORS;";
-        List<Director> directorsFromDb = jdbcTemplate.query(sqlQuery, this::mapRowToDirector);
+        List<Director> directorsFromDb = jdbcTemplate.query(sqlQuery, DirectorDbStorage.this.mapDirector::mapRowToDirector);
         for (Director director : directorsFromDb) {
             allDirectors.put(director.getId(), director);
         }
         return allDirectors;
     } // получение списка всех режиссеров
-
-    private Director mapRowToDirector(ResultSet rs, int rowNum) throws SQLException {
-        return new Director(rs.getLong("ID"), rs.getString("NAME"));
-    }
 
     @Override
     public Optional<Director> findById(Long id) {

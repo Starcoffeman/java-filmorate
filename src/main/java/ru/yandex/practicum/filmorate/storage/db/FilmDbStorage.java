@@ -26,6 +26,7 @@ import java.util.stream.Collectors;
 @Slf4j
 public class FilmDbStorage implements FilmStorage {
     private final JdbcTemplate jdbcTemplate;
+    private final MapDirector mapDirector = new MapDirector();
 
     @Override
     public Film create(Film film) {
@@ -132,9 +133,9 @@ public class FilmDbStorage implements FilmStorage {
 
     // Получаем список режиссеров
     private List<Director> getDirectorsOfFilm(Long filmId) {
-        String queryForFilmDirectors = "SELECT FD.FILM_ID, FD.DIRECTOR_ID, D.NAME FROM FILM_DIRECTORS FD " +
+        String queryForFilmDirectors = "SELECT FD.FILM_ID, FD.DIRECTOR_ID AS ID, D.NAME FROM FILM_DIRECTORS FD " +
                 "JOIN DIRECTORS D ON D.ID = FD.DIRECTOR_ID WHERE FILM_ID = ?;";
-        return jdbcTemplate.query(queryForFilmDirectors, this::mapRowToDirector, filmId);
+        return jdbcTemplate.query(queryForFilmDirectors, FilmDbStorage.this.mapDirector::mapRowToDirector, filmId);
     }
 
     @Override
@@ -257,11 +258,6 @@ public class FilmDbStorage implements FilmStorage {
 
     private Long mapRowToLike(ResultSet rs, int rowNum) throws SQLException {
         return rs.getLong("ID");
-    }
-
-    // маппинг объекта режиссер
-    private Director mapRowToDirector(ResultSet rs, int rowNum) throws SQLException {
-        return new Director(rs.getLong("DIRECTOR_ID"), rs.getString("NAME"));
     }
 
     @Override
