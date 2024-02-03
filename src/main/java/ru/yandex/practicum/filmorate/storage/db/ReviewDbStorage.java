@@ -116,14 +116,12 @@ public class ReviewDbStorage implements ReviewStorage {
 
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sqlQuery, new String[]{"reviewId"});
-            {
-                ps.setString(1, updatedReview.getContent());
-                ps.setBoolean(2, updatedReview.getIsPositive());
-                ps.setLong(3, updatedReview.getReviewId());
-                return ps;
-            }
+            ps.setString(1, updatedReview.getContent());
+            ps.setBoolean(2, updatedReview.getIsPositive());
+            ps.setLong(3, updatedReview.getReviewId());
+            return ps;
         }, keyHolder);
-
+        
         return findById(updatedReview.getReviewId());
     }
 
