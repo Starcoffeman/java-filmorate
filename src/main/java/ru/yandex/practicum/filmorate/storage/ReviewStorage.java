@@ -13,9 +13,9 @@ public interface ReviewStorage {
 
     Review findById(Long id);
 
-    Review create(Review Review);
+    Review create(Review review);
 
-    Review update(Review Review);
+    Review update(Review review);
 
     void delete(long id);
 
