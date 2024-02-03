@@ -74,12 +74,4 @@ public class FilmService {
 
         return filmStorage.findCommonFilms(userId, friendId);
     }
-
-    public List<Film> findRecommendation(Long idUser) {
-        if (userStorage.findById(idUser) == null) {
-            throw new ResourceNotFoundException("Пользователь не найден");
-        }
-
-        return filmStorage.findRecommendation(idUser);
-    }
 }
