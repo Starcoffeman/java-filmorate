@@ -280,18 +280,14 @@ public class FilmDbStorage implements FilmStorage {
     }
 
     public List<Film> findRecommendation(Long idUser) {
-        List<Long> users = usersWithSimilarLikes(idUser);
-        if (users.isEmpty()) {
-            return new ArrayList<>();
+        List films = new ArrayList<>();
+        List users = usersWithSimilarLikes(idUser);
+        if (!users.isEmpty()) {
+            List<Long> recommendations = filmRecommendations(idUser, users);
+            for (Long id : recommendations) {
+                films.add(findById(id));
+            }
         }
-
-        List<Long> recommendations = filmRecommendations(idUser, users);
-
-        List<Film> films = new ArrayList<>();
-        for (Long id : recommendations) {
-            films.add(findById(id));
-        }
-
         return films;
     }
 
@@ -304,10 +300,8 @@ public class FilmDbStorage implements FilmStorage {
                 " HAVING RATE > 1 " +
                 " ORDER BY RATE DESC";
 
-        List<Long> usersForLike = jdbcTemplate.query(sqlQuery, (rs, rowNum)
+        return jdbcTemplate.query(sqlQuery, (rs, rowNum)
                 -> rs.getLong("USER_ID"), userId);
-
-        return usersForLike;
     }
 
     private List<Long> filmRecommendations(Long userId, List<Long> sameUserIds) {
@@ -315,9 +309,7 @@ public class FilmDbStorage implements FilmStorage {
         final String sqlQuery = "SELECT fl.film_id FROM film_likes fl " +
                 " WHERE  fl.user_id IN (" + inSql + ")" +
                 " AND fl.film_id NOT IN (SELECT ul.film_id FROM film_likes ul WHERE ul.user_id = ?) ";
-        List<Long> idFilms = jdbcTemplate.query(sqlQuery, (rs, rowNum)
+        return jdbcTemplate.query(sqlQuery, (rs, rowNum)
                 -> rs.getLong("FILM_ID"), sameUserIds.toArray(), userId);
-
-        return idFilms;
     }
 }
