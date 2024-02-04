@@ -230,6 +230,36 @@ public class FilmDbStorage implements FilmStorage {
         }
     }
 
+        @Override
+        public List<Film> searchFilmBy(String query, String by) {
+        String sql = "SELECT f.ID, f.NAME, f.DESCRIPTION, f.RELEASE_DATE, f.DURATION, f.RATING_ID, " +
+                "r.ID AS MPA_ID, r.name AS MPA_NAME, STRING_AGG(DISTINCT g.id || '-' || g.name, ',') AS genres, " +
+                "STRING_AGG(DISTINCT l.user_id, ',') AS likes, " +
+                "LENGTH (STRING_AGG(distinct l.user_id,'' )) AS likes_count " +
+                "FROM FILMS f " +
+                "LEFT JOIN RATING AS r ON f.RATING_ID = r.id " +
+                "LEFT JOIN film_genre AS fg ON f.id = fg.film_id " +
+                "LEFT JOIN genre AS g ON fg.genre_id = g.id " +
+                "LEFT JOIN film_likes l ON f.ID = l.FILM_ID " +
+                "LEFT JOIN film_directors AS fd ON f.id = fd.film_id " +
+                "LEFT JOIN directors AS d ON fd.director_id = d.id " +
+                interpreteQuerry(query, by) +
+                "GROUP BY g.id, f.name " +
+                "ORDER BY likes_count DESC";
+        return Optional.of(jdbcTemplate.query(sql, this::mapRowToFilm))
+                .orElse(Collections.emptyList());
+    }
+
+    private String interpreteQuerry(String query, String by) {
+        return switch (by) {
+            case "title" -> "WHERE LOWER(f.name) LIKE " + "LOWER('%" + query + "%') ";
+            case "director" -> "WHERE LOWER(d.name) LIKE " + "LOWER('%" + query + "%') ";
+            case "both" ->
+                    "WHERE LOWER(d.name) LIKE " + "LOWER('%" + query + "%') OR LOWER(f.name) LIKE " + "LOWER('%" + query + "%') ";
+            default -> null;
+        };
+    }
+
     private Film mapRowToFilm(ResultSet rs, int rowNum) throws SQLException {
         log.info("Film build start>>>>>");
         Film film = Film.builder()

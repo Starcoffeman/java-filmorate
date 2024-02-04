@@ -82,4 +82,26 @@ public class FilmService {
             throw new ResourceNotFoundException("Пользователь не найден " + e.getMessage());
         }
     }
+
+    public List<Film> searchFilmBy(String query, String by) {
+    /*
+    Из условия by — может принимать значения director (поиск по режиссёру),
+    title (поиск по названию),
+    либо оба значения через запятую при поиске одновременно и по режиссеру и по названию.
+     */
+        List<String> requestParam = List.of(by.split(","));
+        if (requestParam.size() == 1) {
+            switch (requestParam.get(0)) {
+                case "director":
+                    return filmStorage.searchFilmBy(query, "director");
+                case "title":
+                    return filmStorage.searchFilmBy(query, "title");
+            }
+        } else if (requestParam.size() == 2) {
+            return filmStorage.searchFilmBy(query, "both");
+        } else {
+            throw new ResourceNotFoundException("Не найдены параметры сортировки");
+        }
+        return null;
+    }
 }
