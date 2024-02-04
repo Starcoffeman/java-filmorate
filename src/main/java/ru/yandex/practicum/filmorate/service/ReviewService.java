@@ -50,6 +50,9 @@ public class ReviewService {
     }
 
     public Review update(Review review) {
+        if (review.getReviewId() == 0) {
+            throw new ValidationException("Отзыв должен иметь идентификатор (reviewId)");
+        }
         return reviewStorage.update(review);
     }
 
