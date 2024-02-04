@@ -8,6 +8,7 @@ import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -81,5 +82,9 @@ public class FilmService {
         } catch (RuntimeException e) {
             throw new ResourceNotFoundException("Пользователь не найден " + e.getMessage());
         }
+    }
+
+    public List<Film> gitMostPopularsByGenreYear(Optional<Integer> year, Optional<Long> genreId, Integer limit) {
+        return filmStorage.gitMostPopularsByGenreYear(year, genreId, limit);
     }
 }

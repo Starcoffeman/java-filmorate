@@ -230,6 +230,39 @@ public class FilmDbStorage implements FilmStorage {
         }
     }
 
+    @Override
+    public List<Film> gitMostPopularsByGenreYear(Optional<Integer> year, Optional<Long> genreId, Integer limit) {
+        StringBuilder builder = new StringBuilder()
+                .append("SELECT F.ID, F.NAME, F.DESCRIPTION, F.RELEASE_DATE, " +
+                        "F.DURATION, F.RATING_ID MPA_ID, R.NAME MPA_NAME, COUNT(FL.FILM_ID) RATE, " +
+                        "FROM FILMS F " +
+                        "LEFT JOIN FILM_LIKES FL ON F.ID = FL.FILM_ID " +
+                        "LEFT JOIN RATING R ON F.RATING_ID = R.ID " +
+                        "LEFT JOIN FILM_GENRE FG ON F.ID = FG.FILM_ID ");
+
+        if (year.isPresent() || genreId.isPresent()) {
+            builder.append("WHERE ");
+            if (year.isPresent()) {
+                builder.append("EXTRACT(YEAR FROM F.RELEASE_DATE) = ").append(year.get()).append(" ");
+                if (genreId.isPresent()) {
+                    builder.append("AND ");
+                }
+            }
+            if (genreId.isPresent()) {
+                builder.append("FG.GENRE_ID = ").append(genreId.get()).append(" ");
+            }
+        }
+
+        builder.append("GROUP BY F.ID " +
+                "ORDER BY RATE DESC " +
+                "LIMIT ?");
+
+        return jdbcTemplate.query(builder.toString(),
+                this::mapRowToFilm,
+                limit);
+    }
+
+
     private Film mapRowToFilm(ResultSet rs, int rowNum) throws SQLException {
         log.info("Film build start>>>>>");
         Film film = Film.builder()
