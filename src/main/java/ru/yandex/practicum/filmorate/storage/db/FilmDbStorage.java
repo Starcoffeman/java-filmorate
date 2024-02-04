@@ -92,8 +92,11 @@ public class FilmDbStorage implements FilmStorage {
     @Override
     public Long delete(Long id) {
         String query = "DELETE FROM FILMS WHERE id = ?";
-        jdbcTemplate.update(query, id);
-        return id;
+        if (jdbcTemplate.update(query, id) == 0) {
+            throw new ResourceNotFoundException("Запись в БД не найдена");
+        } else {
+            return id;
+        }
     }
 
     @Override
