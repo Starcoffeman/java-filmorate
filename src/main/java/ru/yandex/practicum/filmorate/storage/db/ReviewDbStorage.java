@@ -121,7 +121,6 @@ public class ReviewDbStorage implements ReviewStorage {
             ps.setLong(3, updatedReview.getReviewId());
             return ps;
         }, keyHolder);
-        
         return findById(updatedReview.getReviewId());
     }
 
