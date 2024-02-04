@@ -304,12 +304,12 @@ public class FilmDbStorage implements FilmStorage {
                 -> rs.getLong("USER_ID"), userId);
     }
 
-    private List<Long> filmRecommendations(Long userId, List<Long> sameUserIds) {
-        String inSql = String.join(",", Collections.nCopies(sameUserIds.size(), "?"));
+    private List<Long> filmRecommendations(Long userId, List<Long> UserIds) {
+        String inSql = String.join(",", Collections.nCopies(UserIds.size(), "?"));
         final String sqlQuery = "SELECT fl.film_id FROM film_likes fl " +
                 " WHERE  fl.user_id IN (" + inSql + ")" +
                 " AND fl.film_id NOT IN (SELECT ul.film_id FROM film_likes ul WHERE ul.user_id = ?) ";
         return jdbcTemplate.query(sqlQuery, (rs, rowNum)
-                -> rs.getLong("FILM_ID"), sameUserIds.toArray(), userId);
+                -> rs.getLong("FILM_ID"), UserIds.toArray(), userId);
     }
 }
