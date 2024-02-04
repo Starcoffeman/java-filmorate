@@ -27,6 +27,11 @@ public class UserController {
         return userService.update(user);
     }
 
+    @DeleteMapping("/{userId}")
+    public void removeById(@PathVariable Long userId) {
+        userService.removeById(userId);
+    }
+
     @GetMapping
     public List<User> findAll() {
         return userService.findAll();

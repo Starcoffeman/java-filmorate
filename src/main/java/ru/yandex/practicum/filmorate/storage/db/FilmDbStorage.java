@@ -90,6 +90,13 @@ public class FilmDbStorage implements FilmStorage {
     }
 
     @Override
+    public Long delete(Long id) {
+        String query = "DELETE FROM FILMS WHERE id = ?";
+        jdbcTemplate.update(query, id);
+        return id;
+    }
+
+    @Override
     public List<Film> findAll() {
         String sqlQuery = "SELECT F.*, R.ID MPA_ID, R.NAME MPA_NAME FROM FILMS AS F JOIN RATING AS R ON F.RATING_ID = R.ID ";
         return jdbcTemplate.query(sqlQuery, this::mapRowToFilm);

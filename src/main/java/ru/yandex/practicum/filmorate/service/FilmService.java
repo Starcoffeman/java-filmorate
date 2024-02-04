@@ -29,6 +29,10 @@ public class FilmService {
         return filmStorage.update(film);
     }
 
+    public Long removeById(Long id) {
+        return filmStorage.delete(id);
+    }
+
     public List<Film> findAll() {
         return filmStorage.findAll();
     }

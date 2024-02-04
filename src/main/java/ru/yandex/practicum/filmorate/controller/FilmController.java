@@ -27,6 +27,11 @@ public class FilmController {
         return filmService.update(film);
     }
 
+    @DeleteMapping("/{filmId}")
+    public void removeById(@PathVariable Long filmId) {
+        filmService.removeById(filmId);
+    }
+
     @GetMapping
     public List<Film> findAll() {
         return filmService.findAll();
