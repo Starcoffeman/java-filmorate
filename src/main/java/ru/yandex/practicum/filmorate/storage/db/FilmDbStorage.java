@@ -251,13 +251,15 @@ public class FilmDbStorage implements FilmStorage {
     }
 
     private String interpreteQuerry(String query, String by) {
-        return switch (by) {
-            case "title" -> "WHERE LOWER(f.name) LIKE " + "LOWER('%" + query + "%') ";
-            case "director" -> "WHERE LOWER(d.name) LIKE " + "LOWER('%" + query + "%') ";
-            case "both" ->
-                    "WHERE LOWER(d.name) LIKE " + "LOWER('%" + query + "%') OR LOWER(f.name) LIKE " + "LOWER('%" + query + "%') ";
-            default -> null;
-        };
+        switch (by) {
+            case "title":
+                return "WHERE LOWER(f.name) LIKE " + "LOWER('%" + query + "%') ";
+            case "director":
+                return "WHERE LOWER(d.name) LIKE " + "LOWER('%" + query + "%') ";
+            case "both":
+                return "WHERE LOWER(d.name) LIKE " + "LOWER('%" + query + "%') OR LOWER(f.name) LIKE " + "LOWER('%" + query + "%') ";
+            default: return null;
+        }
     }
 
     private Film mapRowToFilm(ResultSet rs, int rowNum) throws SQLException {
