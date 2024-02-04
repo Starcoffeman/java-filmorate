@@ -278,4 +278,38 @@ public class FilmDbStorage implements FilmStorage {
         return Optional.of(jdbcTemplate.query(sqlQuery, this::mapRowToFilm, userId, friendId))
                 .orElse(Collections.emptyList());
     }
+
+    public List<Film> findRecommendation(Long idUser) {
+        List films = new ArrayList<>();
+        List users = usersWithSimilarLikes(idUser);
+        if (!users.isEmpty()) {
+            List<Long> recommendations = filmRecommendations(idUser, users);
+            for (Long id : recommendations) {
+                films.add(findById(id));
+            }
+        }
+        return films;
+    }
+
+    private List<Long> usersWithSimilarLikes(Long userId) {
+        final String sqlQuery = "SELECT fl.user_id, COUNT(fl.film_id) RATE FROM film_likes ul" +
+                " JOIN film_likes fl  ON (ul.film_id = fl.film_id AND ul.user_id != fl.user_id)" +
+                " JOIN users u  ON (fl.user_id != u.id)" +
+                " WHERE  ul.user_id = ? " +
+                " GROUP BY fl.user_id " +
+                " HAVING RATE > 1 " +
+                " ORDER BY RATE DESC";
+
+        return jdbcTemplate.query(sqlQuery, (rs, rowNum)
+                -> rs.getLong("USER_ID"), userId);
+    }
+
+    private List<Long> filmRecommendations(Long userId, List<Long> UserIds) {
+        String inSql = String.join(",", Collections.nCopies(UserIds.size(), "?"));
+        final String sqlQuery = "SELECT fl.film_id FROM film_likes fl " +
+                " WHERE  fl.user_id IN (" + inSql + ")" +
+                " AND fl.film_id NOT IN (SELECT ul.film_id FROM film_likes ul WHERE ul.user_id = ?) ";
+        return jdbcTemplate.query(sqlQuery, (rs, rowNum)
+                -> rs.getLong("FILM_ID"), UserIds.toArray(), userId);
+    }
 }
