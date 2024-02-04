@@ -5,6 +5,7 @@ import ru.yandex.practicum.filmorate.model.Film;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Optional;
 
 public interface FilmStorage {
     Film create(Film film);
@@ -23,11 +24,11 @@ public interface FilmStorage {
 
     Map<Long, Set<Long>> getLikesOfFilm(List<Film> filmIds);
 
-    List<Film> findPopular(Integer count);
-
     List<Film> getFilmsOfDirectorSortByLikesOrYears(Long id, String sortBy);
 
     List<Film> findCommonFilms(Long userId, Long friendId);
 
     List<Film> findRecommendation(Long idUser);
+
+    List<Film> gitMostPopularsByGenreYear(Optional<Integer> year, Optional<Long> genreId, Integer limit);
 }
