@@ -27,22 +27,20 @@ public class ReviewDbStorage implements ReviewStorage {
     @Override
     public List<Review> findAll() {
         String sqlQuery = "SELECT * FROM reviews ORDER BY useful DESC";
-        return jdbcTemplate.query(sqlQuery, (rs, rowNum) -> {
-            return new Review(
-                    rs.getInt("reviewId"),
-                    rs.getString("content"),
-                    rs.getBoolean("isPositive"),
-                    rs.getInt("user_id"),
-                    rs.getInt("film_id"),
-                    rs.getInt("useful")
-            );
-        });
+        return jdbcTemplate.query(sqlQuery, (rs, rowNum) -> new Review(
+                rs.getInt("reviewId"),
+                rs.getString("content"),
+                rs.getBoolean("isPositive"),
+                rs.getInt("user_id"),
+                rs.getInt("film_id"),
+                rs.getInt("useful")
+        ));
     }
 
     @Override
     public List<Review> getReviewsByFilmId(int filmId, int count) {
         String sqlQuery = "SELECT * FROM REVIEWS WHERE film_id = ? ORDER BY useful DESC LIMIT ?";
-        List<Review> reviewList = jdbcTemplate.query(sqlQuery, (rs, rowNum) -> new Review(
+        return jdbcTemplate.query(sqlQuery, (rs, rowNum) -> new Review(
                 rs.getInt("reviewId"),
                 rs.getString("content"),
                 rs.getBoolean("isPositive"),
@@ -50,7 +48,6 @@ public class ReviewDbStorage implements ReviewStorage {
                 rs.getInt("film_id"),
                 rs.getInt("useful")
         ), filmId, count);
-        return reviewList;
     }
 
     @Override
@@ -83,10 +80,6 @@ public class ReviewDbStorage implements ReviewStorage {
             throw new ValidationException("Не были даны userId и filmId");
         }
 
-        if (review.getContent() == null) {
-            throw new ValidationException("Content равен null");
-        }
-
         KeyHolder keyHolder = new GeneratedKeyHolder();
         String sqlQuery = "INSERT INTO \"REVIEWS\" (CONTENT,ISPOSITIVE,USER_ID,FILM_ID,USEFUL) VALUES (?,?,?,?,?)";
         jdbcTemplate.update(
@@ -107,10 +100,6 @@ public class ReviewDbStorage implements ReviewStorage {
 
     @Override
     public Review update(Review updatedReview) {
-        if (updatedReview.getReviewId() == 0) {
-            throw new ValidationException("Отзыв должен иметь идентификатор (reviewId)");
-        }
-
         String sqlQuery = "UPDATE REVIEWS SET CONTENT=?, ISPOSITIVE=? WHERE reviewId=?";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
@@ -146,9 +135,8 @@ public class ReviewDbStorage implements ReviewStorage {
     @Override
     public void delete(long id) {
         String sqlQuery = "DELETE FROM REVIEWS WHERE reviewId = ?";
-        int deletedRows = jdbcTemplate.update(sqlQuery, id);
 
-        if (deletedRows > 0) {
+        if (jdbcTemplate.update(sqlQuery, id) > 0) {
             log.info("Отзыв с id {} успешно удален", id);
         } else {
             log.warn("Отзыв с id {} не найден и не может быть удален", id);
