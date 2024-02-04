@@ -29,7 +29,7 @@ public class ReviewController {
 
     @GetMapping
     public Collection<Review> getAll(@RequestParam(name = "filmId", required = false) Integer filmId,
-                                     @RequestParam(name = "count", defaultValue = "100") Integer count) {
+                                     @RequestParam(name = "count", defaultValue = "10") Integer count) {
         if (filmId == null) {
             return reviewService.findAll();
         } else {
