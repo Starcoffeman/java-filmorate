@@ -85,7 +85,7 @@ public class FilmService {
     }
 
     public List<Film> searchFilmBy(String query, String by) {
-        switch(by){
+        switch (by) {
             case "director":
             case "title":
             case "director,title":
