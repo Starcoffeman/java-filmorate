@@ -230,6 +230,36 @@ public class FilmDbStorage implements FilmStorage {
         }
     }
 
+        @Override
+        public List<Film> searchFilmBy(String query, String by) {
+            String sql = "SELECT f.ID, f.NAME, f.DESCRIPTION, f.RELEASE_DATE, f.DURATION, " +
+                    "F.RATING_ID MPA_ID, R.NAME MPA_NAME, " +
+                    "COUNT (L.FILM_ID) AS likes_count " +
+                    "FROM FILMS f " +
+                    "INNER JOIN RATING R ON F.RATING_ID = R.ID " +
+                    "LEFT JOIN film_likes l ON f.ID = l.FILM_ID " +
+                    "LEFT JOIN film_directors AS fd ON f.id = fd.film_id " +
+                    "LEFT JOIN directors AS d ON fd.director_id = d.id " +
+                    interpreteQuerry(query, by) +
+                    "GROUP BY F.ID " +
+                    "ORDER BY likes_count DESC";
+        return Optional.of(jdbcTemplate.query(sql, this::mapRowToFilm))
+                .orElse(Collections.emptyList());
+    }
+
+    private String interpreteQuerry(String query, String by) {
+        switch (by) {
+            case "title":
+                return "WHERE LOWER(f.name) LIKE " + "LOWER('%" + query + "%') ";
+            case "director":
+                return "WHERE LOWER(d.name) LIKE " + "LOWER('%" + query + "%') ";
+            case "director,title":
+            case "title,director":
+                return "WHERE LOWER(d.name) LIKE " + "LOWER('%" + query + "%') OR LOWER(f.name) LIKE " + "LOWER('%" + query + "%') ";
+            default: return null;
+        }
+    }
+
     private Film mapRowToFilm(ResultSet rs, int rowNum) throws SQLException {
         log.info("Film build start>>>>>");
         Film film = Film.builder()

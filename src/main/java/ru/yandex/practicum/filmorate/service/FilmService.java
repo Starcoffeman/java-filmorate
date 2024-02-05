@@ -83,4 +83,16 @@ public class FilmService {
 
         return filmStorage.findCommonFilms(userId, friendId);
     }
+
+    public List<Film> searchFilmBy(String query, String by) {
+        switch (by) {
+            case "director":
+            case "title":
+            case "director,title":
+            case "title,director":
+                break;
+            default: throw new ResourceNotFoundException("Не найдены параметры поиска");
+        }
+        return filmStorage.searchFilmBy(query, by);
+    }
 }
