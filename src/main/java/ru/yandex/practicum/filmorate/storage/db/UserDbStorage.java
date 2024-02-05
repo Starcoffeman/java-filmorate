@@ -62,6 +62,16 @@ public class UserDbStorage implements UserStorage {
     }
 
     @Override
+    public Long delete(Long id) {
+        String query = "DELETE FROM USERS WHERE id = ?";
+        if (jdbcTemplate.update(query, id) == 0) {
+            throw new ResourceNotFoundException("Запись в БД не найдена");
+        } else {
+            return id;
+        }
+    }
+
+    @Override
     public List<User> findAll() {
         String sqlQuery = "SELECT * FROM \"USERS\"";
         return jdbcTemplate.query(sqlQuery, this::mapRowToUser);

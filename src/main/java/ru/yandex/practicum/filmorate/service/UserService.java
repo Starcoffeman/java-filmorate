@@ -33,6 +33,10 @@ public class UserService {
         return userStorage.update(user);
     }
 
+    public Long removeById(Long id) {
+        return userStorage.delete(id);
+    }
+
     public List<User> findAll() {
         return userStorage.findAll();
     }
