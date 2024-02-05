@@ -83,8 +83,8 @@ public class FilmService {
 
         return filmStorage.findCommonFilms(userId, friendId);
     }
-
-    public List<Film> searchFilmBy(String query, String by) {
+  
+      public List<Film> searchFilmBy(String query, String by) {
         switch(by) {
             case "director":
             case "title":
