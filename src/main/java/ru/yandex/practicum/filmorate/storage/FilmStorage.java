@@ -30,6 +30,6 @@ public interface FilmStorage {
     List<Film> findCommonFilms(Long userId, Long friendId);
 
     List<Film> findRecommendation(Long idUser);
-  
+
     List<Film> searchFilmBy(String query, String by);
 }
