@@ -75,9 +75,9 @@ public class FilmController {
     }
 
     @GetMapping("/popular")
-    public List<Film> gitMostPopularsByGenreYear(@RequestParam Optional<Integer> year,
-                                                 @RequestParam Optional<Long> genreId,
-                                                 @RequestParam(defaultValue = "10") @Positive Integer count) {
-        return filmService.gitMostPopularsByGenreYear(year, genreId, count);
+    public List<Film> getMostPopularByGenreYear(@RequestParam Optional<Integer> year,
+                                                @RequestParam Optional<Long> genreId,
+                                                @RequestParam(defaultValue = "10") @Positive Integer count) {
+        return filmService.getMostPopularByGenreYear(year, genreId, count);
     }
 }

@@ -97,7 +97,7 @@ public class FilmService {
         return filmStorage.searchFilmBy(query, by);
     }
 
-    public List<Film> gitMostPopularsByGenreYear(Optional<Integer> year, Optional<Long> genreId, Integer limit) {
-        return filmStorage.gitMostPopularsByGenreYear(year, genreId, limit);
+    public List<Film> getMostPopularByGenreYear(Optional<Integer> year, Optional<Long> genreId, Integer limit) {
+        return filmStorage.getMostPopularByGenreYear(year, genreId, limit);
     }
 }

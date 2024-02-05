@@ -252,14 +252,14 @@ public class FilmDbStorage implements FilmStorage {
     }
 
     @Override
-    public List<Film> gitMostPopularsByGenreYear(Optional<Integer> year, Optional<Long> genreId, Integer limit) {
+    public List<Film> getMostPopularByGenreYear(Optional<Integer> year, Optional<Long> genreId, Integer limit) {
         StringBuilder builder = new StringBuilder()
-                .append("SELECT F.ID, F.NAME, F.DESCRIPTION, F.RELEASE_DATE, " +
-                        "F.DURATION, F.RATING_ID MPA_ID, R.NAME MPA_NAME, COUNT(FL.FILM_ID) RATE, " +
-                        "FROM FILMS F " +
-                        "LEFT JOIN FILM_LIKES FL ON F.ID = FL.FILM_ID " +
-                        "LEFT JOIN RATING R ON F.RATING_ID = R.ID " +
-                        "LEFT JOIN FILM_GENRE FG ON F.ID = FG.FILM_ID ");
+                .append("SELECT F.ID, F.NAME, F.DESCRIPTION, F.RELEASE_DATE, ")
+                .append("F.DURATION, F.RATING_ID MPA_ID, R.NAME MPA_NAME, COUNT(FL.FILM_ID) RATE, ")
+                .append("FROM FILMS F ")
+                .append("LEFT JOIN FILM_LIKES FL ON F.ID = FL.FILM_ID ")
+                .append("LEFT JOIN RATING R ON F.RATING_ID = R.ID ")
+                .append("LEFT JOIN FILM_GENRE FG ON F.ID = FG.FILM_ID ");
 
         if (year.isPresent() || genreId.isPresent()) {
             builder.append("WHERE ");
