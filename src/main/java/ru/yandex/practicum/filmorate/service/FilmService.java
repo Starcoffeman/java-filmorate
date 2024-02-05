@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exceptions.ResourceNotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
+import ru.yandex.practicum.filmorate.storage.UserStorage;
 
 import java.util.List;
 
@@ -15,7 +16,7 @@ import java.util.List;
 public class FilmService {
 
     private final FilmStorage filmStorage;
-    private final UserService userService;
+    private final UserStorage userStorage;
 
     public Film create(Film film) {
         return filmStorage.create(film);
@@ -44,7 +45,7 @@ public class FilmService {
         if (filmStorage.findById(filmId) == null) {
             throw new ResourceNotFoundException("Фильм не найден");
         }
-        if (userService.findById(userId) == null) {
+        if (userStorage.findById(userId) == null) {
             throw new ResourceNotFoundException("Пользователь не найден");
         }
         filmStorage.addLike(filmId, userId);
@@ -55,7 +56,7 @@ public class FilmService {
         if (filmStorage.findById(filmId) == null) {
             throw new ResourceNotFoundException("Фильм не найден");
         }
-        if (userService.findById(userId) == null) {
+        if (userStorage.findById(userId) == null) {
             throw new ResourceNotFoundException("Пользователь не найден");
         }
         filmStorage.deleteLike(filmId, userId);
@@ -76,32 +77,22 @@ public class FilmService {
     }
 
     public List<Film> findCommonFilms(Long userId, Long friendId) {
-        try {
-            return filmStorage.findCommonFilms(userId, friendId);
-        } catch (RuntimeException e) {
-            throw new ResourceNotFoundException("Пользователь не найден " + e.getMessage());
+        if (userStorage.findById(userId) == null || userStorage.findById(friendId) == null) {
+            throw new ResourceNotFoundException("Пользователь не найден");
         }
+
+        return filmStorage.findCommonFilms(userId, friendId);
     }
 
     public List<Film> searchFilmBy(String query, String by) {
-    /*
-    Из условия by — может принимать значения director (поиск по режиссёру),
-    title (поиск по названию),
-    либо оба значения через запятую при поиске одновременно и по режиссеру и по названию.
-     */
-        List<String> requestParam = List.of(by.split(","));
-        if (requestParam.size() == 1) {
-            switch (requestParam.get(0)) {
-                case "director":
-                    return filmStorage.searchFilmBy(query, "director");
-                case "title":
-                    return filmStorage.searchFilmBy(query, "title");
-            }
-        } else if (requestParam.size() == 2) {
-            return filmStorage.searchFilmBy(query, "both");
-        } else {
-            throw new ResourceNotFoundException("Не найдены параметры сортировки");
+        switch(by) {
+            case "director":
+            case "title":
+            case "director,title":
+            case "title,director":
+                break;
+            default: throw new ResourceNotFoundException("Не найдены параметры поиска");
         }
-        return null;
+        return filmStorage.searchFilmBy(query, by);
     }
 }
