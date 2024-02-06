@@ -6,8 +6,10 @@ import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exceptions.ResourceNotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
+import ru.yandex.practicum.filmorate.storage.UserStorage;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -15,7 +17,8 @@ import java.util.List;
 public class FilmService {
 
     private final FilmStorage filmStorage;
-    private final UserService userService;
+    private final UserStorage userStorage;
+    private final FeedService feedService;
 
     public Film create(Film film) {
         return filmStorage.create(film);
@@ -26,6 +29,10 @@ public class FilmService {
             throw new ResourceNotFoundException("Фильм не найден");
         }
         return filmStorage.update(film);
+    }
+
+    public Long removeById(Long id) {
+        return filmStorage.delete(id);
     }
 
     public List<Film> findAll() {
@@ -44,10 +51,11 @@ public class FilmService {
         if (filmStorage.findById(filmId) == null) {
             throw new ResourceNotFoundException("Фильм не найден");
         }
-        if (userService.findById(userId) == null) {
+        if (userStorage.findById(userId) == null) {
             throw new ResourceNotFoundException("Пользователь не найден");
         }
         filmStorage.addLike(filmId, userId);
+        feedService.addFeedAddLike(userId, filmId);
         return filmStorage.findById(filmId);
     }
 
@@ -55,14 +63,44 @@ public class FilmService {
         if (filmStorage.findById(filmId) == null) {
             throw new ResourceNotFoundException("Фильм не найден");
         }
-        if (userService.findById(userId) == null) {
+        if (userStorage.findById(userId) == null) {
             throw new ResourceNotFoundException("Пользователь не найден");
         }
         filmStorage.deleteLike(filmId, userId);
+        feedService.addFeedRemoveLike(userId, filmId);
         return filmStorage.findById(filmId);
     }
 
-    public List<Film> findPopular(Integer count) {
-        return filmStorage.findPopular(count);
+    public List<Film> getFilmsOfDirectorSortByLikesOrYears(Long id, String sortBy) {
+        List<Film> films = filmStorage.getFilmsOfDirectorSortByLikesOrYears(id, sortBy);
+        if (films.isEmpty()) {
+            throw new ResourceNotFoundException("Режиссер не найден");
+        } else {
+            return films;
+        }
+    }
+
+    public List<Film> findCommonFilms(Long userId, Long friendId) {
+        if (userStorage.findById(userId) == null || userStorage.findById(friendId) == null) {
+            throw new ResourceNotFoundException("Пользователь не найден");
+        }
+
+        return filmStorage.findCommonFilms(userId, friendId);
+    }
+
+    public List<Film> searchFilmBy(String query, String by) {
+        switch (by) {
+            case "director":
+            case "title":
+            case "director,title":
+            case "title,director":
+                break;
+            default: throw new ResourceNotFoundException("Не найдены параметры поиска");
+        }
+        return filmStorage.searchFilmBy(query, by);
+    }
+
+    public List<Film> getMostPopularByGenreYear(Optional<Integer> year, Optional<Long> genreId, Integer limit) {
+        return filmStorage.getMostPopularByGenreYear(year, genreId, limit);
     }
 }

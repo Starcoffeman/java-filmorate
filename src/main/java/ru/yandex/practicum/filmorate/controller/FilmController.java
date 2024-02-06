@@ -9,6 +9,7 @@ import ru.yandex.practicum.filmorate.service.FilmService;
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/films")
@@ -25,6 +26,11 @@ public class FilmController {
     @PutMapping
     public Film update(@Valid @RequestBody Film film) {
         return filmService.update(film);
+    }
+
+    @DeleteMapping("/{filmId}")
+    public void removeById(@PathVariable Long filmId) {
+        filmService.removeById(filmId);
     }
 
     @GetMapping
@@ -50,9 +56,28 @@ public class FilmController {
         return filmService.removeLike(filmId, userId);
     }
 
+    @GetMapping("/director/{directorId}")
+    public List<Film> getFilmsOfDirectorSortByLikesOrYears(@PathVariable("directorId") Long id,
+                                                           @RequestParam(defaultValue = "likes") String sortBy) {
+        return filmService.getFilmsOfDirectorSortByLikesOrYears(id, sortBy);
+    }
+
+    @GetMapping("/common")
+    public List<Film> findCommonFilms(@RequestParam Long userId, @RequestParam Long friendId) {
+        return filmService.findCommonFilms(userId, friendId);
+    }
+
+    @GetMapping("/search")
+    public List<Film> getSearchFilmsBy(
+            @RequestParam String query,
+            @RequestParam String by) {
+        return filmService.searchFilmBy(query, by);
+    }
+
     @GetMapping("/popular")
-    public List<Film> findPopular(
-            @RequestParam(defaultValue = "10") @Positive int count) {
-        return filmService.findPopular(count);
+    public List<Film> getMostPopularByGenreYear(@RequestParam Optional<Integer> year,
+                                                @RequestParam Optional<Long> genreId,
+                                                @RequestParam(defaultValue = "10") @Positive Integer count) {
+        return filmService.getMostPopularByGenreYear(year, genreId, count);
     }
 }

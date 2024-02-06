@@ -4,7 +4,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exceptions.ResourceNotFoundException;
+import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.storage.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
 import java.util.*;
@@ -16,6 +18,8 @@ import java.util.stream.Collectors;
 public class UserService {
 
     private final UserStorage userStorage;
+    private final FilmStorage filmStorage;
+    private final FeedService feedService;
 
     public User create(User user) {
         fillEmptyName(user);
@@ -28,6 +32,10 @@ public class UserService {
         }
         fillEmptyName(user);
         return userStorage.update(user);
+    }
+
+    public Long removeById(Long id) {
+        return userStorage.delete(id);
     }
 
     public List<User> findAll() {
@@ -47,6 +55,7 @@ public class UserService {
             throw new ResourceNotFoundException("Не найден пользователь");
         }
         userStorage.addFriend(id, friendId);
+        feedService.addFeedAddFriend(id, friendId);
         return userStorage.findById(id);
     }
 
@@ -55,6 +64,7 @@ public class UserService {
             throw new ResourceNotFoundException("Не найден пользователь");
         }
         userStorage.removeFriend(id, friendId);
+        feedService.addFeedRemoveFriend(id, friendId);
         return userStorage.findById(id);
     }
 
@@ -88,5 +98,13 @@ public class UserService {
         if (Objects.isNull(user.getName()) || user.getName().isBlank()) {
             user.setName(user.getLogin());
         }
+    }
+
+    public List<Film> findRecommendation(Long idUser) {
+        if (userStorage.findById(idUser) == null) {
+            throw new ResourceNotFoundException("Пользователь не найден");
+        }
+
+        return filmStorage.findRecommendation(idUser);
     }
 }
