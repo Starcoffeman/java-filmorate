@@ -3,8 +3,10 @@ package ru.yandex.practicum.filmorate.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+import ru.yandex.practicum.filmorate.model.Feed;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.service.FeedService;
 import ru.yandex.practicum.filmorate.service.UserService;
 
 import javax.validation.Valid;
@@ -16,6 +18,7 @@ import java.util.List;
 @Slf4j
 public class UserController {
     private final UserService userService;
+    private final FeedService feedService;
 
     @PostMapping
     public User add(@Valid @RequestBody User user) {
@@ -69,4 +72,10 @@ public class UserController {
     public List<Film> findRecommendation(@PathVariable Long idUser) {
         return userService.findRecommendation(idUser);
     }
+
+    @GetMapping("/{id}/feed")
+    public List<Feed> dfg(@PathVariable(name = "id") long userId) {
+        return feedService.getFeedsByUserId(userId);
+    }
+
 }
