@@ -186,25 +186,6 @@ public class FilmDbStorage implements FilmStorage {
         jdbcTemplate.update(sqlQuery, filmId, userId);
     }
 
-    @Override
-    public List<Film> findPopular(Integer count) {
-        String sql = "SELECT f.ID, f.NAME, f.DESCRIPTION, f.RELEASE_DATE, f.DURATION, f.RATING_ID, " +
-                "r.ID AS MPA_ID, r.name AS MPA_NAME, STRING_AGG(DISTINCT g.id || '-' || g.name, ',') AS genres, " +
-                "STRING_AGG(DISTINCT l.user_id, ',') AS likes, " +
-                "LENGTH (STRING_AGG(distinct l.user_id,'' )) AS likes_count " +
-                "FROM FILMS f " +
-                "LEFT JOIN RATING r ON f.RATING_ID = r.ID " +
-                "LEFT JOIN film_genre fg ON f.id = fg.film_id " +
-                "LEFT JOIN GENRE g ON fg.GENRE_ID = g.ID " +
-                "LEFT JOIN film_likes l ON f.ID = l.FILM_ID " +
-                "GROUP BY f.ID " +
-                "ORDER BY likes_count DESC " +
-                "LIMIT ?";
-
-        return Optional.of(jdbcTemplate.query(sql, this::mapRowToFilm, count))
-                .orElse(Collections.emptyList());
-    }
-
     public List<Film> getFilmsOfDirectorSortByLikesOrYears(Long id, String sortBy) {
         String yearSqlQuery = "SELECT f.ID, f.NAME, f.DESCRIPTION, f.RELEASE_DATE, f.DURATION, f.RATING_ID, " +
                 "r.ID AS MPA_ID, r.name AS MPA_NAME, STRING_AGG(DISTINCT g.id || '-' || g.name, ',') AS genres, " +
@@ -268,6 +249,38 @@ public class FilmDbStorage implements FilmStorage {
                 return "WHERE LOWER(d.name) LIKE " + "LOWER('%" + query + "%') OR LOWER(f.name) LIKE " + "LOWER('%" + query + "%') ";
             default: return null;
         }
+    }
+
+    @Override
+    public List<Film> getMostPopularByGenreYear(Optional<Integer> year, Optional<Long> genreId, Integer limit) {
+        StringBuilder builder = new StringBuilder()
+                .append("SELECT F.ID, F.NAME, F.DESCRIPTION, F.RELEASE_DATE, ")
+                .append("F.DURATION, F.RATING_ID MPA_ID, R.NAME MPA_NAME, COUNT(FL.FILM_ID) RATE, ")
+                .append("FROM FILMS F ")
+                .append("LEFT JOIN FILM_LIKES FL ON F.ID = FL.FILM_ID ")
+                .append("LEFT JOIN RATING R ON F.RATING_ID = R.ID ")
+                .append("LEFT JOIN FILM_GENRE FG ON F.ID = FG.FILM_ID ");
+
+        if (year.isPresent() || genreId.isPresent()) {
+            builder.append("WHERE ");
+            if (year.isPresent()) {
+                builder.append("EXTRACT(YEAR FROM F.RELEASE_DATE) = ").append(year.get()).append(" ");
+                if (genreId.isPresent()) {
+                    builder.append("AND ");
+                }
+            }
+            if (genreId.isPresent()) {
+                builder.append("FG.GENRE_ID = ").append(genreId.get()).append(" ");
+            }
+        }
+
+        builder.append("GROUP BY F.ID " +
+                "ORDER BY RATE DESC " +
+                "LIMIT ?");
+
+        return jdbcTemplate.query(builder.toString(),
+                this::mapRowToFilm,
+                limit);
     }
 
     private Film mapRowToFilm(ResultSet rs, int rowNum) throws SQLException {

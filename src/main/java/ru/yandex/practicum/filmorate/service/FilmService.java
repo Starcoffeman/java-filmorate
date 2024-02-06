@@ -9,6 +9,7 @@ import ru.yandex.practicum.filmorate.storage.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -67,10 +68,6 @@ public class FilmService {
         return filmStorage.findById(filmId);
     }
 
-    public List<Film> findPopular(Integer count) {
-        return filmStorage.findPopular(count);
-    }
-
     public List<Film> getFilmsOfDirectorSortByLikesOrYears(Long id, String sortBy) {
         List<Film> films = filmStorage.getFilmsOfDirectorSortByLikesOrYears(id, sortBy);
         if (films.isEmpty()) {
@@ -98,5 +95,9 @@ public class FilmService {
             default: throw new ResourceNotFoundException("Не найдены параметры поиска");
         }
         return filmStorage.searchFilmBy(query, by);
+    }
+
+    public List<Film> getMostPopularByGenreYear(Optional<Integer> year, Optional<Long> genreId, Integer limit) {
+        return filmStorage.getMostPopularByGenreYear(year, genreId, limit);
     }
 }
