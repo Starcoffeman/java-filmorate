@@ -1,7 +1,6 @@
 package ru.yandex.practicum.filmorate.service;
 
 import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exceptions.ResourceNotFoundException;
 import ru.yandex.practicum.filmorate.model.Feed;
@@ -40,12 +39,12 @@ public class FeedService {
         feedStorage.addFeedAddFriend(id, friendId);
     }
 
-    public void addFeedAddLike(Long id, Long LikeId) {
-        feedStorage.addFeedAddLike(id, LikeId);
+    public void addFeedAddLike(Long id, Long likeId) {
+        feedStorage.addFeedAddLike(id, likeId);
     }
 
-    public void addFeedRemoveLike(Long id, Long LikeId) {
-        feedStorage.addFeedRemoveLike(id, LikeId);
+    public void addFeedRemoveLike(Long id, Long likeId) {
+        feedStorage.addFeedRemoveLike(id, likeId);
     }
 
     public void addFeedAddReview(Long id, Long reviewId) {
