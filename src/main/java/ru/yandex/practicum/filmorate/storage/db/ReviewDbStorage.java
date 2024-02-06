@@ -2,10 +2,10 @@ package ru.yandex.practicum.filmorate.storage.db;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
-import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.exceptions.ResourceNotFoundException;
 import ru.yandex.practicum.filmorate.exceptions.ValidationException;
@@ -13,6 +13,8 @@ import ru.yandex.practicum.filmorate.model.Review;
 import ru.yandex.practicum.filmorate.storage.ReviewStorage;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Objects;
 
@@ -27,48 +29,24 @@ public class ReviewDbStorage implements ReviewStorage {
     @Override
     public List<Review> findAll() {
         String sqlQuery = "SELECT * FROM reviews ORDER BY useful DESC";
-        return jdbcTemplate.query(sqlQuery, (rs, rowNum) -> new Review(
-                rs.getInt("reviewId"),
-                rs.getString("content"),
-                rs.getBoolean("isPositive"),
-                rs.getInt("user_id"),
-                rs.getInt("film_id"),
-                rs.getInt("useful")
-        ));
+        return jdbcTemplate.query(sqlQuery, (rs, rowNum) -> mapRowToReview(rs));
     }
 
     @Override
     public List<Review> getReviewsByFilmId(int filmId, int count) {
         String sqlQuery = "SELECT * FROM REVIEWS WHERE film_id = ? ORDER BY useful DESC LIMIT ?";
-        return jdbcTemplate.query(sqlQuery, (rs, rowNum) -> new Review(
-                rs.getInt("reviewId"),
-                rs.getString("content"),
-                rs.getBoolean("isPositive"),
-                rs.getInt("user_id"),
-                rs.getInt("film_id"),
-                rs.getInt("useful")
-        ), filmId, count);
+        return jdbcTemplate.query(sqlQuery, (rs, rowNum) -> mapRowToReview(rs), filmId, count);
     }
 
     @Override
     public Review findById(Long id) {
-        String sqlQuery = "SELECT * FROM REVIEWS WHERE reviewId = ?";
-        SqlRowSet reviewRows = jdbcTemplate.queryForRowSet(sqlQuery, id);
-        if (reviewRows.next()) {
-            Review review = new Review(
-                    reviewRows.getLong("reviewId"),
-                    reviewRows.getString("CONTENT"),
-                    reviewRows.getBoolean("ISPOSITIVE"),
-                    reviewRows.getInt("USER_ID"),
-                    reviewRows.getInt("FILM_ID"),
-                    reviewRows.getInt("USEFUL"));
-            log.info("Найден отзыв с id {}", id);
-            return review;
-        } else {
+        try {
+            String sqlQuery = "SELECT * FROM REVIEWS WHERE reviewId = ?";
+            return jdbcTemplate.queryForObject(sqlQuery, (rs, rowNum) -> mapRowToReview(rs), id);
+        } catch (EmptyResultDataAccessException e) {
             throw new ResourceNotFoundException("Отзыв с id " + id + " не найден");
         }
     }
-
 
     @Override
     public Review create(Review review) {
@@ -141,5 +119,16 @@ public class ReviewDbStorage implements ReviewStorage {
         } else {
             log.warn("Отзыв с id {} не найден и не может быть удален", id);
         }
+    }
+
+    private Review mapRowToReview(ResultSet rs) throws SQLException {
+        return new Review(
+                rs.getLong("reviewId"),
+                rs.getString("content"),
+                rs.getBoolean("isPositive"),
+                rs.getInt("user_id"),
+                rs.getInt("film_id"),
+                rs.getInt("useful")
+        );
     }
 }
