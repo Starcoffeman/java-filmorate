@@ -18,6 +18,7 @@ public class FilmService {
 
     private final FilmStorage filmStorage;
     private final UserStorage userStorage;
+    private final FeedService feedService;
 
     public Film create(Film film) {
         return filmStorage.create(film);
@@ -54,6 +55,7 @@ public class FilmService {
             throw new ResourceNotFoundException("Пользователь не найден");
         }
         filmStorage.addLike(filmId, userId);
+        feedService.addFeedAddLike(userId, filmId);
         return filmStorage.findById(filmId);
     }
 
@@ -65,6 +67,7 @@ public class FilmService {
             throw new ResourceNotFoundException("Пользователь не найден");
         }
         filmStorage.deleteLike(filmId, userId);
+        feedService.addFeedRemoveLike(userId, filmId);
         return filmStorage.findById(filmId);
     }
 

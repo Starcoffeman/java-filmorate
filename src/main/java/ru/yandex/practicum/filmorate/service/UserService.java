@@ -19,6 +19,7 @@ public class UserService {
 
     private final UserStorage userStorage;
     private final FilmStorage filmStorage;
+    private final FeedService feedService;
 
     public User create(User user) {
         fillEmptyName(user);
@@ -54,6 +55,7 @@ public class UserService {
             throw new ResourceNotFoundException("Не найден пользователь");
         }
         userStorage.addFriend(id, friendId);
+        feedService.addFeedAddFriend(id, friendId);
         return userStorage.findById(id);
     }
 
@@ -62,6 +64,7 @@ public class UserService {
             throw new ResourceNotFoundException("Не найден пользователь");
         }
         userStorage.removeFriend(id, friendId);
+        feedService.addFeedRemoveFriend(id, friendId);
         return userStorage.findById(id);
     }
 

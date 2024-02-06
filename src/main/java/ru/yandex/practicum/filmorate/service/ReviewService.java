@@ -16,10 +16,12 @@ import java.util.List;
 public class ReviewService {
 
     private final ReviewStorage reviewStorage;
+    private final FeedService feedService;
 
     public Review create(Review review) {
+        Review reviewNew;
         try {
-            return reviewStorage.create(review);
+            reviewNew = reviewStorage.create(review);
         } catch (ValidationException e) {
             log.error("Ошибка валидации при создании отзыва: " + e.getMessage());
             throw e;
@@ -27,6 +29,9 @@ public class ReviewService {
             log.error("Произошла ошибка при создании отзыва", e);
             throw e;
         }
+
+        feedService.addFeedAddReview((long) reviewNew.getUserId(), reviewNew.getReviewId());
+        return reviewNew;
     }
 
     public Review findById(Long id) {
@@ -53,12 +58,14 @@ public class ReviewService {
         if (review.getReviewId() == 0) {
             throw new ValidationException("Отзыв должен иметь идентификатор (reviewId)");
         }
-        return reviewStorage.update(review);
+        Review reviewUpd = reviewStorage.update(review);
+        feedService.addFeedUpdateReview((long) reviewUpd.getUserId(), reviewUpd.getReviewId());
+        return reviewUpd;
     }
 
     public void delete(long id) {
+        Review review = reviewStorage.findById(id);
         reviewStorage.delete(id);
+        feedService.addFeedRemoveReview((long) review.getUserId(), review.getReviewId());
     }
-
 }
-
