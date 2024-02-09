@@ -67,23 +67,29 @@ public class FilmDbStorage implements FilmStorage {
     public Film update(Film film) {
         String sqlQuery = "UPDATE FILMS SET NAME = ?, DESCRIPTION = ?, RELEASE_DATE = ?, RATING_ID = ?, DURATION = ?" +
                 " WHERE ID = ?;";
+
         String queryToDeleteFilmGenres = "DELETE FROM FILM_GENRE WHERE FILM_ID = ?;";
+
         String queryForUpdateGenre = "INSERT INTO FILM_GENRE (FILM_ID, GENRE_ID) VALUES (?, ?);";
 
         String queryToDeleteFilmDirectors = "DELETE FROM FILM_DIRECTORS WHERE FILM_ID = ?;";
+
         String queryForUpdateDirector = "INSERT INTO FILM_DIRECTORS (FILM_ID, DIRECTOR_ID) VALUES (?, ?);";
 
         jdbcTemplate.update(sqlQuery, film.getName(), film.getDescription(), film.getReleaseDate(),
                 film.getMpa().getId(), film.getDuration(), film.getId());
+
         jdbcTemplate.update(queryToDeleteFilmGenres, film.getId());
-        if (!film.getGenres().isEmpty()) {
+
+        if (film.getGenres() != null) {
             for (Genre genre : film.getGenres()) {
                 jdbcTemplate.update(queryForUpdateGenre, film.getId(), genre.getId());
             }
         }
+
         // обновляем список режиссеров в фильме
         jdbcTemplate.update(queryToDeleteFilmDirectors, film.getId());
-        if (!film.getDirectors().isEmpty()) {
+        if (film.getDirectors() != null) {
             for (Director director : film.getDirectors()) {
                 jdbcTemplate.update(queryForUpdateDirector, film.getId(), director.getId());
             }
