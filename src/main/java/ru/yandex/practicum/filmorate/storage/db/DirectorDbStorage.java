@@ -34,14 +34,18 @@ public class DirectorDbStorage implements DirectorsStorage {
 
     @Override
     public Director findById(Long id) {
+
         String sqlQuery = "SELECT * FROM DIRECTORS WHERE ID = ?";
+
         SqlRowSet directorRows = jdbcTemplate.queryForRowSet(sqlQuery, id);
+
         if (directorRows.next()) {
             Director director = new Director(directorRows.getLong("ID"),
                     directorRows.getString("NAME"));
             log.info("Найден режиссер с id {}", id);
             return director;
         }
+
         log.warn("Режиссер с id {} не найден", id);
         return null;
     } // получение режиссера по id

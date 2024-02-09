@@ -23,11 +23,13 @@ public class DirectorsService {
     }
 
     public Director findById(Long id) {
-        try {
-            return directorsStorage.findById(id);
-        } catch (ResourceNotFoundException e ){
+        Director director = directorsStorage.findById(id);
+        
+        if(director == null) {
             throw new ResourceNotFoundException("Ошибка! Невозможно вывести режиссера - его не существует.");
         }
+
+        return director;
     }
 
     public Director create(Director director) {
