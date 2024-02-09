@@ -22,10 +22,6 @@ public interface FilmStorage {
 
     void deleteLike(Long filmId, Long userId);
 
-    List<Long> getLikesOfFilm(Long filmId);
-
-    Map<Long, Set<Long>> getLikesOfFilm(List<Film> filmIds);
-
     List<Film> getFilmsOfDirectorSortByLikesOrYears(Long id, String sortBy);
 
     List<Film> findCommonFilms(Long userId, Long friendId);
