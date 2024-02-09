@@ -23,10 +23,14 @@ public class DirectorsService {
     }
 
     public Director findById(Long id) {
-        return directorsStorage.findById(id).orElseThrow(() -> new ResourceNotFoundException("Что то не работает"));
+        try {
+            return directorsStorage.findById(id);
+        } catch (ResourceNotFoundException e ){
+            throw new ResourceNotFoundException("Ошибка! Невозможно вывести режиссера - его не существует.");
+        }
     }
 
-    public Optional<Director> create(Director director) {
+    public Director create(Director director) {
         return directorsStorage.create(director);
     }
 
@@ -41,5 +45,6 @@ public class DirectorsService {
         if (directorsStorage.delete(id) == 0) {
             throw new ResourceNotFoundException("Ошибка! Невозможно удалить режиссера - его не существует.");
         }
+        directorsStorage.delete(id);
     }
 }

@@ -10,12 +10,12 @@ import java.util.Map;
 @Data
 @Builder
 public class Feed {
-    long eventId;
-    long timestamp;
-    long userId;
-    EventType eventType;
-    Operation operation;
-    long entityId;
+    private long eventId;
+    private long timestamp;
+    private long userId;
+    private EventType eventType;
+    private Operation operation;
+    private long entityId;
 
     public Map<String, Object> toMapForDB() {
         return Map.of("TIMESTAMP", timestamp, "USER_ID", userId, "EVENT_TYPE", eventType,

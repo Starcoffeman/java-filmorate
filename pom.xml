@@ -12,9 +12,12 @@
 	<artifactId>filmorate</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>filmorate</name>
-	<description>Demo project for Spring Boot</description>
+	<description>Filmorate is project about films</description>
 	<properties>
 		<java.version>11</java.version>
+		<spring-boot-starter-validation>3.1.4</spring-boot-starter-validation>
+		<validation-api>2.0.1.Final</validation-api>
+		<junit>4.13.2</junit>
 	</properties>
 	<dependencies>
 
@@ -42,7 +45,6 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-validation</artifactId>
-			<version>3.1.4</version>
 		</dependency>
 
 		<dependency>
@@ -59,13 +61,11 @@
 		<dependency>
 			<groupId>javax.validation</groupId>
 			<artifactId>validation-api</artifactId>
-			<version>2.0.1.Final</version>
 		</dependency>
 
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.13.2</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>

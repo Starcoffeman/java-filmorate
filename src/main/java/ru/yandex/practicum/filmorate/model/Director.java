@@ -15,6 +15,5 @@ public class Director {
     @EqualsAndHashCode.Exclude
     private long id;
     @NotBlank(message = "имя режиссера не может быть пустым")
-    @NotNull
     private String name;
 }
