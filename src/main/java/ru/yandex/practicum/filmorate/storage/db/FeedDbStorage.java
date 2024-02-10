@@ -23,13 +23,13 @@ public class FeedDbStorage implements FeedStorage {
 
     @Override
     public List<Feed> getFeedsByUserId(long userId) {
-        return jdbcTemplate.query("SELECT U.ID,  F.* " +
-                        "FROM USERS U " +
-                        "LEFT JOIN FEED F ON U.ID = F.USER_ID " +
-                        "WHERE U.ID = ? " +
-                        "ORDER BY TIMESTAMP",
-                this::mapRowToFeed,
-                userId);
+        String query = "SELECT U.ID,  F.* FROM USERS U " +
+                "LEFT JOIN FEED F ON U.ID = F.USER_ID WHERE U.ID = ? " +
+                "ORDER BY TIMESTAMP";
+
+        return jdbcTemplate.query(query,
+                preparedStatement -> {preparedStatement.setLong(1, userId);},
+                this::mapRowToFeed);
     }
 
     @Override
