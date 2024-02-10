@@ -22,32 +22,23 @@ public class DirectorDbStorage implements DirectorsStorage {
     private final JdbcTemplate jdbcTemplate;
 
     @Override
-    public Map<Long, Director> findAll() {
-        Map<Long, Director> allDirectors = new HashMap<>();
+    public List<Director> findAll() {
         String sqlQuery = "SELECT * FROM DIRECTORS;";
-        List<Director> directorsFromDb = jdbcTemplate.query(sqlQuery, MapDirector::mapRowToDirector);
-        for (Director director : directorsFromDb) {
-            allDirectors.put(director.getId(), director);
-        }
-        return allDirectors;
+        return jdbcTemplate.query(sqlQuery, MapDirector::mapRowToDirector);
     } // получение списка всех режиссеров
 
     @Override
     public Director findById(Long id) {
-
         String sqlQuery = "SELECT * FROM DIRECTORS WHERE ID = ?";
-
         SqlRowSet directorRows = jdbcTemplate.queryForRowSet(sqlQuery, id);
-
         if (directorRows.next()) {
             Director director = new Director(directorRows.getLong("ID"),
                     directorRows.getString("NAME"));
             log.info("Найден режиссер с id {}", id);
             return director;
         }
-
         log.warn("Режиссер с id {} не найден", id);
-        return null;
+        throw new ResourceNotFoundException("не найден режиссер с id " + id);
     } // получение режиссера по id
 
     public Director create(Director director) {

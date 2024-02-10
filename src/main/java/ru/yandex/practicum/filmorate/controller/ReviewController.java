@@ -8,7 +8,7 @@ import ru.yandex.practicum.filmorate.model.Review;
 import ru.yandex.practicum.filmorate.service.ReviewService;
 
 import javax.validation.Valid;
-import java.util.Collection;
+import java.util.List;
 
 @RestController
 @RequestMapping("/reviews")
@@ -32,8 +32,8 @@ public class ReviewController {
     }
 
     @GetMapping
-    public Collection<Review> findAll(@RequestParam(name = "filmId", required = false) Integer filmId,
-                                      @RequestParam(name = "count", defaultValue = "10") Integer count) {
+    public List<Review> findAll(@RequestParam(name = "filmId", required = false) Integer filmId,
+                                @RequestParam(name = "count", defaultValue = "10") Integer count) {
         if (filmId == null) {
             log.info("Вывод всех отзывов");
             return reviewService.findAll();

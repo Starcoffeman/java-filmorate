@@ -2,12 +2,11 @@ package ru.yandex.practicum.filmorate.storage;
 
 import ru.yandex.practicum.filmorate.model.Director;
 
-import java.util.Map;
-import java.util.Optional;
+import java.util.List;
 
 public interface DirectorsStorage {
 
-    Map<Long, Director> findAll(); // получение списка всех режиссеров
+    List<Director> findAll(); // получение списка всех режиссеров
 
     Director findById(Long id); // получение режиссера по id
 
