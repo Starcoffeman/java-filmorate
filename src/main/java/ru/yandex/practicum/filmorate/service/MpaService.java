@@ -12,7 +12,6 @@ import java.util.Collections;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class MpaService {
     private final MpaStorage mpaStorage;
 

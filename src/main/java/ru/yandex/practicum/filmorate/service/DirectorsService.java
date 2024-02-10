@@ -13,7 +13,6 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class DirectorsService {
 
     private final DirectorsStorage directorsStorage;

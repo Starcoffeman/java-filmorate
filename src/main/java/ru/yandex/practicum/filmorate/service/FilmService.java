@@ -1,7 +1,6 @@
 package ru.yandex.practicum.filmorate.service;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exceptions.ResourceNotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
@@ -9,11 +8,9 @@ import ru.yandex.practicum.filmorate.storage.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class FilmService {
 
     private final FilmStorage filmStorage;
@@ -100,7 +97,7 @@ public class FilmService {
         return filmStorage.searchFilmBy(query, by);
     }
 
-    public List<Film> getMostPopularByGenreYear(Optional<Integer> year, Optional<Long> genreId, Integer limit) {
+    public List<Film> getMostPopularByGenreYear(Integer year, Long genreId, Integer limit) {
         return filmStorage.getMostPopularByGenreYear(year, genreId, limit);
     }
 }

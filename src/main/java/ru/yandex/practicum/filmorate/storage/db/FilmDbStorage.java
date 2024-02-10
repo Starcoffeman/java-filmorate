@@ -238,7 +238,7 @@ public class FilmDbStorage implements FilmStorage {
     }
 
     @Override
-    public List<Film> getMostPopularByGenreYear(Optional<Integer> year, Optional<Long> genreId, Integer limit) {
+    public List<Film> getMostPopularByGenreYear(Integer year, Long genreId, Integer limit) {
         StringBuilder builder = new StringBuilder()
                 .append("SELECT F.ID, F.NAME, F.DESCRIPTION, F.RELEASE_DATE, ")
                 .append("F.DURATION, F.RATING_ID MPA_ID, R.NAME MPA_NAME, COUNT(FL.FILM_ID) RATE, ")
@@ -247,16 +247,16 @@ public class FilmDbStorage implements FilmStorage {
                 .append("LEFT JOIN RATING R ON F.RATING_ID = R.ID ")
                 .append("LEFT JOIN FILM_GENRE FG ON F.ID = FG.FILM_ID ");
 
-        if (year.isPresent() || genreId.isPresent()) {
+        if (year != 0 || genreId != 0) {
             builder.append("WHERE ");
-            if (year.isPresent()) {
-                builder.append("EXTRACT(YEAR FROM F.RELEASE_DATE) = ").append(year.get()).append(" ");
-                if (genreId.isPresent()) {
+            if (year != 0) {
+                builder.append("EXTRACT(YEAR FROM F.RELEASE_DATE) = ").append(year).append(" ");
+                if (genreId != 0) {
                     builder.append("AND ");
                 }
             }
-            if (genreId.isPresent()) {
-                builder.append("FG.GENRE_ID = ").append(genreId.get()).append(" ");
+            if (genreId != 0) {
+                builder.append("FG.GENRE_ID = ").append(genreId).append(" ");
             }
         }
 

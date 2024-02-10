@@ -12,7 +12,6 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class ReviewService {
 
     private final ReviewStorage reviewStorage;
@@ -23,10 +22,8 @@ public class ReviewService {
         try {
             reviewNew = reviewStorage.create(review);
         } catch (ValidationException e) {
-            log.error("Ошибка валидации при создании отзыва: " + e.getMessage());
             throw e;
         } catch (Exception e) {
-            log.error("Произошла ошибка при создании отзыва", e);
             throw e;
         }
 

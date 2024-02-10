@@ -30,5 +30,5 @@ public interface FilmStorage {
 
     List<Film> searchFilmBy(String query, String by);
 
-    List<Film> getMostPopularByGenreYear(Optional<Integer> year, Optional<Long> genreId, Integer limit);
+    List<Film> getMostPopularByGenreYear(Integer year, Long genreId, Integer limit);
 }

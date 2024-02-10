@@ -19,8 +19,8 @@ public class DirectorController {
     private final DirectorsService directorsService;
 
     @GetMapping("/{id}")
-    public Director findById(@PathVariable long id) {
-        log.info("Выовод режиссера под id:{id}",id);
+    public Director findById(@PathVariable("id") long id) {
+        log.info("Выовод режиссера под id {}",id);
         return directorsService.findById(id);
     }
 
@@ -33,19 +33,19 @@ public class DirectorController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Director create(@Valid @RequestBody Director director) {
-        log.info("Режиссер создан");
+        log.info("Режиссер создан director {}", director);
         return directorsService.create(director);
     }
 
     @PutMapping
     public Director update(@Valid @RequestBody Director director) {
-        log.info("Режиссер обновлён");
+        log.info("Режиссер обновлён director {}", director);
         return directorsService.update(director);
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable long id) {
-        log.info("Режиссер под id:{id} удалён",id);
+    public void delete(@PathVariable("id") long id) {
+        log.info("Режиссер под id {} удалён", id);
         directorsService.delete(id);
     }
 }
