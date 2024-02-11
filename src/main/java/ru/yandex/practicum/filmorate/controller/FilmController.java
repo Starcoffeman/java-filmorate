@@ -26,30 +26,35 @@ public class FilmController {
     }
 
     @PutMapping
+    @ResponseStatus(HttpStatus.OK)
     public Film update(@Valid @RequestBody Film film) {
         log.info("Фильм обновлён");
         return filmService.update(film);
     }
 
     @DeleteMapping("/{filmId}")
+    @ResponseStatus(HttpStatus.OK)
     public void removeById(@PathVariable Long filmId) {
         log.info("Фильм под id:{filmId} удалён",filmId);
         filmService.removeById(filmId);
     }
 
     @GetMapping
+    @ResponseStatus(HttpStatus.OK)
     public List<Film> findAll() {
         log.info("Вывод всех фильмов");
         return filmService.findAll();
     }
 
     @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
     public Film findById(@PathVariable("id") Long id) {
         log.info("Вывод фильма под id:{id}",id);
         return filmService.findById(id);
     }
 
     @PutMapping("{id}/like/{userId}")
+    @ResponseStatus(HttpStatus.OK)
     public Film addLike(@PathVariable("id") Long filmId,
                         @PathVariable("userId") Long userId) {
         log.info("Пользователь под id:{userId} лайкнул фильм под id:{filmId}",userId,filmId);
@@ -57,6 +62,7 @@ public class FilmController {
     }
 
     @DeleteMapping("{id}/like/{userId}")
+    @ResponseStatus(HttpStatus.OK)
     public Film removeLike(
             @PathVariable("id") Long filmId,
             @PathVariable("userId") Long userId) {
@@ -65,6 +71,7 @@ public class FilmController {
     }
 
     @GetMapping("/director/{directorId}")
+    @ResponseStatus(HttpStatus.OK)
     public List<Film> getFilmsOfDirectorSortByLikesOrYears(@PathVariable("directorId") Long id,
                                                            @RequestParam(defaultValue = "likes") String sortBy) {
         log.info("Вывод отсортированного список фильмов");
@@ -72,12 +79,14 @@ public class FilmController {
     }
 
     @GetMapping("/common")
+    @ResponseStatus(HttpStatus.OK)
     public List<Film> findCommonFilms(@RequestParam Long userId, @RequestParam Long friendId) {
         log.info("Вывод общего списка фильмов у пользователей под id: {userId} и {friendId}",userId,friendId);
         return filmService.findCommonFilms(userId, friendId);
     }
 
     @GetMapping("/search")
+    @ResponseStatus(HttpStatus.OK)
     public List<Film> searchFilmBy(
             @RequestParam String query,
             @RequestParam String by) {
@@ -86,6 +95,7 @@ public class FilmController {
     }
 
     @GetMapping("/popular")
+    @ResponseStatus(HttpStatus.OK)
     public List<Film> getMostPopularByGenreYear(@RequestParam(defaultValue = "0") Integer year,
                                                 @RequestParam(defaultValue = "0") Long genreId,
                                                 @RequestParam(defaultValue = "10") @Positive Integer count) {
