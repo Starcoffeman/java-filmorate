@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exceptions.ResourceNotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.service.FeedService;
 import ru.yandex.practicum.filmorate.service.UserService;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
@@ -20,7 +21,7 @@ public class UserServiceImpl implements UserService {
 
     private final UserStorage userStorage;
     private final FilmStorage filmStorage;
-    private final FeedServiceImpl feedService;
+    private final FeedService feedService;
 
     public User create(User user) {
         fillEmptyName(user);

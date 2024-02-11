@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.Review;
+import ru.yandex.practicum.filmorate.service.FeedService;
 import ru.yandex.practicum.filmorate.service.ReviewService;
 import ru.yandex.practicum.filmorate.storage.ReviewStorage;
 
@@ -16,7 +17,7 @@ import java.util.List;
 public class ReviewServiceImpl implements ReviewService {
 
     private final ReviewStorage reviewStorage;
-    private final FeedServiceImpl feedService;
+    private final FeedService feedService;
 
     public Review create(Review review) {
         Review reviewNew;

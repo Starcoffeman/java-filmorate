@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.Feed;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.service.impl.FeedServiceImpl;
-import ru.yandex.practicum.filmorate.service.impl.UserServiceImpl;
+import ru.yandex.practicum.filmorate.service.FeedService;
+import ru.yandex.practicum.filmorate.service.UserService;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -18,8 +18,8 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class UserController {
-    private final UserServiceImpl userService;
-    private final FeedServiceImpl feedService;
+    private final UserService userService;
+    private final FeedService feedService;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)

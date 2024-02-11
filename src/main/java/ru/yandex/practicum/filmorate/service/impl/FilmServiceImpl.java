@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exceptions.ResourceNotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.service.FeedService;
 import ru.yandex.practicum.filmorate.service.FilmService;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
@@ -19,7 +20,7 @@ public class FilmServiceImpl implements FilmService {
 
     private final FilmStorage filmStorage;
     private final UserStorage userStorage;
-    private final FeedServiceImpl feedService;
+    private final FeedService feedService;
 
     public Film create(Film film) {
         return filmStorage.create(film);
