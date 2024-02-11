@@ -1,106 +1,29 @@
 package ru.yandex.practicum.filmorate.service;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
-import ru.yandex.practicum.filmorate.exceptions.ResourceNotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.storage.FilmStorage;
-import ru.yandex.practicum.filmorate.storage.UserStorage;
 
 import java.util.List;
-import java.util.Optional;
 
-@Service
-@RequiredArgsConstructor
-@Slf4j
-public class FilmService {
+public interface FilmService {
+    Film create(Film film);
 
-    private final FilmStorage filmStorage;
-    private final UserStorage userStorage;
-    private final FeedService feedService;
+    Film update(Film film);
 
-    public Film create(Film film) {
-        return filmStorage.create(film);
-    }
+    Long removeById(Long id);
 
-    public Film update(Film film) {
-        if (filmStorage.findById(film.getId()) == null) {
-            throw new ResourceNotFoundException("Фильм не найден");
-        }
-        return filmStorage.update(film);
-    }
+    List<Film> findAll();
 
-    public Long removeById(Long id) {
-        return filmStorage.delete(id);
-    }
+    Film findById(Long id);
 
-    public List<Film> findAll() {
-        return filmStorage.findAll();
-    }
+    Film addLike(Long filmId, Long userId);
 
-    public Film findById(Long id) {
-        Film film = filmStorage.findById(id);
-        if (film == null) {
-            throw new ResourceNotFoundException("Фильм не найден");
-        }
-        return film;
-    }
+    Film removeLike(Long filmId, Long userId);
 
-    public Film addLike(Long filmId, Long userId) {
-        if (filmStorage.findById(filmId) == null) {
-            throw new ResourceNotFoundException("Фильм не найден");
-        }
-        if (userStorage.findById(userId) == null) {
-            throw new ResourceNotFoundException("Пользователь не найден");
-        }
-        filmStorage.addLike(filmId, userId);
-        feedService.addFeedAddLike(userId, filmId);
-        return filmStorage.findById(filmId);
-    }
+    List<Film> getFilmsOfDirectorSortByLikesOrYears(Long id, String sortBy);
 
-    public Film removeLike(Long filmId, Long userId) {
-        if (filmStorage.findById(filmId) == null) {
-            throw new ResourceNotFoundException("Фильм не найден");
-        }
-        if (userStorage.findById(userId) == null) {
-            throw new ResourceNotFoundException("Пользователь не найден");
-        }
-        filmStorage.deleteLike(filmId, userId);
-        feedService.addFeedRemoveLike(userId, filmId);
-        return filmStorage.findById(filmId);
-    }
+    List<Film> findCommonFilms(Long userId, Long friendId);
 
-    public List<Film> getFilmsOfDirectorSortByLikesOrYears(Long id, String sortBy) {
-        List<Film> films = filmStorage.getFilmsOfDirectorSortByLikesOrYears(id, sortBy);
-        if (films.isEmpty()) {
-            throw new ResourceNotFoundException("Режиссер не найден");
-        } else {
-            return films;
-        }
-    }
+    List<Film> searchFilmBy(String query, String by);
 
-    public List<Film> findCommonFilms(Long userId, Long friendId) {
-        if (userStorage.findById(userId) == null || userStorage.findById(friendId) == null) {
-            throw new ResourceNotFoundException("Пользователь не найден");
-        }
-
-        return filmStorage.findCommonFilms(userId, friendId);
-    }
-
-    public List<Film> searchFilmBy(String query, String by) {
-        switch (by) {
-            case "director":
-            case "title":
-            case "director,title":
-            case "title,director":
-                break;
-            default: throw new ResourceNotFoundException("Не найдены параметры поиска");
-        }
-        return filmStorage.searchFilmBy(query, by);
-    }
-
-    public List<Film> getMostPopularByGenreYear(Optional<Integer> year, Optional<Long> genreId, Integer limit) {
-        return filmStorage.getMostPopularByGenreYear(year, genreId, limit);
-    }
+    List<Film> getMostPopularByGenreYear(Integer year, Long genreId, Integer limit);
 }

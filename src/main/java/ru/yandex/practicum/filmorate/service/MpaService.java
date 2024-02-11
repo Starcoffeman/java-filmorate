@@ -1,26 +1,11 @@
 package ru.yandex.practicum.filmorate.service;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
-import ru.yandex.practicum.filmorate.exceptions.ResourceNotFoundException;
 import ru.yandex.practicum.filmorate.model.Mpa;
-import ru.yandex.practicum.filmorate.storage.MpaStorage;
 
-import java.util.Collection;
-import java.util.Collections;
+import java.util.List;
 
-@Service
-@RequiredArgsConstructor
-@Slf4j
-public class MpaService {
-    private final MpaStorage mpaStorage;
+public interface MpaService {
+    List<Mpa> findAll();
 
-    public Collection<Mpa> findAll() {
-        return Collections.unmodifiableCollection(mpaStorage.findAll().values());
-    }
-
-    public Mpa findById(Long id) {
-        return mpaStorage.findById(id).orElseThrow(() -> new ResourceNotFoundException("Что то не работает"));
-    }
+    Mpa findById(Long id);
 }

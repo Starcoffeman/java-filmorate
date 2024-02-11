@@ -7,11 +7,13 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Repository;
+import ru.yandex.practicum.filmorate.exceptions.ResourceNotFoundException;
 import ru.yandex.practicum.filmorate.model.Director;
 import ru.yandex.practicum.filmorate.storage.DirectorsStorage;
 
 import java.sql.PreparedStatement;
-import java.util.*;
+import java.util.List;
+import java.util.Objects;
 
 @Repository
 @RequiredArgsConstructor
@@ -21,31 +23,26 @@ public class DirectorDbStorage implements DirectorsStorage {
     private final JdbcTemplate jdbcTemplate;
 
     @Override
-    public Map<Long, Director> findAll() {
-        Map<Long, Director> allDirectors = new HashMap<>();
+    public List<Director> findAll() {
         String sqlQuery = "SELECT * FROM DIRECTORS;";
-        List<Director> directorsFromDb = jdbcTemplate.query(sqlQuery, MapDirector::mapRowToDirector);
-        for (Director director : directorsFromDb) {
-            allDirectors.put(director.getId(), director);
-        }
-        return allDirectors;
+        return jdbcTemplate.query(sqlQuery, MapDirector::mapRowToDirector);
     } // получение списка всех режиссеров
 
     @Override
-    public Optional<Director> findById(Long id) {
+    public Director findById(Long id) {
         String sqlQuery = "SELECT * FROM DIRECTORS WHERE ID = ?";
         SqlRowSet directorRows = jdbcTemplate.queryForRowSet(sqlQuery, id);
         if (directorRows.next()) {
             Director director = new Director(directorRows.getLong("ID"),
                     directorRows.getString("NAME"));
             log.info("Найден режиссер с id {}", id);
-            return Optional.of(director);
+            return director;
         }
         log.warn("Режиссер с id {} не найден", id);
-        return Optional.empty();
+        throw new ResourceNotFoundException("не найден режиссер с id " + id);
     } // получение режиссера по id
 
-    public Optional<Director> create(Director director) {
+    public Director create(Director director) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         String sqlQuery = "INSERT INTO \"DIRECTORS\" (NAME) VALUES (?)";
         jdbcTemplate.update(
