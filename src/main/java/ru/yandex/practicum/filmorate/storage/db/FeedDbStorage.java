@@ -23,12 +23,16 @@ public class FeedDbStorage implements FeedStorage {
 
     @Override
     public List<Feed> getFeedsByUserId(long userId) {
-        String query = "SELECT U.ID,  F.* FROM USERS U " +
-                "LEFT JOIN FEED F ON U.ID = F.USER_ID WHERE U.ID = ? " +
-                "ORDER BY TIMESTAMP";
+        if (!isUserPresent(userId)) {
+            throw new ResourceNotFoundException(String.format("Пользователь с id = %s не найден", userId));
+        }
+
+        String query = "SELECT * FROM FEED WHERE USER_ID = ? ORDER BY TIMESTAMP";
 
         return jdbcTemplate.query(query,
-                preparedStatement -> {preparedStatement.setLong(1, userId);},
+                preparedStatement -> {
+                    preparedStatement.setLong(1, userId);
+                },
                 this::mapRowToFeed);
     }
 
@@ -79,10 +83,7 @@ public class FeedDbStorage implements FeedStorage {
     }
 
     private void addFeedGeneralized(long userId, long entityId, EventType eventType, Operation operation) {
-        boolean isUserIdMissing = jdbcTemplate.queryForObject("SELECT COUNT(ID) FROM USERS WHERE ID = ? " +
-                "GROUP BY ID", Long.class, userId) == 0;
-
-        if (isUserIdMissing) {
+        if (!isUserPresent(userId)) {
             throw new ResourceNotFoundException(String.format("Пользователь с id = %s не найден", userId));
         }
 
@@ -99,5 +100,9 @@ public class FeedDbStorage implements FeedStorage {
                 .build();
 
         simpleJdbcInsert.executeAndReturnKey(feed.toMapForDB()).longValue();
+    }
+
+    private boolean isUserPresent(long userId) {
+        return jdbcTemplate.queryForObject("SELECT COUNT(*) FROM USERS WHERE ID = ?", Long.class, userId) != 0;
     }
 }

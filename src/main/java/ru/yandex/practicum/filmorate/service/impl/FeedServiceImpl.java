@@ -16,20 +16,7 @@ public class FeedServiceImpl implements FeedService {
     private final FeedStorage feedStorage;
 
     public List<Feed> getFeedsByUserId(long userId) {
-        List<Feed> feedList;
-
-        try {
-            feedList = feedStorage.getFeedsByUserId(userId);
-        } catch (NullPointerException e) {
-            return new ArrayList<>() {
-            };
-        }
-
-        if (feedList.isEmpty()) {
-            throw new ResourceNotFoundException(String.format("Не найден пользователь с id = %s", userId));
-        }
-
-        return feedList;
+        return feedStorage.getFeedsByUserId(userId);
     }
 
     public void addFeedRemoveFriend(Long id, Long friendId) {
