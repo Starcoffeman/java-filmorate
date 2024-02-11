@@ -145,14 +145,24 @@ public class FilmDbStorage implements FilmStorage {
     private List<Genre> getGenresOfFilm(Long filmId) {
         String queryForFilmGenres = "SELECT FG.FILM_ID, FG.GENRE_ID, G.NAME FROM FILM_GENRE FG" +
                 " JOIN GENRE G ON G.ID = FG.GENRE_ID WHERE FILM_ID = ?;";
-        return jdbcTemplate.query(queryForFilmGenres, this::mapRowToGenre, filmId);
+
+        return jdbcTemplate.query(queryForFilmGenres,
+                preparedStatement -> {
+                    preparedStatement.setLong(1, filmId);
+                },
+                this::mapRowToGenre);
     }
 
     // Получаем список режиссеров
     private List<Director> getDirectorsOfFilm(Long filmId) {
         String queryForFilmDirectors = "SELECT FD.FILM_ID, FD.DIRECTOR_ID AS ID, D.NAME FROM FILM_DIRECTORS FD " +
                 "JOIN DIRECTORS D ON D.ID = FD.DIRECTOR_ID WHERE FILM_ID = ?;";
-        return jdbcTemplate.query(queryForFilmDirectors, MapDirector::mapRowToDirector, filmId);
+
+        return jdbcTemplate.query(queryForFilmDirectors,
+                preparedStatement -> {
+                    preparedStatement.setLong(1, filmId);
+                },
+                MapDirector::mapRowToDirector);
     }
 
     @Override
